@@ -7,8 +7,9 @@
 
 #include "Drawable.hpp"
 
-Drawable::Drawable(Entity *self) : Component(self, false, true), _texture(), _sprite(_texture)
+Drawable::Drawable(Entity *self, std::string texture) : Component(self, false, true), _texture(), _sprite(_texture)
 {
+    std::cout << "Drawable::Drawable" << std::endl;
 }
 
 Drawable::~Drawable()

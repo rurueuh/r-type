@@ -11,7 +11,7 @@
 
 class Drawable : public Component {
     public:
-        Drawable(Entity *self);
+        Drawable(Entity *self, std::string texture);
         ~Drawable();
 
         void loadTexture(const std::string &path);

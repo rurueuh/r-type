@@ -23,6 +23,8 @@ public:
 	virtual void draw(sf::RenderTarget& window) = 0;
 
 	// GETTERS AND SETTERS //
+	size_t getId() const { return _idEntity; }
+	void setId(size_t id) { _idEntity = id; }
 
 	// OPERATORS //
 	bool operator==(const Entity& other) const { return this == &other;}
@@ -38,10 +40,10 @@ public:
 		}
 		return nullptr;
 	}
-	template <typename T>
-	void addComponent(...)
+	template <typename T, typename... Args>
+	void addComponent(Args&&... args)
 	{
-		std::shared_ptr<T> component = std::make_shared<T>(this);
+		std::shared_ptr<T> component = std::make_shared<T>(this, std::forward<Args>(args)...);
 		_components.push_back(component);
 	}
 	template <typename T>
@@ -59,4 +61,5 @@ public:
 
 	protected:
 		std::vector<std::shared_ptr<Component>> _components;
+		size_t _idEntity = 0;
 };
