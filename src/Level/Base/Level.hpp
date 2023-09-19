@@ -98,7 +98,7 @@ public:
 	/// @brief get all entities of a specific type
 	/// @tparam T herited class of Entity
 	/// @example std::vector<std::shared_ptr<Enemy>> enemies = getEntity<Enemy>();
-	/// @return 
+	/// @return std::vector<std::shared_ptr<T>>
 	template <typename T>
 	std::vector<std::shared_ptr<T>> getEntity()
 	{
