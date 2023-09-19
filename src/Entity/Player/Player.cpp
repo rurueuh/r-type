@@ -10,7 +10,7 @@
 
 Player::Player()
 {
-    this->addComponent<Drawable>();
+    this->addComponent<Drawable>("./assets/player.png");
 }
 
 Player::~Player()

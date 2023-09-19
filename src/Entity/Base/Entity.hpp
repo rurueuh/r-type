@@ -38,10 +38,10 @@ public:
 		}
 		return nullptr;
 	}
-	template <typename T>
-	void addComponent(...)
+	template <typename T, typename... Args>
+	void addComponent(Args&&... args)
 	{
-		std::shared_ptr<T> component = std::make_shared<T>(this);
+		std::shared_ptr<T> component = std::make_shared<T>(this, std::forward<Args>(args)...);
 		_components.push_back(component);
 	}
 	template <typename T>
