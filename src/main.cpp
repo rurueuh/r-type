@@ -1,6 +1,7 @@
 #include "SFML.hpp"
 #include "LevelManager.hpp"
 #include "Menu.hpp"
+#include "TextureManager.hpp"
 
 std::shared_ptr<sf::RenderWindow> createWindow()
 {
@@ -56,6 +57,6 @@ int main(void)
         Update(levelManager);
         draw(window, levelManager);
     }
-
+    TextureManager::clear();
     return 0;
 }
