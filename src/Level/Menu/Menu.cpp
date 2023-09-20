@@ -7,9 +7,11 @@
 
 #include "Menu.hpp"
 #include "Player.hpp"
+#include "TextureManager.hpp"
 
 Menu::Menu()
 {
+    TextureManager::loadTextureInMemory({"./1322308.jpeg"});
     this->addEntity<Player>();
 }
 

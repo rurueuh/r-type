@@ -11,6 +11,10 @@ add_subdirectory(SFML)
 # faire que les hpp se la sfml soit accessible
 include_directories(SFML/include)
 
+# thread
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 # glob recursive of all files in src (hpp and cpp)
 file(GLOB_RECURSE SOURCES
      "src/*.hpp"
@@ -32,3 +36,6 @@ add_executable(rtype ${SOURCES})
 
 # Lier votre exécutable avec les bibliothèques SFML
 target_link_libraries(rtype sfml-graphics sfml-window sfml-system)
+
+# Link thread
+target_link_libraries(rtype pthread)

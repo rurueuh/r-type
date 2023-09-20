@@ -23,11 +23,3 @@ void Drawable::loadTexture(const std::string &path)
     _sprite.setTexture(_texture);
 }
 
-void Drawable::update(const float dt)
-{
-}
-
-void Drawable::draw(sf::RenderTarget& target)
-{
-    target.draw(_sprite);
-}

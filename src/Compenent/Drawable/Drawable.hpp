@@ -14,10 +14,6 @@ class Drawable : public Component {
         Drawable(Entity *self, std::string texture);
         ~Drawable();
 
-        void loadTexture(const std::string &path);
-
-        void update(const float dt) override;
-        void draw(sf::RenderTarget& target) override;
 
     protected:
     private:
