@@ -12,7 +12,7 @@
 
 class Player : public Entity {
     public:
-        Player(u_int64_t id) : Entity(id) {};
+        Player(uint64_t id) : Entity(id) {};
         ~Player() = default;
 
     protected:

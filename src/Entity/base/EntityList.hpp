@@ -14,17 +14,17 @@ class EntityList {
     public:
         EntityList() {
             _list.reserve(10000);
-            for (u_int64_t i = 0; i < 10000; i++)
+            for (uint64_t i = 0; i < 10000; i++)
                 _freeIds.push(i);
         }
         ~EntityList()  = default;
 
-        std::shared_ptr<Entity> &getEntity(u_int64_t id) {
+        std::shared_ptr<Entity> &getEntity(uint64_t id) {
             return _list[id];
         }
         template <typename T>
         std::shared_ptr<Entity> &createEntity() {
-            u_int64_t id = _freeIds.front();
+            uint64_t id = _freeIds.front();
             _freeIds.pop();
             #ifdef DEBUG
                 std::cout << "Created entity with id " << id << std::endl;
@@ -41,7 +41,7 @@ class EntityList {
     protected:
     private:
         std::unordered_map<int, std::shared_ptr<Entity>> _list;
-        std::queue<u_int64_t> _freeIds;
+        std::queue<uint64_t> _freeIds;
 };
 
 inline std::ostream &operator<<(std::ostream &os, EntityList &list) {
