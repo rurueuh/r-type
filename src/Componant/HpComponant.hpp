@@ -15,6 +15,13 @@ class HpComponant : public Componant {
         HpComponant() = default;
         ~HpComponant() = default;
 
+        std::string toString() const noexcept {
+            std::string str = "\t\t\t HpComponant{";
+            str += "\n\t\t\t\tHp: " + std::to_string(_hp);
+            str += "\n\t\t\t}";
+            return str;
+        };
+
         int getHp() const { return _hp; };
         void setHp(int hp) { _hp = hp; };
 

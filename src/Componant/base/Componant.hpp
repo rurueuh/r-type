@@ -14,6 +14,11 @@ class Componant {
         Componant() = default;
         virtual ~Componant() = default;
 
+        virtual std::string toString() const noexcept {
+            std::string str = "\t\t\t BaseComponant{}";
+            return str;
+        };
+
     protected:
     private:
 };

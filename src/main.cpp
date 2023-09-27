@@ -10,11 +10,13 @@ int main(void)
     EntityList list;
     ComponantList componantList;
     auto p = list.createEntity<Player>();
-    auto p2 = list.createEntity<Player>();
+    // auto p2 = list.createEntity<Player>();
     auto hp = componantList.addComponent<HpComponant>(p);
+    auto hp2 = componantList.addComponent<HpComponant>(p);
 
-    std::cout << p->getId() << std::endl;
-    std::cout << p2->getId() << std::endl;
+    hp2->setHp(50);
+
+    std::cout << list << std::endl;
     sf::RenderWindow window(sf::VideoMode({800, 600}), "SFML works!");
 
     while (window.isOpen())
