@@ -39,3 +39,10 @@ target_link_libraries(rtype sfml-graphics sfml-window sfml-system)
 
 # Link thread
 target_link_libraries(rtype pthread)
+
+# if debug
+
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    message(STATUS "Debug mode")
+    target_compile_definitions(rtype PUBLIC DEBUG)
+endif()

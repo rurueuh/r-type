@@ -1,62 +1,32 @@
 #include "SFML.hpp"
-#include "LevelManager.hpp"
-#include "Menu.hpp"
-#include "TextureManager.hpp"
-
-std::shared_ptr<sf::RenderWindow> createWindow()
-{
-	sf::ContextSettings settings;
-	settings.antialiasingLevel = 8;
-    settings.majorVersion = 4;
-    settings.minorVersion = 6;
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    auto window = std::make_shared<sf::RenderWindow>(desktop, "RTYPE", sf::Style::Default, settings);
-    window->setFramerateLimit(250);
-	return window;
-}
-
-void Update(LevelManager& levelManager)
-{
-    static sf::Clock clock;
-    float dt = 0.0f;
-    dt = clock.restart().asSeconds();
-    levelManager.update(dt);
-}
-
-void draw(std::shared_ptr<sf::RenderWindow>& window, LevelManager& levelManager)
-{
-    window->clear();
-    levelManager.draw((sf::RenderTarget &)*window);
-    window->display();
-}
-
-void Event(std::shared_ptr<sf::RenderWindow>& window)
-{
-    sf::Event event;
-    while (window->pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-            window->close();
-        if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Escape)
-                window->close();
-        }
-    }
-}
+#include "EntityList.hpp"
+#include "ComponantList.hpp"
+#include "HpComponant.hpp"
+#include "Entity.hpp"
+#include "Player.hpp"
 
 int main(void)
 {
-    auto window = createWindow();
+    EntityList list;
+    ComponantList componantList;
+    auto p = list.createEntity<Player>();
+    auto p2 = list.createEntity<Player>();
+    auto hp = componantList.addComponent<HpComponant>(p);
 
-    LevelManager &levelManager = LevelManager::getInstance();
-    levelManager.addLevel<Menu>();
+    std::cout << p->getId() << std::endl;
+    std::cout << p2->getId() << std::endl;
+    sf::RenderWindow window(sf::VideoMode({800, 600}), "SFML works!");
 
-    while (window->isOpen())
+    while (window.isOpen())
     {
-        Event(window);
-        Update(levelManager);
-        draw(window, levelManager);
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) window.close();
+        }
+        window.clear();
+
+
+        window.display();
     }
-    TextureManager::clear();
     return 0;
 }

@@ -1,21 +1,19 @@
 /*
 ** EPITECH PROJECT, 2023
-** rtype
+** B-rtype
 ** File description:
 ** Player
 */
 
 #pragma once
 
+#include <bits/stdc++.h>
 #include "Entity.hpp"
 
 class Player : public Entity {
     public:
-        Player();
-        ~Player();
-
-        void update(const float dt);
-        void draw(sf::RenderTarget& target);
+        Player(u_int64_t id) : Entity(id) {};
+        ~Player() = default;
 
     protected:
     private:
