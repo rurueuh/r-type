@@ -12,7 +12,7 @@
 
 class HpComponent : public Component {
     public:
-        HpComponent() = default;
+        HpComponent(int hp) : _hp(hp) {};
         ~HpComponent() = default;
 
         std::string toString() const noexcept {

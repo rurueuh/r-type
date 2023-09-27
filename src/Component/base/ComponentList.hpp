@@ -16,10 +16,10 @@ class ComponentList {
         ComponentList() = default;
         ~ComponentList() = default;
 
-        template<typename T>
-        std::shared_ptr<T> addComponent(std::shared_ptr<Entity> &entity) noexcept
+        template<typename T, typename ...Args>
+        std::shared_ptr<T> addComponent(std::shared_ptr<Entity> &entity, Args &&...args) noexcept
         {
-            std::shared_ptr<T> Component = std::make_shared<T>();
+            std::shared_ptr<T> Component = std::make_shared<T>(std::forward<Args>(args)...);
             _Components.push_back(Component);
             entity->addComponent(Component);
             return Component;
