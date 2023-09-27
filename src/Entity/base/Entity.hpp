@@ -8,7 +8,7 @@
 #pragma once
 
 #include <bits/stdc++.h>
-#include "Componant.hpp"
+#include "Component.hpp"
 
 class Entity {
     public:
@@ -17,28 +17,62 @@ class Entity {
 
         uint64_t getId() const { return _id; };
 
-        void addComponent(std::shared_ptr<Componant> componant) noexcept
+        void addComponent(std::shared_ptr<Component> Component) noexcept
         {
-            _componants.push_back(componant);
+            if (hasComponent(Component)){
+                #ifdef DEBUG
+                    PRINT_ERROR("Entity already has this Component")
+                #endif
+                return;
+            }
+            _Components.push_back(Component);
         }
-        std::vector<std::shared_ptr<Componant>> &getComponants() noexcept
+        std::vector<std::shared_ptr<Component>> &getComponents() noexcept
         {
-            return _componants;
+            return _Components;
         }
 
+        template <typename T>
+        std::shared_ptr<T> getComponent() noexcept
+        {
+            for (auto &Component : _Components) {
+                if (typeid(*Component) == typeid(T))
+                    return std::dynamic_pointer_cast<T>(Component);
+            }
+            return nullptr;
+        }
+
+        template <typename T>
+        bool hasComponent() noexcept
+        {
+            for (auto &Component : _Components) {
+                if (typeid(*Component) == typeid(T))
+                    return true;
+            }
+            return false;
+        }
+        bool hasComponent(std::shared_ptr<Component> content) noexcept
+        {
+            for (auto &Component : _Components) {
+                if (typeid(*Component) == typeid(*content))
+                    return true;
+            }
+            return false;
+        }
     protected:
     private:
         uint64_t _id = -1;
-        std::vector<std::shared_ptr<Componant>> _componants = {};
+        std::vector<std::shared_ptr<Component>> _Components = {};
 };
 
 inline std::ostream &operator<<(std::ostream &os, Entity &entity) {
-    os << "\tEntity{ " << std::endl;
+    std::string name = typeid(entity).name();
+    os << "\t"+name+"{ " << std::endl;
     os << "\t\tId: " << entity.getId() << std::endl;
-    os << "\t\tComponants { " << std::endl;
-    for (auto &componant : entity.getComponants()) {
+    os << "\t\tComponents { " << std::endl;
+    for (auto &Component : entity.getComponents()) {
         std::string output;
-        output += componant->toString();
+        output += Component->toString();
         os << output << std::endl;
     }
     std::cout << "\t\t}" << std::endl;

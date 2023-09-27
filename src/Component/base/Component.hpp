@@ -2,20 +2,21 @@
 ** EPITECH PROJECT, 2023
 ** B-rtype
 ** File description:
-** Componant
+** Component
 */
 
 #pragma once
 
 #include <bits/stdc++.h>
+#include "macro.hpp"
 
-class Componant {
+class Component {
     public:
-        Componant() = default;
-        virtual ~Componant() = default;
+        Component() = default;
+        virtual ~Component() = default;
 
         virtual std::string toString() const noexcept {
-            std::string str = "\t\t\t BaseComponant{}";
+            std::string str = "\t\t\t BaseComponent{}";
             return str;
         };
 

@@ -1,18 +1,18 @@
 #include "SFML.hpp"
 #include "EntityList.hpp"
-#include "ComponantList.hpp"
-#include "HpComponant.hpp"
+#include "ComponentList.hpp"
+#include "HpComponent.hpp"
 #include "Entity.hpp"
 #include "Player.hpp"
 
 int main(void)
 {
     EntityList list;
-    ComponantList componantList;
+    ComponentList ComponentList;
     auto p = list.createEntity<Player>();
-    // auto p2 = list.createEntity<Player>();
-    auto hp = componantList.addComponent<HpComponant>(p);
-    auto hp2 = componantList.addComponent<HpComponant>(p);
+    auto p2 = list.createEntity<Player>();
+    auto hp = ComponentList.addComponent<HpComponent>(p);
+    auto hp2 = ComponentList.addComponent<HpComponent>(p);
 
     hp2->setHp(50);
 
