@@ -12,10 +12,10 @@
 
 class Entity {
     public:
-        Entity(u_int64_t id) : _id(id) {};
+        Entity(uint64_t id) : _id(id) {};
         virtual ~Entity() = default;
 
-        u_int64_t getId() const { return _id; };
+        uint64_t getId() const { return _id; };
 
         void addComponent(std::shared_ptr<Componant> componant) noexcept
         {
@@ -24,6 +24,6 @@ class Entity {
 
     protected:
     private:
-        u_int64_t _id = -1;
+        uint64_t _id = -1;
         std::vector<std::shared_ptr<Componant>> _componants = {};
 };
