@@ -1,23 +1,29 @@
 #include "SFML.hpp"
-#include "EntityList.hpp"
-#include "ComponentList.hpp"
-#include "HpComponent.hpp"
-#include "Entity.hpp"
-#include "Player.hpp"
+#include "World/World.hpp"
+
+struct PositionComponent {
+    PositionComponent(float x, float y) : x(x), y(y) {};
+    PositionComponent() : x(0), y(0) {};
+	float x, y;
+};
+
+struct PvEComponent {
+    PvEComponent(int health) : health(health) {};
+    PvEComponent() : health(0) {};
+    int health;
+};
 
 int main(void)
 {
-    EntityList list;
-    ComponentList ComponentList;
-    auto p = list.createEntity<Player>();
-    auto p2 = list.createEntity<Player>();
-    auto hp2 = ComponentList.addComponent<HpComponent>(p, 55);
-    auto hp = ComponentList.addComponent<HpComponent>(p, 50);
+    sf::RenderWindow window(sf::VideoMode({800, 600}), "SFML ECS!");
+    ECS::World* world = ECS::World::CreateWorld();
 
-    hp2->setHp(51);
-
-    std::cout << list << std::endl;
-    sf::RenderWindow window(sf::VideoMode({800, 600}), "SFML works!");
+    ECS::Entity* player = world->CreateEntity();
+    ECS::Entity* player2 = world->CreateEntity();
+    player->assign<PositionComponent>(1000.f, 1000.f);
+    player2->assign<PositionComponent>(0.f, 0.f);
+    player->assign<PvEComponent>(100);
+    player->assign<PvEComponent>(150);
 
     while (window.isOpen())
     {
@@ -27,8 +33,21 @@ int main(void)
         }
         window.clear();
 
+        world->each<PositionComponent>([&](ECS::Entity* ent, PositionComponent *position) {
+            position->y += 1;
+        });
+
+        world->all([](ECS::Entity* ent) {
+            std::cout << ent->has<PvEComponent>() << std::endl;
+        });
+
+        auto pos = player->get<PositionComponent>();
+        auto pos2 = player2->get<PositionComponent>();
+        std::cout << pos->y << std::endl;
+        std::cout << pos2->y << std::endl;
 
         window.display();
     }
+    world->destroyWorld();
     return 0;
 }

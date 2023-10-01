@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 
 project(rtype)
 
@@ -36,9 +36,10 @@ add_executable(rtype ${SOURCES})
 
 # Lier votre exécutable avec les bibliothèques SFML
 target_link_libraries(rtype sfml-graphics sfml-window sfml-system)
+target_link_libraries(rtype ${Boost_LIBRARIES})
 
-# Link thread
-target_link_libraries(rtype pthread)
+# Link thread on linux
+# target_link_libraries(rtype pthread)
 
 # if debug
 
