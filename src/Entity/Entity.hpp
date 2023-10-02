@@ -5,7 +5,9 @@
 #include <unordered_map>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 #include "Utils/Utils.hpp"
+#include <any>
 
 
 namespace InternalECS {
@@ -44,7 +46,8 @@ namespace ECS {
 
 	class World;
 
-	class Entity
+	class 
+	Entity
 	{
 	public:
 		friend class World;
