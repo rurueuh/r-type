@@ -3,3 +3,4 @@ build
 .vs
 html/
 latex/
+cmake-build-debug
