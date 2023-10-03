@@ -30,7 +30,7 @@ int main(void)
     player->assign<PositionComponent>(1000.f, 1000.f);
     player2->assign<PositionComponent>(0.f, 0.f);
     player->assign<PvEComponent>(100);
-    player->assign<PvEComponent>(150);
+    player->assign<PvEComponent>(150); // ignorer
 
     while (window.isOpen())
     {
@@ -45,7 +45,7 @@ int main(void)
         });
 
         world->all([](ECS::Entity* ent) {
-            // std::cout << ent->has<PvEComponent>() << std::endl;
+            std::cout << ent->has<PvEComponent>() << std::endl;
         });
 
         // std::function<void(ECS::Entity*)> f = my_system;
@@ -53,8 +53,8 @@ int main(void)
 
         auto pos = player->get<PositionComponent>();
         auto pos2 = player2->get<PositionComponent>();
-        // std::cout << pos->y << std::endl;
-        // std::cout << pos2->y << std::endl;
+        std::cout << pos->y << std::endl;
+        std::cout << pos2->y << std::endl;
 
         window.display();
     }

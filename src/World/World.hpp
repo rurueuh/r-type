@@ -4,6 +4,8 @@
 #include "Utils/Utils.hpp"
 #include <functional>
 #include <algorithm>
+#include "System.hpp"
+#include "SFML.hpp"
 
 class ComponentHandler;
 
@@ -50,10 +52,30 @@ namespace ECS {
 			void all(std::function<void(Entity*)> f) {
 				std::for_each(m_entities.begin(), m_entities.end(), f);
 			}
+
+			/**
+			 * @brief make all "tick" of all system register
+			 * @arg (optional) float dt | if not give automatic override it with dt
+			*/
+			void tick(float dt = 0) {
+				if (dt == 0) { // automatic get ms of tick
+					static sf::Clock clock;
+					auto time = clock.getElapsedTime().asMilliseconds();
+					dt = time;
+				}
+				for (auto &sys : m_system) {
+					sys->tick(this, dt);
+				}
+			}
+
+			bool registerSystem(BaseSystem *sys, size_t priority){
+				
+			}
 		private:
 			World() {};
 			~World() {};
 
 			std::vector<Entity*> m_entities = std::vector<Entity*>();
+			std::vector<BaseSystem*> m_system = std::vector<BaseSystem*>();
 	};
 }
