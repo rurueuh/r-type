@@ -64,18 +64,31 @@ namespace ECS {
 					dt = time;
 				}
 				for (auto &sys : m_system) {
-					sys->tick(this, dt);
+					sys.second->tick(this, dt);
 				}
 			}
 
-			bool registerSystem(BaseSystem *sys, size_t priority){
-				
+			/**
+			 * @brief add a system to system list to update (use tick funct and need to herit from BaseSystem.
+			 * @param priority order to execute if dupplicate prio throw exception
+			 */
+			template <typename T, typename... Args>
+			bool registerSystem(size_t priority, Args&&... args){
+				BaseSystem* newRegister = new T(std::forward<Args>(args)...);
+				if (m_system[priority] != nullptr) {
+					throw std::runtime_error("double insert system priority");
+					return true;
+				}
+				else {
+					m_system[priority] = newRegister;
+				}
+				return false;
 			}
 		private:
 			World() {};
 			~World() {};
 
 			std::vector<Entity*> m_entities = std::vector<Entity*>();
-			std::vector<BaseSystem*> m_system = std::vector<BaseSystem*>();
+			std::unordered_map<int, BaseSystem*> m_system = std::unordered_map<int, BaseSystem*>();
 	};
 }

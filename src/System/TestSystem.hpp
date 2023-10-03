@@ -15,8 +15,18 @@ public:
     TestSystem() = default;
     ~TestSystem() = default;
 
-    virtual void tick(ECS::World *world, const float &dt) override {
-        std::cout << "test" << std::endl;
+    virtual void tick(ECS::World* world, const float& dt) override;
+private:
+};
+
+class TestESystem : public ECS::BaseSystem {
+public:
+    TestESystem() = default;
+    ~TestESystem() = default;
+
+    virtual void tick(ECS::World* world, const float& dt) override {
+        std::cout << "teste" << std::endl;
     };
 private:
 };
+
