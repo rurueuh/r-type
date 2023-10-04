@@ -3,12 +3,12 @@ cmake_minimum_required(VERSION 3.5)
 project(rtype)
 
 # set the C++ standard to C++ 23
-set (CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 23)
 
 # Inclure le sous-module SFML
 add_subdirectory(SFML)
 
-# faire que les hpp se la sfml soit accessible
+# faire que les hpp se la sfml soit accessibles
 include_directories(SFML/include)
 
 # thread
@@ -17,33 +17,51 @@ find_package(Threads REQUIRED)
 
 # glob recursive of all files in src (hpp and cpp)
 file(GLOB_RECURSE SOURCES
-     "src/*.hpp"
-     "src/*.cpp"
+    "src/*.hpp"
+    "src/*.cpp"
 )
 
-foreach (file ${SOURCES})
+foreach(file ${SOURCES})
     set(MYFILE_DIR)
     # print the file name
     message(STATUS "Found file: ${file}")
-    if (file MATCHES ".*.hpp")
+    if(file MATCHES ".*.hpp")
         get_filename_component(MYFILE_DIR ${file} DIRECTORY)
         include_directories(${MYFILE_DIR})
     endif()
 endforeach()
 
-# Votre code source
-add_executable(rtype ${SOURCES})
+# Votre code source pour rtype-client
+add_executable(rtype-client ${SOURCES})
 
 # Lier votre exécutable avec les bibliothèques SFML
-target_link_libraries(rtype sfml-graphics sfml-window sfml-system)
-target_link_libraries(rtype ${Boost_LIBRARIES})
+target_link_libraries(rtype-client sfml-graphics sfml-window sfml-system)
+target_link_libraries(rtype-client ${Boost_LIBRARIES})
 
-# Link thread on linux
-# target_link_libraries(rtype pthread)
+# Link thread on Linux
+# target_link_libraries(rtype-client pthread)
 
 # if debug
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    message(STATUS "Debug mode for rtype-client")
+    target_compile_definitions(rtype-client PUBLIC DEBUG)
+endif()
 
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-    message(STATUS "Debug mode")
-    target_compile_definitions(rtype PUBLIC DEBUG)
+# Votre code source pour rtype-server
+add_executable(rtype-server ${SOURCES})
+
+# Définir la macro SERVER pour rtype-server
+target_compile_definitions(rtype-server PUBLIC SERVER=1)
+
+# Lier votre exécutable avec les bibliothèques SFML
+target_link_libraries(rtype-server sfml-graphics sfml-window sfml-system)
+target_link_libraries(rtype-server ${Boost_LIBRARIES})
+
+# Link thread on Linux
+# target_link_libraries(rtype-server pthread)
+
+# if debug
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    message(STATUS "Debug mode for rtype-server")
+    target_compile_definitions(rtype-server PUBLIC DEBUG)
 endif()
