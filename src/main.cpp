@@ -14,6 +14,8 @@ struct PositionComponent {
 int main(void)
 {
     sf::RenderWindow window(sf::VideoMode({1600, 900}), "SFML ECS!");
+    window.setFramerateLimit(240);
+    
     ECS::World* world = ECS::World::CreateWorld();
 
     ECS::Entity* player = world->CreateEntity();
@@ -22,11 +24,11 @@ int main(void)
     player->assign<PositionComponent>(1000.f, 1000.f);
     player2->assign<PositionComponent>(0.f, 0.f);
     player->assign<PvComponent>(100);
+    player2->assign<PvComponent>(1000);
     player->assign<PvComponent>(150); // ignorer
 
     try {
         world->registerSystem<TestSystem>(0);
-        world->registerSystem<TestESystem>(1);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
         return 1;
@@ -45,7 +47,6 @@ int main(void)
         auto pos2 = player2->get<PositionComponent>();
 
         world->tick();
-
         window.display();
     }
     world->destroyWorld();

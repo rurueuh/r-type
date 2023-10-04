@@ -86,6 +86,8 @@ namespace ECS {
 		void die(bool force = false) { // TODO: add force dead to remove in m_world
 			this->m_WaitingForDestroy = true;
 		}
+
+		bool isDead() { return m_WaitingForDestroy; };
 		
 
 	private:

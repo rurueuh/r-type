@@ -57,16 +57,7 @@ namespace ECS {
 			 * @brief make all "tick" of all system register
 			 * @arg (optional) float dt | if not give automatic override it with dt
 			*/
-			void tick(float dt = 0) {
-				if (dt == 0) { // automatic get ms of tick
-					static sf::Clock clock;
-					auto time = clock.getElapsedTime().asMilliseconds();
-					dt = time;
-				}
-				for (auto &sys : m_system) {
-					sys.second->tick(this, dt);
-				}
-			}
+			void tick(float dt = 0);
 
 			/**
 			 * @brief add a system to system list to update (use tick funct and need to herit from BaseSystem.
@@ -88,7 +79,9 @@ namespace ECS {
 			World() {};
 			~World() {};
 
+			void updateWorld(void);
+
 			std::vector<Entity*> m_entities = std::vector<Entity*>();
-			std::unordered_map<int, BaseSystem*> m_system = std::unordered_map<int, BaseSystem*>();
+			std::unordered_map<size_t, BaseSystem*> m_system = std::unordered_map<size_t, BaseSystem*>();
 	};
 }
