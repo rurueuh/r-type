@@ -35,7 +35,7 @@ endforeach()
 add_executable(rtype-client ${SOURCES})
 
 # Lier votre exécutable avec les bibliothèques SFML
-target_link_libraries(rtype-client sfml-graphics sfml-window sfml-system)
+target_link_libraries(rtype-client sfml-graphics sfml-window sfml-system sfml-network)
 target_link_libraries(rtype-client ${Boost_LIBRARIES})
 
 # Link thread on Linux
@@ -54,7 +54,7 @@ add_executable(rtype-server ${SOURCES})
 target_compile_definitions(rtype-server PUBLIC SERVER=1)
 
 # Lier votre exécutable avec les bibliothèques SFML
-target_link_libraries(rtype-server sfml-graphics sfml-window sfml-system)
+target_link_libraries(rtype-server sfml-graphics sfml-window sfml-system sfml-network)
 target_link_libraries(rtype-server ${Boost_LIBRARIES})
 
 # Link thread on Linux
