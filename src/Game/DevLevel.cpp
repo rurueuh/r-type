@@ -12,7 +12,7 @@ DevLevel::DevLevel() : Level()
     player->assign<PvComponent>(150);
 
     try {
-        _world->registerSystem<TestSystem>(0);
+        //_world->registerSystem<TestSystem>(0);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }

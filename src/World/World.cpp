@@ -43,7 +43,7 @@ namespace ECS {
 	{
 		for (auto& ent : m_entities) {
 			if (ent->isDead()) {
-				std::remove(m_entities.begin(), m_entities.end(), ent);
+				(void)std::remove(m_entities.begin(), m_entities.end(), ent);
 				std::cout << "a entity die" << std::endl;
 			}
 		}

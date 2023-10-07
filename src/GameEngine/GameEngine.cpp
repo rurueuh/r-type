@@ -22,6 +22,7 @@ void GameEngine::Run(void)
         manager.update();
 
         #ifndef SERVER // CLIENT ONLY
+            _client.update();
             _window->display();
         #else // SERVER ONLY
             std::this_thread::sleep_for(std::chrono::milliseconds(4));

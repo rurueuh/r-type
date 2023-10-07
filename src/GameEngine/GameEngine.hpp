@@ -3,6 +3,7 @@
 #include "Level.hpp"
 #include "LevelManager.hpp"
 #include "Server.hpp"
+#include "Client.hpp"
 
 class GameEngine
 {
@@ -33,7 +34,7 @@ private:
 	#ifdef SERVER // SERVER ONLY
 		Server _server;
 	#else // CLIENT ONLY
-		sf::Clock _clock;
+		Client _client;
 	#endif
 
 };
