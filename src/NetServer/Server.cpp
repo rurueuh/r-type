@@ -99,4 +99,18 @@
 		}
 		return client;
 	}
+	void Server::sendToAll(sf::Packet& packet)
+	{
+		for (auto it = _clients.begin(); it != _clients.end(); it++) {
+			if (_UDPsocket.send(packet, it->ip, it->port) != sf::Socket::Status::Done) {
+				throw std::runtime_error("error can join server");
+			}
+		}
+	}
+	void Server::sendToAll(std::string type, std::string data)
+	{
+		for (auto it = _clients.begin(); it != _clients.end(); it++) {
+			send(type, data, *it);
+		}
+	}
 #endif

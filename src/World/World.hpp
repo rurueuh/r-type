@@ -24,22 +24,22 @@ namespace ECS {
 			 */
 			void destroyWorld();
 
-			Entity* getEntity(size_t id) { return m_entities[id]; };
+			Entity &getEntity(size_t id) { return m_entities[id]; };
 
 			/**
 			 * @brief Create an entity to the world
 			 */
-			Entity* CreateEntity();
+			Entity &CreateEntity();
 
 			/**
 			 * @brief make a call with function with all entity has the component in template.
 			 * @brief world->each<PositionComponent>([&](ECS::Entity* ent, PositionComponent *position) {position->y += 1;});
 			 */
 			template<typename T>
-			void each(std::function<void(Entity*, T *)> f) {
+			void each(std::function<void(Entity &, T *)> f) {
 				for (auto& ent : m_entities) {
-					if (ent->has<T>()) {
-						auto* comp = ent->get<T>();
+					if (ent.has<T>()) {
+						auto* comp = ent.get<T>();
 						f(ent, comp);
 					}
 				}
@@ -49,9 +49,11 @@ namespace ECS {
 			 * @brief make a call with function with all entity.
 			 * @brief world->all([](ECS::Entity* ent) {...});
 			 */
-			void all(std::function<void(Entity*)> f) {
-				std::for_each(m_entities.begin(), m_entities.end(), f);
-			}
+			void all(std::function<void(Entity &)> f) {
+				for (auto& ent : m_entities) {
+					f(ent);
+				}
+			};
 
 			/**
 			 * @brief make all "tick" of all system register
@@ -75,13 +77,16 @@ namespace ECS {
 				}
 				return false;
 			}
+
+			std::vector<Entity> getEntities() { return m_entities; };
+
 		private:
 			World() {};
 			~World() {};
 
 			void updateWorld(void);
 
-			std::vector<Entity*> m_entities = std::vector<Entity*>();
+			std::vector<Entity> m_entities = std::vector<Entity>();
 			std::unordered_map<size_t, BaseSystem*> m_system = std::unordered_map<size_t, BaseSystem*>();
 	};
 }

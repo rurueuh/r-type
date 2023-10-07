@@ -31,6 +31,9 @@
 		void sendCheckAlive(void);
 		void checkAlive(void);
 		client_t &findClient(client_t &client);
+
+		void sendToAll(sf::Packet &packet);
+		void sendToAll(std::string type, std::string data);
 	private:
 		sf::UdpSocket _UDPsocket = sf::UdpSocket();
 		std::shared_ptr<sf::Thread> _networkInterceptor = nullptr;

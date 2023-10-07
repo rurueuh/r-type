@@ -4,6 +4,28 @@ GameEngine::GameEngine()
 {
 }
 
+void GameEngine::replicateEntities(void)
+{
+    auto& manager = LevelManager::getInstance();
+    auto level = manager.getCurrentLevel();
+    auto world = level->getWorld();
+    auto entities = world->getEntities();
+
+    sf::Packet packet;
+    packet << "entities";
+    auto data = entities.data();
+    // reconstruct entities from data
+
+    world->all([&](ECS::Entity &entity) {
+        // TODO: serialize entity
+    });
+    #ifdef SERVER // SERVER ONLY
+        _server.sendToAll(packet);
+	#else // CLIENT ONLY
+
+    #endif
+}
+
 void GameEngine::Run(void)
 {
     auto &manager = LevelManager::getInstance();
@@ -20,13 +42,12 @@ void GameEngine::Run(void)
         #endif
 
         manager.update();
+        this->replicateEntities();
 
         #ifndef SERVER // CLIENT ONLY
-            _client.update();
             _window->display();
-        #else // SERVER ONLY
-            std::this_thread::sleep_for(std::chrono::milliseconds(4));
         #endif
+        std::this_thread::sleep_for(std::chrono::milliseconds(4));
     }
 }
 

@@ -16,7 +16,7 @@ namespace InternalECS {
 
 	class ComponentHandler {
 	public:
-		std::unordered_map<std::type_index, std::vector<void*>> components;
+		std::unordered_map<std::type_index, std::vector<void*>> components = std::unordered_map<std::type_index, std::vector<void*>>();
 
 		template <typename T, typename... Args>
 		T* assignComponent(void* entity, Args&&... args) {
@@ -36,8 +36,6 @@ namespace InternalECS {
 
 	private:
 		std::unordered_map<void*, std::vector<std::type_index>> entities;
-
-
 	};;
 }
 
