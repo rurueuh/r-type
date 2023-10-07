@@ -2,6 +2,7 @@
 
 #include "Level.hpp"
 #include "LevelManager.hpp"
+#include "Server.hpp"
 
 class GameEngine
 {
@@ -29,4 +30,10 @@ private:
 
 	sf::RenderWindow *_window = nullptr;
 	bool _isRunning = false;
+	#ifdef SERVER // SERVER ONLY
+		Server _server;
+	#else // CLIENT ONLY
+		sf::Clock _clock;
+	#endif
+
 };
