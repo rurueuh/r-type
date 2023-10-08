@@ -7,12 +7,6 @@
 #include "DevLevel.hpp"
 #include "GameEngine.hpp"
 
-struct PositionComponent {
-    PositionComponent(float x, float y) : x(x), y(y) {};
-    PositionComponent() : x(0), y(0) {};
-	float x, y;
-};
-
 int main(void)
 {
     auto &engine = GameEngine::GetInstance();

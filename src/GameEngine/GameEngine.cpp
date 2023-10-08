@@ -13,16 +13,26 @@ void GameEngine::replicateEntities(void)
 
     sf::Packet packet;
     packet << "entities";
-    auto data = entities.data();
-    // reconstruct entities from data
+    std::string entitiesString = "{";
 
-    world->all([&](ECS::Entity &entity) {
+    for (auto& entity : entities) {
+        std::string serialize = entity->serialise();
+        entitiesString += serialize + ",";
+	}
+    entitiesString += "}";
+    size_t pos = 0;
+    while ((pos = entitiesString.find(",}", pos)) != std::string::npos) {
+		entitiesString.replace(pos, 2, "}");
+	}
+    packet << entitiesString;
+
+    world->all([&](ECS::Entity *entity) {
         // TODO: serialize entity
     });
     #ifdef SERVER // SERVER ONLY
         _server.sendToAll(packet);
 	#else // CLIENT ONLY
-
+        // TODO: send to server (client)
     #endif
 }
 
