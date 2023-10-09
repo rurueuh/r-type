@@ -4,6 +4,7 @@
 
 #ifdef SERVER // SERVER ONLY
 	constexpr int PORT = 4242;
+	const sf::IpAddress IP = sf::IpAddress::IpAddress::Any;
 	constexpr int PING_TIME_INTERVAL = 10;
 	constexpr int PING_TIME_OUT = 20;
 

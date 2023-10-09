@@ -47,13 +47,13 @@
 			auto [rcv, type, data, client] = receive();
 			if (!rcv) {
 				sendCheckAlive();
-				sf::sleep(sf::microseconds(500));
+				sf::sleep(sf::microseconds(5));
 				continue;
 			}
 			if (type != "hello" && std::find(_clients.begin(), _clients.end(), client) == _clients.end())
 				continue; // not a client
 			this->onMessage(type, data, client);
-			sf::sleep(sf::microseconds(500));
+			sf::sleep(sf::microseconds(5));
 		}
 	}
 

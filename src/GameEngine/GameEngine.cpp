@@ -13,23 +13,20 @@ void GameEngine::replicateEntities(void)
 
     sf::Packet packet;
     packet << "entities";
-    std::string entitiesString = "{";
+    std::string entitiesString = "";
 
     for (auto& entity : entities) {
         std::string serialize = entity->serialise();
-        entitiesString += serialize + ",";
+        entitiesString += serialize + ":";
 	}
-    entitiesString += "}";
     size_t pos = 0;
     while ((pos = entitiesString.find(",}", pos)) != std::string::npos) {
 		entitiesString.replace(pos, 2, "}");
 	}
     packet << entitiesString;
 
-    world->all([&](ECS::Entity *entity) {
-        // TODO: serialize entity
-    });
     #ifdef SERVER // SERVER ONLY
+        // is safe ?
         _server.sendToAll(packet);
 	#else // CLIENT ONLY
         // TODO: send to server (client)
@@ -57,7 +54,8 @@ void GameEngine::Run(void)
         #ifndef SERVER // CLIENT ONLY
             _window->display();
         #endif
-        std::this_thread::sleep_for(std::chrono::milliseconds(4));
+        const auto TIMESLEEP = std::chrono::nanoseconds(1000);
+        std::this_thread::sleep_for(TIMESLEEP);
     }
 }
 
