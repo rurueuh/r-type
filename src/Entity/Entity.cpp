@@ -23,7 +23,7 @@ namespace ECS {
 		for (auto& pair : handler->components) {
 			if (pair.second.size() == 0)
 				continue;
-			serialised += "" + Utils::getTypeName(pair.first) + " { ";
+			serialised += "" + Utils::getRegisteredComponent(pair.first) + " { ";
 			for (void* component : pair.second) {
 				auto tr = static_cast<Component*>(component);
 				serialised += tr->toString();

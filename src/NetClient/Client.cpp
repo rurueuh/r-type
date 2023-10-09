@@ -94,7 +94,7 @@ const sf::IpAddress IP = sf::IpAddress::IpAddress::Any;
         std::stringstream ss(data);
         std::string token;
         while (std::getline(ss, token, ':')) {
-            std::cout << token << std::endl;
+            // std::cout << token << std::endl;
             size_t id = std::stoi(token.substr(0, token.find(" ")));
             std::string components = "";
             size_t pos = 0;
@@ -104,14 +104,14 @@ const sf::IpAddress IP = sf::IpAddress::IpAddress::Any;
 			}
             std::stringstream ss2(components);
             while (std::getline(ss2, token, ',')) {
-				std::cout << token << std::endl;
+				// std::cout << token << std::endl;
 				std::stringstream ss3(token);
 				std::string componentName;
 				std::string componentData;
                 std::getline(ss3, componentName, '{');
                 std::getline(ss3, componentData, '}');
-				std::cout << "nameComp " << componentName << std::endl;
-                std::cout << "data " << componentData << std::endl;
+				// std::cout << "nameComp " << componentName << std::endl;
+                // std::cout << "data " << componentData << std::endl;
 
 				// PvComponent
 				// 100

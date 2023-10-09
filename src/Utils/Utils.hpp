@@ -26,26 +26,20 @@ namespace Utils
 		return name;
 	}
 
-	static std::unordered_map<std::type_index, std::string>& getTypeMap()
-	{
-		static std::unordered_map <std::type_index, std::string > typeMap;
-		return typeMap;
-	}
+	inline std::unordered_map <std::type_index, std::string > typeMap;
 
 	template <typename T>
 	inline void registerComponent(std::string str)
 	{
-		auto &map = getTypeMap();
-		if (map.find(getTypeId<T>()) != map.end())
+		if (typeMap.find(getTypeId<T>()) != typeMap.end())
 			std::cerr << "WARNING: Component " << getTypeName(getTypeId<T>()) << " already registered" << std::endl;
-		map[getTypeId<T>()] = str;
+		typeMap[getTypeId<T>()] = str;
 	}
 
 	inline std::string getRegisteredComponent(std::type_index index)
 	{
-		auto &map = getTypeMap();
-		if (map.find(index) == map.end())
+		if (typeMap.find(index) == typeMap.end())
 			return "Unknown";
-		return map[index];
+		return typeMap[index];
 	}
 }
