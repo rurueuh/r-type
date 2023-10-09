@@ -1,6 +1,6 @@
 #include "Component.hpp"
 #include "Entity.hpp"
-#include <Map>
+#include <map>
 #include <functional>
 
 void ECS::Component::FactoryAssignPvComponent(Entity* ent, std::type_index index, std::string str) {
@@ -17,7 +17,7 @@ void ECS::Component::FactoryAssignComponent(Entity* ent, std::type_index index, 
 	std::vector<std::type_index> id = {
 		Utils::getTypeId<PvComponent>()
 	};
-	// pour une raison inconnue (probablement le combo unordered_map + std::function) je ne peux pas crée de map
+	// pour une raison inconnue (probablement le combo unordered_map + std::function) je ne peux pas crï¿½e de map
 
 	for (size_t i = 0; i < id.size(); i++) {
 		if (index == id[i]) {

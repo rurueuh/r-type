@@ -5,7 +5,7 @@
 
 #ifndef SERVER // CLIENT ONLY
 	constexpr int PORT = 4242;
-	const sf::IpAddress IP = sf::IpAddress::IpAddress(127, 0, 0, 1);
+	const sf::IpAddress IP(127, 0, 0, 1);
 #endif
 
 class Client

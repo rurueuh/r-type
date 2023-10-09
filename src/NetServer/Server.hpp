@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML.hpp"
+#include <memory>
 
 #ifdef SERVER // SERVER ONLY
 	constexpr int PORT = 4242;

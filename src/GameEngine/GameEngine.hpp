@@ -4,6 +4,8 @@
 #include "LevelManager.hpp"
 #include "Server.hpp"
 #include "Client.hpp"
+#include <chrono>
+#include <thread>
 
 class GameEngine
 {
