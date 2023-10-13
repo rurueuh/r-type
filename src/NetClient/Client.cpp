@@ -49,10 +49,12 @@ constexpr float fakeLagTime = 0.2f;
     {
         send("hello", "client");
         auto [type, data] = receive();
-        if (type != "hello" || data != "server") {
+        if (type != "hello") {
 			std::cerr << "error can join server" << std::endl;
 			return false;
 		}
+        _clientHash = data;
+		std::cout << "client hash: " << _clientHash << std::endl;
 	    return true;
     }
 

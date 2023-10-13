@@ -26,6 +26,8 @@ public:
 	void networkSync(ECS::World *world);
 	void setWorld(ECS::World* world) { _world = world; };
 
+	std::string getClientHash(void) { return _clientHash; };
+
 private:
 	std::string _clientHash = "";
 	sf::UdpSocket _UDPsocket = sf::UdpSocket();

@@ -2,6 +2,7 @@
 
 GameEngine::GameEngine()
 {
+    srand(time(NULL));
 }
 
 void GameEngine::replicateEntities(void)
