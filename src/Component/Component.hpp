@@ -9,9 +9,9 @@ namespace ECS {
 	class Entity;
 	namespace Component {
 
-		void FactoryAssignPvComponent(Entity* ent, std::type_index index, std::string str);
+		void FactoryAssignPvComponent(Entity* ent, std::string type, std::string str);
 
 		// template Args...
-		void FactoryAssignComponent(Entity* ent, std::type_index index, std::string str = "");
+		void FactoryAssignComponent(Entity* ent, std::string type, std::string str = "");
 	};
 };

@@ -6,7 +6,6 @@ struct Component {
 	Component() {};
 	~Component() {};
 
-	virtual std::string toString(void) {
-		return "test";
-	}
+	virtual std::string toString(void) = 0;
+	virtual void fromString(std::string) = 0;
 };

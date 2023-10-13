@@ -6,9 +6,11 @@
 #include "LevelManager.hpp"
 #include "DevLevel.hpp"
 #include "GameEngine.hpp"
+#include "Utils/Utils.hpp"
 
 int main(void)
 {
+    Utils::registerComponent<PvComponent>("PvComponent");
     auto &engine = GameEngine::GetInstance();
     engine.Init<DevLevel>();
     engine.Run();

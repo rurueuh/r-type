@@ -63,6 +63,8 @@ namespace ECS {
 		World* getWorld() const { return m_world; }
 		size_t getId() const { return m_id; }
 
+		void assingWorld(World* world) { m_world = world; };
+
 		template <typename T, typename... Args>
 		T* assign(Args&&... args) {
 			return handler->assignComponent<T>(this, std::forward<Args>(args)...);

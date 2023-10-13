@@ -2,8 +2,9 @@
 
 #include <iostream>
 #include <sstream>
+#include "ComponentBase.hpp"
 
-struct PvComponent {
+struct PvComponent : public Component {
     PvComponent(int health) : health(health) {};
     PvComponent() : health(0) {};
     int health = 0;
@@ -13,4 +14,9 @@ struct PvComponent {
         ss << health;
         return ss.str();
 	}
+
+    virtual void fromString(std::string str) override {
+        std::stringstream ss = std::stringstream(str);
+        ss >> health;
+    }
 };

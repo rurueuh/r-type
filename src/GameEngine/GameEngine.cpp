@@ -29,6 +29,7 @@ void GameEngine::replicateEntities(void)
         // is safe ?
         _server.sendToAll(packet);
 	#else // CLIENT ONLY
+        _client.networkSync(world);
         // TODO: send to server (client)
     #endif
 }
