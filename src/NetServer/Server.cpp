@@ -47,13 +47,13 @@
 			auto [rcv, type, data, client] = receive();
 			if (!rcv) {
 				sendCheckAlive();
-				sf::sleep(sf::microseconds(500));
+				sf::sleep(sf::microseconds(5));
 				continue;
 			}
 			if (type != "hello" && std::find(_clients.begin(), _clients.end(), client) == _clients.end())
 				continue; // not a client
 			this->onMessage(type, data, client);
-			sf::sleep(sf::microseconds(500));
+			sf::sleep(sf::microseconds(5));
 		}
 	}
 
@@ -98,5 +98,19 @@
 			}
 		}
 		return client;
+	}
+	void Server::sendToAll(sf::Packet& packet)
+	{
+		for (auto it = _clients.begin(); it != _clients.end(); it++) {
+			if (_UDPsocket.send(packet, it->ip, it->port) != sf::Socket::Status::Done) {
+				throw std::runtime_error("error can join server");
+			}
+		}
+	}
+	void Server::sendToAll(std::string type, std::string data)
+	{
+		for (auto it = _clients.begin(); it != _clients.end(); it++) {
+			send(type, data, *it);
+		}
 	}
 #endif

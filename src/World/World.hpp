@@ -75,6 +75,9 @@ namespace ECS {
 				}
 				return false;
 			}
+
+			std::vector<Entity*> getEntities() { return m_entities; };
+			void setEntities(std::vector<Entity*> entities) { m_entities = entities; };
 		private:
 			World() {};
 			~World() {};

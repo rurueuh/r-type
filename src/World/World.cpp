@@ -13,12 +13,12 @@ namespace ECS {
 		delete this;
 	}
 
-	Entity* World::CreateEntity()
+	Entity *World::CreateEntity()
 	{
 		auto id = Utils::getCounterEntity();
-		auto* entity = new Entity(this, id);
+		Entity *entity = new Entity(this, id);
 		m_entities.push_back(entity);
-		return entity;
+		return m_entities.back();
 	}
 
 
@@ -43,7 +43,7 @@ namespace ECS {
 	{
 		for (auto& ent : m_entities) {
 			if (ent->isDead()) {
-				(void)std::remove(m_entities.begin(), m_entities.end(), ent);
+				// TODO: remove entity from world
 				std::cout << "a entity die" << std::endl;
 			}
 		}

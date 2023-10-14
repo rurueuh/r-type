@@ -1,10 +1,12 @@
 #pragma once
 
 #include "SFML.hpp"
+#include <memory>
 
 #ifdef SERVER // SERVER ONLY
 	constexpr int PORT = 4242;
-	constexpr int PING_TIME_INTERVAL = 10;
+	const sf::IpAddress IP = sf::IpAddress::IpAddress::Any;
+	constexpr int PING_TIME_INTERVAL = 5;
 	constexpr int PING_TIME_OUT = 20;
 
 	typedef struct client_t {
@@ -31,6 +33,9 @@
 		void sendCheckAlive(void);
 		void checkAlive(void);
 		client_t &findClient(client_t &client);
+
+		void sendToAll(sf::Packet &packet);
+		void sendToAll(std::string type, std::string data);
 	private:
 		sf::UdpSocket _UDPsocket = sf::UdpSocket();
 		std::shared_ptr<sf::Thread> _networkInterceptor = nullptr;
