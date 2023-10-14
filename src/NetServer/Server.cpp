@@ -61,7 +61,6 @@
 	{
 		auto &clientRef = findClient(client);
 		if (type == "hello") {
-			this->_clients.push_back(client);
 			// generate a string of 32 char randomly
 			std::string hash = "";
 			for (int i = 0; i < 32; i++) {
@@ -70,6 +69,7 @@
 			clientRef.hash = hash;
 			std::cout << "SERVER | new client " << client.ip << ":" << client.port << " | hash : " << hash << std::endl;
 			send("hello", hash, client);
+			this->_clients.push_back(client);
 		}
 		else if (type == "alive") {
 			clientRef.timeNoRespond.restart().asSeconds();
