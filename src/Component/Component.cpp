@@ -11,14 +11,24 @@ void ECS::Component::FactoryAssignPvComponent(Entity* ent, std::string type, std
 	}
 }
 
+void ECS::Component::FactoryAssignPlayerInputComponent(Entity* ent, std::string type, std::string data) {
+	auto id = Utils::getRegisteredComponent(Utils::getTypeId<PlayerInputComponent>());
+	if (type == id) {
+		auto playerInput = ent->assign<PlayerInputComponent>();
+		playerInput->fromString(data);
+	}
+}
+
 void ECS::Component::FactoryAssignComponent(Entity* ent, std::string type, std::string str) {
 	// remove useless space in type
 	type.erase(std::remove_if(type.begin(), type.end(), isspace), type.end());
 	std::vector<std::function<void(Entity*, std::string, std::string)>> funcs = {
-		FactoryAssignPvComponent
+		FactoryAssignPvComponent,
+		FactoryAssignPlayerInputComponent
 	};
 	std::vector<std::string> id = {
-		Utils::getRegisteredComponent(Utils::getTypeId<PvComponent>())
+		Utils::getRegisteredComponent(Utils::getTypeId<PvComponent>()),
+		Utils::getRegisteredComponent(Utils::getTypeId<PlayerInputComponent>())
 	};
 	// pour une raison inconnue (probablement le combo unordered_map + std::function) je ne peux pas cree de map
 	for (size_t i = 0; i < id.size(); i++) {

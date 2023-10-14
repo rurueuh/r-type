@@ -1,12 +1,15 @@
 #include "DevLevel.hpp"
 #include "Component.hpp"
 #include "TestSystem.hpp"
+#include "GameEngine.hpp"
 
 DevLevel::DevLevel() : Level()
 {
     ECS::Entity* player = _world->CreateEntity();
     ECS::Entity *player2 = _world->CreateEntity();
+
     player->assign<PvComponent>(100);
+    player->assign<PlayerInputComponent>("");
     player2->assign<PvComponent>(10000);
 
     try {

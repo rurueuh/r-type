@@ -24,7 +24,10 @@ public:
 	void recvEntity(std::string data);
 
 	void networkSync(ECS::World *world);
+	void onInput(sf::Keyboard::Key key);
 	void setWorld(ECS::World* world) { _world = world; };
+
+	std::string getClientHash(void) { return _clientHash; };
 
 private:
 	std::string _clientHash = "";

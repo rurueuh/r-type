@@ -2,6 +2,7 @@
 
 GameEngine::GameEngine()
 {
+    srand(time(NULL));
 }
 
 void GameEngine::replicateEntities(void)
@@ -44,6 +45,9 @@ void GameEngine::Run(void)
             while (_window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
                     this->Shutdown();
+                }
+                if (event.type == sf::Event::KeyPressed) {
+					_client.onInput(event.key.code);
                 }
             }
             _window->clear();
