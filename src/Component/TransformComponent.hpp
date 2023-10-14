@@ -10,9 +10,9 @@
 #include "SFML.hpp"
 
 struct TransformComponent {
-    TransformComponent(Vector2f position, Vector2f scale, float rotation) : position(position), scale(scale), rotation(rotation) {};
-    TransformComponent() : position(Vector2f(0, 0)), scale(Vector2f(0, 0)), rotation(0) {};
-    Vector2f position;
-    Vector2f scale;
+    TransformComponent(sf::Vector2f position, sf::Vector2f scale, float rotation) : position(position), scale(scale), rotation(rotation) {};
+    TransformComponent() : position(sf::Vector2f(0, 0)), scale(sf::Vector2f(0, 0)), rotation(0) {};
+    sf::Vector2f position;
+    sf::Vector2f scale;
     float rotation;
 };
