@@ -10,8 +10,8 @@
 #include "SFML.hpp"
 
 struct ColliderComponent {
-    ColliderComponent(Vector2f size) : size(size) {};
-    ColliderComponent() : size(Vector2f(0, 0)) {};
-    Vector2f size;
+    ColliderComponent(sf::Vector2f size) : size(size) {};
+    ColliderComponent() : size(sf::Vector2f(0, 0)) {};
+    sf::Vector2f size;
 };
 
