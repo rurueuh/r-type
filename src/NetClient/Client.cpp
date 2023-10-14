@@ -156,8 +156,15 @@ constexpr float fakeLagTime = 0.2f;
             delete entWorld;
         }
         world->getEntities().clear();
+        for (auto& ent : this->_entities) {
+            ent->assingWorld(world);
+		}
         world->setEntities(this->_entities);
         this->_entities.clear();
         _mutex.unlock();
+    }
+
+    void Client::onInput(sf::Keyboard::Key key) {
+        this->send("input", std::to_string(key));
     }
 //#endif

@@ -46,6 +46,9 @@ void GameEngine::Run(void)
                 if (event.type == sf::Event::Closed) {
                     this->Shutdown();
                 }
+                if (event.type == sf::Event::KeyPressed) {
+					_client.onInput(event.key.code);
+                }
             }
             _window->clear();
         #endif

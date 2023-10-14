@@ -73,6 +73,9 @@
 		}
 		else if (type == "alive") {
 			clientRef.timeNoRespond.restart().asSeconds();
+		}
+		else if (type == "input") {
+			std::cout << "SERVER | received Input | DATA : " << type << ": " << data << std::endl;
 		} else {
 			std::cout << "SERVER | received packet | DATA : " << type << ": " << data << std::endl;
 		}

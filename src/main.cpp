@@ -11,6 +11,7 @@
 int main(void)
 {
     Utils::registerComponent<PvComponent>("PvComponent");
+    Utils::registerComponent<PlayerInputComponent>("PlayerInputComponent");
     auto &engine = GameEngine::GetInstance();
     engine.Init<DevLevel>();
     engine.Run();
