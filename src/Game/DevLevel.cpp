@@ -30,7 +30,6 @@ void DevLevel::update(const float dt)
 		clock.restart();
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
             pv->health += 1;
-			std::cout << "pv: " << pv->health << std::endl;
 		});
 	}
 }
