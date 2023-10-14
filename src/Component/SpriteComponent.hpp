@@ -9,8 +9,9 @@
 #include "SFML.hpp"
 
 struct SpriteComponent {
-    SpriteComponent(sf::Texture *texture, sf::IntRect rect = {}) : texture(texture), rect(rect) {};
-    SpriteComponent() : texture(nullptr), rect(sf::IntRect(0, 0, 0, 0)) {};
     sf::Texture *texture;
     sf::IntRect rect;
+    SpriteComponent(sf::Texture *texture, sf::IntRect rect = {}) : texture(texture), rect(rect) {};
+    SpriteComponent() : texture(nullptr), rect() {}
 };
+
