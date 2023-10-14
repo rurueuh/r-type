@@ -5,13 +5,8 @@
 #include "Component.hpp"
 #include "LevelManager.hpp"
 #include "DevLevel.hpp"
-
-struct PositionComponent
-{
-    PositionComponent(float x, float y) : x(x), y(y){};
-    PositionComponent() : x(0), y(0){};
-    float x, y;
-};
+#include "GameEngine.hpp"
+#include "Utils/Utils.hpp"
 
 std::string compress_str(std::string str)
 {
@@ -53,36 +48,11 @@ std::string decompressString(std::string str) {
 
 int main(void)
 {
-    sf::RenderWindow window(sf::VideoMode({1600, 900}), "SFML ECS!");
-    window.setFramerateLimit(240);
+    Utils::registerComponent<PvComponent>("PvComponent");
+    Utils::registerComponent<PlayerInputComponent>("PlayerInputComponent");
+    auto &engine = GameEngine::GetInstance();
+    engine.Init<DevLevel>();
+    engine.Run();
 
-    auto &manager = LevelManager::getInstance();
-    manager.addLevel<DevLevel>();
-
-    std::string original = "0 [PositionComponent { 10 10 },PvComponent { 100 }]:1 [PvComponent { 10000 }]";
-    std::string compressed = compress_str(original);
-    std::cout << "original : " << original << std::endl;
-
-    // try {
-    //     world->registerSystem<TestSystem>(0);
-    // } catch (const std::exception &e) {
-    //     std::cout << "ERROR : " << e.what() << std::endl;
-    //     return 1;
-    // }
-
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-        window.clear();
-
-        manager.update();
-
-        window.display();
-    }
     return 0;
 }

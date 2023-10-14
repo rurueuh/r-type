@@ -8,7 +8,13 @@
 #include <vector>
 #include "Utils/Utils.hpp"
 #include <any>
-
+#include <iostream>
+#include <string>
+#include <sstream>
+#include "Utils/Utils.hpp"
+#include <iostream>
+#include <type_traits>
+#include "ComponentBase.hpp"
 
 namespace InternalECS {
 	class World;
@@ -16,7 +22,8 @@ namespace InternalECS {
 
 	class ComponentHandler {
 	public:
-		std::unordered_map<std::type_index, std::vector<void*>> components;
+		std::unordered_map<std::type_index, std::vector<void*>> components = std::unordered_map<std::type_index, std::vector<void*>>();
+		std::unordered_map<void*, std::vector<std::type_index>> entities;
 
 		template <typename T, typename... Args>
 		T* assignComponent(void* entity, Args&&... args) {
@@ -35,10 +42,7 @@ namespace InternalECS {
 		}
 
 	private:
-		std::unordered_map<void*, std::vector<std::type_index>> entities;
-
-
-	};;
+	};
 }
 
 
@@ -58,6 +62,8 @@ namespace ECS {
 
 		World* getWorld() const { return m_world; }
 		size_t getId() const { return m_id; }
+
+		void assingWorld(World* world) { m_world = world; };
 
 		template <typename T, typename... Args>
 		T* assign(Args&&... args) {
@@ -89,6 +95,7 @@ namespace ECS {
 
 		bool isDead() { return m_WaitingForDestroy; };
 		
+		std::string serialise(void);
 
 	private:
 			InternalECS::ComponentHandler *handler = new InternalECS::ComponentHandler();

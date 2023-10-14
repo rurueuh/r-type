@@ -4,8 +4,9 @@ project(rtype)
 
 # set the C++ standard to C++ 23
 set(CMAKE_CXX_STANDARD 23)
-
 # Inclure le sous-module SFML
+set(SFML_STATIC TRUE)
+set(BUILD_SHARED_LIBS FALSE)
 add_subdirectory(SFML)
 
 # faire que les hpp se la sfml soit accessibles
@@ -54,7 +55,7 @@ add_executable(rtype-server ${SOURCES})
 target_compile_definitions(rtype-server PUBLIC SERVER=1)
 
 # Lier votre exécutable avec les bibliothèques SFML
-target_link_libraries(rtype-server sfml-graphics sfml-window sfml-system sfml-network)
+target_link_libraries(rtype-server sfml-network)
 target_link_libraries(rtype-server ${Boost_LIBRARIES})
 
 # Link thread on Linux

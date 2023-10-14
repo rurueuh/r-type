@@ -1,0 +1,1 @@
+si crée component besoin struct et Utils::registerComponent<TestComponent>("TestComponent"); pour le network et crée sa factory dans component.cpp

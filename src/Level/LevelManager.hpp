@@ -25,6 +25,10 @@ public:
 		world->tick(dt);
 	}
 
+	std::shared_ptr<Level> getCurrentLevel(void) const {
+		return _currentLevel;
+	}
+
 private:
 	LevelManager() = default;
 
