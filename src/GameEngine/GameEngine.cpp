@@ -59,8 +59,8 @@ void GameEngine::Run(void)
         #ifndef SERVER // CLIENT ONLY
             _window->display();
         #endif
-        const auto TIMESLEEP = std::chrono::nanoseconds(1000);
-        std::this_thread::sleep_for(TIMESLEEP);
+        const auto TIMESLEEP = sf::milliseconds(10);
+        sf::sleep(TIMESLEEP);
     }
 }
 
