@@ -7,11 +7,24 @@
 
 #pragma once
 #include "SFML.hpp"
+#include "ComponentBase.hpp"
 
-struct SpriteComponent {
-    sf::Texture *texture;
-    sf::IntRect rect;
-    SpriteComponent(sf::Texture *texture, sf::IntRect rect = {}) : texture(texture), rect(rect) {};
-    SpriteComponent() : texture(nullptr), rect() {}
+struct SpriteComponent : public Component {
+    SpriteComponent(std::string path) : path(path) {
+        texture.loadFromFile(path);
+        sprite.setTexture(texture);
+    };
+
+    virtual std::string toString(void) {
+    }
+
+    virtual void fromString(std::string str) override {
+    }
+
+    sf::Sprite sprite;
+    sf::Texture texture;
+    std::string path;
 };
+
+
 
