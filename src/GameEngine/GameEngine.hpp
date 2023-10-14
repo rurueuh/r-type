@@ -26,6 +26,7 @@ public:
 	}
 	void Run(void);
 	void Shutdown(void);
+	sf::RenderWindow *getWindow(void) { return _window; }
 
 	#ifdef SERVER // SERVER ONLY
 		Server &getServer(void) { return _server; }
