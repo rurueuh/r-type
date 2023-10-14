@@ -26,7 +26,7 @@ DevLevel::~DevLevel()
 void DevLevel::update(const float dt)
 {
     static sf::Clock clock;
-    if (clock.getElapsedTime().asSeconds() > 1) {
+    if (clock.getElapsedTime().asSeconds() > 0.01) {
 		clock.restart();
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
             pv->health += 1;
