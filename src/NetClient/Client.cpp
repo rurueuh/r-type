@@ -48,12 +48,17 @@ constexpr float fakeLagTime = 0.2f;
     bool Client::connect(sf::IpAddress ip, unsigned short port)
     {
         send("hello", "client");
-        auto [type, data] = receive();
-        if (type != "hello") {
-			std::cerr << "error can join server" << std::endl;
-			return false;
-		}
-        _clientHash = data;
+        while (1) {
+            _UDPsocket.setBlocking(true);
+            auto [type, data] = receive();
+            _UDPsocket.setBlocking(false);
+            _clientHash = data;
+            if (type != "hello") {
+                std::cout << "bad type" << std::endl;
+                continue;
+            }
+            break;
+        }
 		std::cout << "client hash: " << _clientHash << std::endl;
 	    return true;
     }
@@ -62,7 +67,7 @@ constexpr float fakeLagTime = 0.2f;
     {
         while (true) {
             // TODO: si le thread time met trop de temps a recuperer les packets par rapport a l'envoie du server alors il met en "queue"
-            // et ça deviens problematique car le client met du temps a les recuperer et il ajoute encore plus de packets en "queue"
+            // et ï¿½a deviens problematique car le client met du temps a les recuperer et il ajoute encore plus de packets en "queue"
             // faire un systeme d'horodatage et si il est trop elever alors on drop les packets pour essayer de le resync/deco
 			auto [type, data] = receive();
             if (type == "ERROR") {
