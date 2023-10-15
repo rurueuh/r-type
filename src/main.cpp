@@ -49,7 +49,7 @@ std::string decompressString(std::string str) {
 int main(void)
 {
     Utils::registerComponent<PvComponent>("PvComponent");
-    Utils::registerComponent<PlayerInputComponent>("PlayerInputComponent");
+    Utils::registerComponent<InputComponent>("PlayerInputComponent");
     Utils::registerComponent<DrawableComponent>("DrawableComponent");
     Utils::registerComponent<TransformComponent>("TransformComponent");
 

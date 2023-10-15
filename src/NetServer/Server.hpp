@@ -32,14 +32,18 @@
 		void onMessage(std::string type, std::string data, client_t &client);
 		void sendCheckAlive(void);
 		void checkAlive(void);
+		void checkInput(std::string data);
 		client_t &findClient(client_t &client);
 
 		void sendToAll(sf::Packet &packet);
 		void sendToAll(std::string type, std::string data);
+
+		std::string getInput(void) { return _input; };
 	private:
 		sf::UdpSocket _UDPsocket = sf::UdpSocket();
 		std::shared_ptr<sf::Thread> _networkInterceptor = nullptr;
 		std::shared_ptr<sf::Thread> _aliveChecker = nullptr;
 		std::vector<client_t> _clients = {};
+		std::string _input = "";
 	};
 #endif
