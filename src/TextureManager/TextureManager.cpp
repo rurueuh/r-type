@@ -7,12 +7,14 @@
 
 #include "TextureManager.hpp"
 
-sf::Texture &TextureManager::getTexture(const std::string &path)
+#ifndef SERVER
+sf::Texture *TextureManager::getTexture(const std::string &path)
 {
     if (_textures.find(path) == _textures.end()) {
-        sf::Texture texture;
-        texture.loadFromFile(path);
+        sf::Texture *texture = new sf::Texture();
+        texture->loadFromFile(path);
         _textures[path] = texture;
     }
     return _textures[path];
 }
+#endif
