@@ -8,6 +8,7 @@
 #pragma once
 #include "Component.hpp"
 #include "System.hpp"
+#include "World.hpp"
 
 class TransformSystem : public ECS::BaseSystem {
     public:

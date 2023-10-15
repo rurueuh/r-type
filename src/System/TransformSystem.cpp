@@ -9,12 +9,16 @@
 
 void TransformSystem::tick(ECS::World *world, const float &dt)
 {
-    world->each<DrawableComponent, TransformComponent>(
-        [&](ECS::Entity *entity,
-            DrawableComponent *drawable,
-            TransformComponent *transform) {
-            drawable->sprite.setPosition(transform->position);
-            drawable->sprite.setScale(transform->scale);
-            drawable->sprite.setRotation(transform->rotation);
-        });
+    #ifndef SERVER
+        world->each<TransformComponent>(
+            [&](ECS::Entity *entity,
+                TransformComponent *transform) {
+                auto drawable = entity->get<DrawableComponent>();
+                if (!drawable)
+                    return;
+                    drawable->sprite.setPosition(transform->position);
+                    drawable->sprite.setScale(transform->scale);
+                    drawable->sprite.setRotation(transform->rotation);
+            });
+    #endif
 }
