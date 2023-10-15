@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel
 ** File description:
-** SpriteComponent
+** DrawableComponent
 */
 
 #pragma once
@@ -11,36 +11,45 @@
 #include "ComponentBase.hpp"
 #include <sstream>
 
-struct SpriteComponent : public Component {
+struct DrawableComponent : public Component {
 
-    SpriteComponent(std::string path) : path(path) {
-        texture = TextureManager::getTexture(path);
-        sprite.setTexture(texture);
+    DrawableComponent() = default;
+
+    DrawableComponent(std::string path) : path(path) {
+        #ifndef SERVER
+            texture = TextureManager::getTexture(path);
+            sprite.setTexture(*texture);
+        #endif
     };
 
-    SpriteComponent(std::string path, sf::IntRect area) : path(path), area(area) {
-        texture = TextureManager::getTexture(path);
-        sprite.setTexture(texture);
-        sprite.setTextureRect(area);
+    DrawableComponent(std::string path, sf::IntRect area) : path(path), area(area) {
+        #ifndef SERVER
+            texture = TextureManager::getTexture(path);
+            sprite.setTexture(*texture);
+            sprite.setTextureRect(area);
+        #endif
     };
 
-    virtual std::string toString() const override {
+    virtual std::string toString() override {
         std::stringstream ss = std::stringstream();
         ss << path << ' ' << area.left << ' ' << area.top << ' ' << area.width << ' ' << area.height;
         return ss.str();
-
     }
 
-    virtual void fromString(const std::string& str) override {
+    virtual void fromString( std::string str) override {
         std::stringstream ss = std::stringstream(str);
         ss >> path >> area.left >> area.top >> area.width >> area.height;
-        texture = TextureManager::getTexture(path);
-        sprite.setTexture(texture);
-        sprite.setTextureRect(area);
+        #ifndef SERVER
+            texture = TextureManager::getTexture(path);
+            sprite.setTexture(*texture);
+            sprite.setTextureRect(area);
+        #endif
     }
 
     std::string path;
-    sf::Sprite sprite;
-    sf::Texture texture;
+    #ifndef SERVER
+        sf::Sprite sprite;
+        sf::Texture *texture;
+    #endif
     sf::IntRect area;
 };
