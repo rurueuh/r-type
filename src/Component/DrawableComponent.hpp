@@ -26,7 +26,8 @@ struct DrawableComponent : public Component {
         #ifndef SERVER
             texture = TextureManager::getTexture(path);
             sprite.setTexture(*texture);
-            sprite.setTextureRect(area);
+            if (area.height != 0 && area.width != 0 && area.top != 0 && area.left != 0)
+                sprite.setTextureRect(area);
         #endif
     };
 
@@ -42,7 +43,8 @@ struct DrawableComponent : public Component {
         #ifndef SERVER
             texture = TextureManager::getTexture(path);
             sprite.setTexture(*texture);
-            sprite.setTextureRect(area);
+            if (area.height != 0 && area.width != 0 && area.top != 0 && area.left != 0)
+                sprite.setTextureRect(area);
         #endif
     }
 

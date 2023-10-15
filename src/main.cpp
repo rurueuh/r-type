@@ -50,6 +50,7 @@ int main(void)
 {
     Utils::registerComponent<PvComponent>("PvComponent");
     Utils::registerComponent<PlayerInputComponent>("PlayerInputComponent");
+    Utils::registerComponent<DrawableComponent>("DrawableComponent");
     auto &engine = GameEngine::GetInstance();
     engine.Init<DevLevel>();
     engine.Run();

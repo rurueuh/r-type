@@ -4,3 +4,4 @@ build
 html/
 latex/
 cmake-build-debug
+out/

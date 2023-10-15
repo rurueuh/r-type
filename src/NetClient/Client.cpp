@@ -55,7 +55,7 @@ constexpr float fakeLagTime = 0.2f;
             _clientHash = data;
             if (type != "hello") {
                 std::cout << "bad type" << std::endl;
-                continue;
+                return false;
             }
             break;
         }

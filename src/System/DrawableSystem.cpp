@@ -14,7 +14,7 @@ void DrawableSystem::tick(ECS::World *world, const float &dt)
     auto window = GameEngine::GetInstance().getWindow();
 
     world->each<DrawableComponent>([&](ECS::Entity *entity, DrawableComponent *drawable) {
-        auto sprite = drawable->sprite;
+        auto &sprite = drawable->sprite;
         window->draw(sprite);
     });
     #endif
