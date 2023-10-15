@@ -11,9 +11,10 @@ DevLevel::DevLevel() : Level()
     player->assign<PvComponent>(100);
     player->assign<PlayerInputComponent>("");
     player2->assign<PvComponent>(10000);
+    player->assign<DrawableComponent>("../assets/menu/button_idle.png");
 
     try {
-        //_world->registerSystem<TestSystem>(0);
+        _world->registerSystem<DrawableSystem>(0);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }
