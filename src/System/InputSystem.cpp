@@ -16,12 +16,12 @@ void InputSystem::tick(ECS::World* world, const float& dt)
 			if (!transform)
 				return;
 			if (std::find(inputStr.begin(), inputStr.end(), 'z') != inputStr.end())
-				transform->position.y -= 1;
+				transform->position.y -= 1 * dt * 142;
 			if (std::find(inputStr.begin(), inputStr.end(), 's') != inputStr.end())
-				transform->position.y += 1;
+				transform->position.y += 1 * dt * 142;
 			if (std::find(inputStr.begin(), inputStr.end(), 'q') != inputStr.end())
-				transform->position.x -= 1;
+				transform->position.x -= 1 * dt * 142;
 			if (std::find(inputStr.begin(), inputStr.end(), 'd') != inputStr.end())
-				transform->position.x += 1;
+				transform->position.x += 1 * dt * 142;
 		});
 }
