@@ -12,7 +12,7 @@
 
 struct TransformComponent : public Component {
     TransformComponent(sf::Vector2f position, sf::Vector2f scale, float rotation) : position(position), scale(scale), rotation(rotation) {};
-    TransformComponent() : position(sf::Vector2f(0, 0)), scale(sf::Vector2f(0, 0)), rotation(0) {};
+    TransformComponent() : position(sf::Vector2f(0.f, 0.f)), scale(sf::Vector2f(0.f, 0.f)), rotation(0.f) {};
     sf::Vector2f position;
     sf::Vector2f scale;
     float rotation;

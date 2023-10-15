@@ -12,10 +12,10 @@ DevLevel::DevLevel() : Level()
     player->assign<PlayerInputComponent>("");
     player2->assign<PvComponent>(10000);
     player->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-    player->assign<TransformComponent>(sf::Vector2f(100, 100), sf::Vector2f(1, 1), 0);
+    player->assign<TransformComponent>(sf::Vector2f(100.f, 100.f), sf::Vector2f(1.f, 1.f), 0.f);
     try {
-        _world->registerSystem<DrawableSystem>(0);
-        _world->registerSystem<TransformSystem>(1);
+        _world->registerSystem<DrawableSystem>(1);
+        _world->registerSystem<TransformSystem>(0);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }
