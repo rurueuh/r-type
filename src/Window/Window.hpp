@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML.hpp"
+#include <memory>
 
 class Window
 {
