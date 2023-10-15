@@ -13,8 +13,7 @@
 #include "PlayerInputComponent.hpp"
 #include "ColliderComponent.hpp"
 #include "DamageComponent.hpp"
-#include "HealthComponent.hpp"
-#include "SpriteComponent.hpp"
+#include "DrawableComponent.hpp"
 #include "TransformComponent.hpp"
 #include "PositionComponent.hpp"
 #include "Utils.hpp"
@@ -27,6 +26,7 @@ namespace ECS {
 		void FactoryAssignPvComponent(Entity* ent, std::string type, std::string str);
 		void FactoryAssignPlayerInputComponent(Entity* ent, std::string type, std::string str);
 		void FactoryAssignDrawableComponent(Entity* ent, std::string type, std::string str);
+		void FactoryAssignTransformComponent(Entity* ent, std::string type, std::string str);
 
 		// template Args...
 		void FactoryAssignComponent(Entity* ent, std::string type, std::string str = "");
