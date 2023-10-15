@@ -34,6 +34,7 @@ endforeach()
 
 # Votre code source pour rtype-client
 add_executable(rtype-client ${SOURCES})
+set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 # Lier votre exécutable avec les bibliothèques SFML
 target_link_libraries(rtype-client sfml-graphics sfml-window sfml-system sfml-network)

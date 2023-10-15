@@ -33,5 +33,11 @@ void DevLevel::update(const float dt)
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
             pv->health += 1;
 		});
+        _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
+            transform->position.x += 1;
+            if (transform->position.x > 1800) {
+				transform->position.x = 0;
+			}
+        });
 	}
 }
