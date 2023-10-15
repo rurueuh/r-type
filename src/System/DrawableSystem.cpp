@@ -11,11 +11,18 @@
 void DrawableSystem::tick(ECS::World *world, const float &dt)
 {
     #ifndef SERVER
-    auto window = GameEngine::GetInstance().getWindow();
+        auto window = GameEngine::GetInstance().getWindow();
 
-    world->each<DrawableComponent>([&](ECS::Entity *entity, DrawableComponent *drawable) {
-        auto &sprite = drawable->sprite;
-        window->draw(sprite);
-    });
+        world->each<DrawableComponent>([&](ECS::Entity *entity, DrawableComponent *drawable) {
+            auto transform = entity->get<TransformComponent>();
+            if (!transform)
+				return;
+            // todo: move this to a system
+            drawable->sprite.setPosition(transform->position);
+            drawable->sprite.setScale(transform->scale);
+            drawable->sprite.setRotation(transform->rotation);
+            auto &sprite = drawable->sprite;
+            window->draw(sprite);
+        });
     #endif
 }

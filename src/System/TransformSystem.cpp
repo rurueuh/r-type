@@ -16,9 +16,9 @@ void TransformSystem::tick(ECS::World *world, const float &dt)
                 auto drawable = entity->get<DrawableComponent>();
                 if (!drawable)
                     return;
-                    drawable->sprite.setPosition(transform->position);
-                    drawable->sprite.setScale(transform->scale);
-                    drawable->sprite.setRotation(transform->rotation);
+                drawable->sprite.setPosition(transform->position);
+                drawable->sprite.setScale(transform->scale);
+                drawable->sprite.setRotation(transform->rotation);
             });
     #endif
 }
