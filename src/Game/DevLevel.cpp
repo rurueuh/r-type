@@ -11,7 +11,7 @@ DevLevel::DevLevel() : Level()
     player->assign<PvComponent>(100);
     player->assign<PlayerInputComponent>("");
     player2->assign<PvComponent>(10000);
-    player->assign<DrawableComponent>("../assets/menu/button_idle.png");
+    player->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
 
     try {
         _world->registerSystem<DrawableSystem>(0);
