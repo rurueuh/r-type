@@ -10,7 +10,7 @@ Aside from that, we need to create our own Game Engine.
 To accomplish the project, we need to developp an ECS (Entity Component System), wich is an architectural pattern often used in game development.
 
 <p align="center">
-	<img src="./Assets/presentation.png">
+	<img src="./assets/presentation.png">
 </p>
 
 # Summary
