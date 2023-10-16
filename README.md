@@ -129,10 +129,13 @@ There is the file .bat that allow you to build and install the complete game :
 
 # Run
 ## Windows
-Execute rtype-client.exe || rtype-server.exe
+Execute rtype-client.exe
+rtype-server.exe
 
 ## Linux
 `./Build-linux/client`
+
+
 `Build-linux/server`
 
 
