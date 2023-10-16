@@ -15,9 +15,6 @@ To accomplish the project, we need to developp an ECS (Entity Component System),
 
 # Summary
 
-* **[Summary](#summary)**
-# Summary
-
 **[Features](#features)**
    * **[World](#world)**
    * **[Entity Component System](#entity-component-system)**
