@@ -1,8 +1,6 @@
 # RType
 ![Language](https://img.shields.io/badge/Language-C++-0052cf)
 
-### A compiler for asm
-
 This project is part of the 3rd year at Epitech
 The goal of this project is to create a multiplayer version of the [R-Type game](https://fr.wikipedia.org/wiki/R-Type).
 Aside from that, we need to create our own Game Engine.
