@@ -95,7 +95,7 @@ constexpr float fakeLagTime = 0.2f;
         if (clock.getElapsedTime().asSeconds() > 1) {
 			clock.restart();
             std::cout << "entities recv in 1s: " << i << std::endl;
-            std::cout << "entities recv: " << data << std::endl;
+            //std::cout << "entities recv: " << data << std::endl;
 			i = 0;
 		}
         i++;

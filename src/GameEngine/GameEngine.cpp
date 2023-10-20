@@ -16,7 +16,7 @@ void GameEngine::replicateEntities(void)
     packet << "entities";
     std::string entitiesString = "";
 
-    for (auto& entity : entities) {
+    for (auto& entity : entities) { // todo: optimise / thread him
         std::string serialize = entity->serialise();
         entitiesString += serialize + ":";
 	}
@@ -25,6 +25,7 @@ void GameEngine::replicateEntities(void)
 		entitiesString.replace(pos, 2, "}");
 	}
     packet << entitiesString;
+    
 
     #ifdef SERVER // SERVER ONLY
         // is safe ?
@@ -38,7 +39,6 @@ void GameEngine::replicateEntities(void)
 			entitiesString.replace(pos + 20, 5, "{ " + string + " }");
 			pos += 1;
 		}
-        std::cout << entitiesString << std::endl;
 
         packet.clear();
         packet << "entities";

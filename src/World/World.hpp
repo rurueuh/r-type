@@ -31,6 +31,8 @@ namespace ECS {
 			 */
 			Entity* CreateEntity();
 
+			std::vector<Entity*> CreateEntity(int nb);
+
 			/**
 			 * @brief make a call with function with all entity has the component in template.
 			 * @brief world->each<PositionComponent>([&](ECS::Entity* ent, PositionComponent *position) {position->y += 1;});

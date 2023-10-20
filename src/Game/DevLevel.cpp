@@ -5,14 +5,14 @@
 
 DevLevel::DevLevel() : Level()
 {
-    ECS::Entity* player = _world->CreateEntity();
-    ECS::Entity *player2 = _world->CreateEntity();
+    std::vector<ECS::Entity*> players = _world->CreateEntity(400);
 
-    player->assign<PvComponent>(100);
-    player->assign<InputComponent>("");
-    player2->assign<PvComponent>(10000);
-    player->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-    player->assign<TransformComponent>(sf::Vector2f(100.f, 100.f), sf::Vector2f(1.f, 1.f), 0.f);
+    for (auto player : players) {
+        player->assign<PvComponent>(100);
+        player->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
+        player->assign<TransformComponent>(sf::Vector2f(100.f, 100.f), sf::Vector2f(1.f, 1.f), 0.f);
+        player->assign<InputComponent>();
+    }
     try {
         _world->registerSystem<DrawableSystem>(1);
         _world->registerSystem<TransformSystem>(0);
