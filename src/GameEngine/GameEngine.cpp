@@ -28,6 +28,21 @@ void GameEngine::replicateEntities(void)
 
     #ifdef SERVER // SERVER ONLY
         // is safe ?
+
+        // find PlayerInputComponent {  }
+        // and change to PlayerInputComponent { ${string} }
+        std::string string = _server.getInput();
+
+        pos = 0;
+        while ((pos = entitiesString.find("PlayerInputComponent", pos)) != std::string::npos) {
+			entitiesString.replace(pos + 20, 5, "{ " + string + " }");
+			pos += 1;
+		}
+        std::cout << entitiesString << std::endl;
+
+        packet.clear();
+        packet << "entities";
+        packet << entitiesString;
         _server.sendToAll(packet);
 	#else // CLIENT ONLY
         _client.networkSync(world);

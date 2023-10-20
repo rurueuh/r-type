@@ -10,3 +10,4 @@
 #include "DrawableSystem.hpp"
 #include "TransformSystem.hpp"
 #include "TestSystem.hpp"
+#include "InputSystem.hpp"

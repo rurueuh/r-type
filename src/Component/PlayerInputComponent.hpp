@@ -4,11 +4,11 @@
 #include <sstream>
 #include "ComponentBase.hpp"
 
-struct PlayerInputComponent : public Component {
+struct InputComponent : public Component {
 	
-	PlayerInputComponent(std::string input) : input(input) {};
-	PlayerInputComponent() : input("") {};
-	~PlayerInputComponent() = default;
+	InputComponent(std::string input) : input(input) {};
+	InputComponent() : input("") {};
+	~InputComponent() = default;
 
 	std::string input = "";
 

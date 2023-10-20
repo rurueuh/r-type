@@ -75,7 +75,7 @@
 			clientRef.timeNoRespond.restart().asSeconds();
 		}
 		else if (type == "input") {
-			std::cout << "SERVER | received Input | DATA : " << type << ": " << data << std::endl;
+			checkInput(data);
 		} else {
 			std::cout << "SERVER | received packet | DATA : " << type << ": " << data << std::endl;
 		}
@@ -99,6 +99,20 @@
 				return;
 			}
 		}
+	}
+	void Server::checkInput(std::string data)
+	{
+		sf::Keyboard::Key key = static_cast<sf::Keyboard::Key>(std::stoi(data));
+		const std::map<sf::Keyboard::Key, std::string> keys = {
+			{sf::Keyboard::Key::Z, "z"},
+			{sf::Keyboard::Key::Q, "q"},
+			{sf::Keyboard::Key::S, "s"},
+			{sf::Keyboard::Key::D, "d"}
+		};
+		if (keys.find(key) == keys.end()) {
+			return;
+		}
+		_input = keys.at(key);
 	}
 	client_t& Server::findClient(client_t& client)
 	{

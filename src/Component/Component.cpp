@@ -12,9 +12,9 @@ void ECS::Component::FactoryAssignPvComponent(Entity* ent, std::string type, std
 }
 
 void ECS::Component::FactoryAssignPlayerInputComponent(Entity* ent, std::string type, std::string data) {
-	auto id = Utils::getRegisteredComponent(Utils::getTypeId<PlayerInputComponent>());
+	auto id = Utils::getRegisteredComponent(Utils::getTypeId<InputComponent>());
 	if (type == id) {
-		auto playerInput = ent->assign<PlayerInputComponent>();
+		auto playerInput = ent->assign<InputComponent>();
 		playerInput->fromString(data);
 	}
 }
@@ -46,7 +46,7 @@ void ECS::Component::FactoryAssignComponent(Entity* ent, std::string type, std::
 	};
 	std::vector<std::string> id = {
 		Utils::getRegisteredComponent(Utils::getTypeId<PvComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<PlayerInputComponent>()),
+		Utils::getRegisteredComponent(Utils::getTypeId<InputComponent>()),
 		Utils::getRegisteredComponent(Utils::getTypeId<DrawableComponent>()),
 		Utils::getRegisteredComponent(Utils::getTypeId<TransformComponent>())
 	};
