@@ -4,4 +4,5 @@
 	branch = 2.6.x
 [submodule "snappy"]
 	path = snappy
-	url = https://github.com/google/snappy
+	url = https://github.com/google/snappy.git
+	tag = v1.14.0
