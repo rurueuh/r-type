@@ -9,19 +9,19 @@
 #include "Utils/Utils.hpp"
 #include <snappy.h>
 
-//int main(void)
-//{
-//    Utils::registerComponent<PvComponent>("PvComponent");
-//    Utils::registerComponent<InputComponent>("PlayerInputComponent");
-//    Utils::registerComponent<DrawableComponent>("DrawableComponent");
-//    Utils::registerComponent<TransformComponent>("TransformComponent");
-//
-//    auto &engine = GameEngine::GetInstance();
-//    engine.Init<DevLevel>();
-//    engine.Run();
-//
-//    return 0;
-//}
+int main(void)
+{
+    Utils::registerComponent<PvComponent>("PvComponent");
+    Utils::registerComponent<InputComponent>("PlayerInputComponent");
+    Utils::registerComponent<DrawableComponent>("DrawableComponent");
+    Utils::registerComponent<TransformComponent>("TransformComponent");
+
+    auto &engine = GameEngine::GetInstance();
+    engine.Init<DevLevel>();
+    engine.Run();
+
+    return 0;
+}
 
 
 //int main(void) {

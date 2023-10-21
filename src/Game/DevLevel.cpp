@@ -5,7 +5,7 @@
 
 DevLevel::DevLevel() : Level()
 {
-    std::vector<ECS::Entity*> players = _world->CreateEntity(400);
+    std::vector<ECS::Entity*> players = _world->CreateEntity(40);
 
     for (auto player : players) {
         player->assign<PvComponent>(100);
@@ -14,8 +14,8 @@ DevLevel::DevLevel() : Level()
         player->assign<InputComponent>();
     }
     try {
-        _world->registerSystem<DrawableSystem>(1);
         _world->registerSystem<TransformSystem>(0);
+        _world->registerSystem<DrawableSystem>(1);
         _world->registerSystem<InputSystem>(2);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;

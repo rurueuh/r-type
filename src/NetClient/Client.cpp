@@ -38,8 +38,11 @@ constexpr float fakeLagTime = 0.2f;
 			std::string type;
 			std::string data;
 			packet >> type >> data;
+            std::string uncompressedType, uncompressedData;
+            snappy::Uncompress(type.data(), type.size(), &uncompressedType);
+            snappy::Uncompress(data.data(), data.size(), &uncompressedData);
             //std::cout << "RECEIVER | received packet from " << sender << ":" << port << " | DATA : " << type << ": " << data << std::endl;
-			return std::make_tuple(type, data);
+			return std::make_tuple(uncompressedType, uncompressedData);
 		}
         //std::cerr << "error can join server" << std::endl;
 		return std::make_tuple("ERROR", "ERROR");

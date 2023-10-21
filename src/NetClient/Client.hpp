@@ -3,6 +3,7 @@
 #include "SFML.hpp"
 #include "World/World.hpp"
 #include "Component.hpp"
+#include "snappy.h"
 
 #ifndef SERVER // CLIENT ONLY
 	constexpr int PORT = 4242;

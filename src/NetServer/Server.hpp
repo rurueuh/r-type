@@ -2,6 +2,7 @@
 
 #include "SFML.hpp"
 #include <memory>
+#include "snappy.h"
 
 #ifdef SERVER // SERVER ONLY
 	constexpr int PORT = 4242;

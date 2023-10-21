@@ -1,4 +1,5 @@
 #include "GameEngine.hpp"
+#include "snappy.h"
 
 GameEngine::GameEngine()
 {
@@ -10,21 +11,6 @@ void GameEngine::replicateEntities(void)
     auto& manager = LevelManager::getInstance();
     auto level = manager.getCurrentLevel();
     auto world = level->getWorld();
-    auto entities = world->getEntities();
-
-    sf::Packet packet;
-    packet << "entities";
-    std::string entitiesString = "";
-
-    for (auto& entity : entities) { // todo: optimise / thread him
-        std::string serialize = entity->serialise();
-        entitiesString += serialize + ":";
-	}
-    size_t pos = 0;
-    while ((pos = entitiesString.find(",}", pos)) != std::string::npos) {
-		entitiesString.replace(pos, 2, "}");
-	}
-    packet << entitiesString;
     
 
     #ifdef SERVER // SERVER ONLY
@@ -32,6 +18,20 @@ void GameEngine::replicateEntities(void)
 
         // find PlayerInputComponent {  }
         // and change to PlayerInputComponent { ${string} }
+        auto entities = world->getEntities();
+
+        sf::Packet packet;
+        packet << "entities";
+        std::string entitiesString = "";
+
+        for (auto& entity : entities) { // todo: optimise / thread him
+            std::string serialize = entity->serialise();
+            entitiesString += serialize + ":";
+	    }
+        size_t pos = 0;
+        while ((pos = entitiesString.find(",}", pos)) != std::string::npos) {
+		    entitiesString.replace(pos, 2, "}");
+	    }
         std::string string = _server.getInput();
 
         pos = 0;
@@ -40,8 +40,6 @@ void GameEngine::replicateEntities(void)
 			pos += 1;
 		}
 
-        packet.clear();
-        packet << "entities";
         packet << entitiesString;
         _server.sendToAll(packet);
 	#else // CLIENT ONLY

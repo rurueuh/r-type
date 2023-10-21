@@ -15,7 +15,10 @@
 	void Server::send(std::string type, std::string data, client_t& client)
 	{
 		sf::Packet packet;
-		packet << type << data;
+		std::string compressedType, compressedData;
+		snappy::Compress(type.data(), type.size(), &compressedType);
+		snappy::Compress(data.data(), data.size(), &compressedData);
+		packet << compressedType << compressedData;
 		if (_UDPsocket.send(packet, client.ip, client.port) != sf::Socket::Status::Done) {
 			throw std::runtime_error("error can join server");
 		}
@@ -125,8 +128,19 @@
 	}
 	void Server::sendToAll(sf::Packet& packet)
 	{
+		sf::Packet dup;
+		std::string type;
+		std::string data;
+		packet >> type >> data;
+
+		std::string compressedType, compressedData;
+		snappy::Compress(type.data(), type.size(), &compressedType);
+		snappy::Compress(data.data(), data.size(), &compressedData);
+		dup << compressedType << compressedData;
+
+
 		for (auto it = _clients.begin(); it != _clients.end(); it++) {
-			if (_UDPsocket.send(packet, it->ip, it->port) != sf::Socket::Status::Done) {
+			if (_UDPsocket.send(dup, it->ip, it->port) != sf::Socket::Status::Done) {
 				throw std::runtime_error("error can join server");
 			}
 		}
