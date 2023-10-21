@@ -19,7 +19,10 @@ constexpr float fakeLagTime = 0.2f;
     void Client::send(std::string type, std::string data)
     {
 		sf::Packet packet;
-		packet << type << data;
+        std::string compressedType, compressedData;
+        snappy::Compress(type.data(), type.size(), &compressedType);
+        snappy::Compress(data.data(), data.size(), &compressedData);
+		packet << compressedType << compressedData;
         if (_UDPsocket.send(packet, IP, PORT) != sf::Socket::Status::Done) {
 			throw std::runtime_error("error can join server");
 		}

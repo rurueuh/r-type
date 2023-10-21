@@ -5,7 +5,7 @@
 
 DevLevel::DevLevel() : Level()
 {
-    std::vector<ECS::Entity*> players = _world->CreateEntity(40);
+    std::vector<ECS::Entity*> players = _world->CreateEntity(400);
 
     for (auto player : players) {
         player->assign<PvComponent>(100);
