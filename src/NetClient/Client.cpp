@@ -58,11 +58,11 @@ constexpr float fakeLagTime = 0.2f;
             _UDPsocket.setBlocking(true);
             auto [type, data] = receive();
             _UDPsocket.setBlocking(false);
-            _clientHash = data;
             if (type != "hello") {
                 std::cout << "bad type" << std::endl;
                 return false;
             }
+            _clientHash = data;
             break;
         }
 		std::cout << "client hash: " << _clientHash << std::endl;
@@ -101,7 +101,7 @@ constexpr float fakeLagTime = 0.2f;
         if (clock.getElapsedTime().asSeconds() > 1) {
 			clock.restart();
             std::cout << "entities recv in 1s: " << i << std::endl;
-            //std::cout << "entities recv: " << data << std::endl;
+            std::cout << "entities recv: " << data << std::endl;
 			i = 0;
 		}
         i++;
@@ -163,6 +163,7 @@ constexpr float fakeLagTime = 0.2f;
             _mutex.unlock();
             return;
         }
+        // todo: voir si on peut pas unmutex ici pour pas bloquer le thread (recuperer une frame en avance)
         for (auto& entWorld : world->getEntities()) {
             delete entWorld;
         }
@@ -175,7 +176,19 @@ constexpr float fakeLagTime = 0.2f;
         _mutex.unlock();
     }
 
-    void Client::onInput(sf::Keyboard::Key key) {
+    void Client::onInput(sf::Keyboard::Key key, ECS::World *world) {
         this->send("input", std::to_string(key));
+        world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent *player) {
+            if (player->hash != this->getClientHash()) {
+				return;
+			}
+            if (ent->has<InputComponent>()) {
+				auto input = ent->get<InputComponent>();
+                if (Utils::KEYMAP.find(key) == Utils::KEYMAP.end()) {
+                    return;
+                }
+				input->input = Utils::KEYMAP.at(key);
+			}
+		});
     }
 //#endif

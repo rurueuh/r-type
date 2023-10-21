@@ -5,14 +5,22 @@
 
 DevLevel::DevLevel() : Level()
 {
-    std::vector<ECS::Entity*> players = _world->CreateEntity(400);
-
-    for (auto player : players) {
-        player->assign<PvComponent>(100);
-        player->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-        player->assign<TransformComponent>(sf::Vector2f(100.f, 100.f), sf::Vector2f(1.f, 1.f), 0.f);
-        player->assign<InputComponent>();
+    std::vector<ECS::Entity*> starship = _world->CreateEntity(4);
+    ECS::Entity* ent = _world->CreateEntity();
+    ent->assign<PvComponent>(100);
+    ent->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
+    ent->assign<TransformComponent>(sf::Vector2f(400.f, 400.f), sf::Vector2f(1.f, 1.f), 0.f);
+    for (auto ship : starship) {
+        ship->assign<PlayerComponent>();
+        ship->assign<InputComponent>();
+        ship->assign<PvComponent>(100);
+        ship->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
+        ship->assign<TransformComponent>(sf::Vector2f(100.f, 100.f), sf::Vector2f(1.f, 1.f), 0.f);
     }
+    #ifndef SERVER
+        starship[0]->get<PlayerComponent>()->hash = "me";
+    #endif // SERVER
+
     try {
         _world->registerSystem<TransformSystem>(0);
         _world->registerSystem<DrawableSystem>(1);

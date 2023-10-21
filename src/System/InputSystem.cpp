@@ -8,9 +8,8 @@ void InputSystem::tick(ECS::World* world, const float& dt)
 			InputComponent* input) {
 			auto transform = entity->get<TransformComponent>();
 			auto &gameEngine = GameEngine::GetInstance();
-			std::string inputStr = input->input;
+			auto &inputStr = input->input;
 			#ifdef SERVER
-				inputStr = gameEngine.getServer().getInput();
 			#endif // SERVER
 
 			if (!transform)
@@ -23,5 +22,12 @@ void InputSystem::tick(ECS::World* world, const float& dt)
 				transform->position.x -= 1 * dt * 142;
 			if (std::find(inputStr.begin(), inputStr.end(), 'd') != inputStr.end())
 				transform->position.x += 1 * dt * 142;
+			if (std::find(inputStr.begin(), inputStr.end(), ' ') != inputStr.end()) {
+				auto world = entity->getWorld();
+				auto bullet = world->CreateEntity();
+				bullet->assign<DrawableComponent>("../assets/bullet.png", sf::IntRect(1, 3, 32, 14));
+				bullet->assign<TransformComponent>(transform->position, sf::Vector2f(1.f, 1.f), 0.f);
+				inputStr = "";
+			}
 		});
 }

@@ -15,9 +15,9 @@ void GameEngine::replicateEntities(void)
 
     #ifdef SERVER // SERVER ONLY
         // is safe ?
-
-        // find PlayerInputComponent {  }
-        // and change to PlayerInputComponent { ${string} }
+        
+        _server.syncClientWithWorld(world);
+        _server.syncClientInput(world);
         auto entities = world->getEntities();
 
         sf::Packet packet;
@@ -32,13 +32,15 @@ void GameEngine::replicateEntities(void)
         while ((pos = entitiesString.find(",}", pos)) != std::string::npos) {
 		    entitiesString.replace(pos, 2, "}");
 	    }
-        std::string string = _server.getInput();
+        
+        // find PlayerInputComponent {  }
+        // and change to PlayerInputComponent { ${string} }
+        // pos = 0;
+        // while ((pos = entitiesString.find("PlayerInputComponent", pos)) != std::string::npos) {
+		//	entitiesString.replace(pos + 20, 5, "{ " + string + " }");
+		//	pos += 1;
+		// }
 
-        pos = 0;
-        while ((pos = entitiesString.find("PlayerInputComponent", pos)) != std::string::npos) {
-			entitiesString.replace(pos + 20, 5, "{ " + string + " }");
-			pos += 1;
-		}
 
         packet << entitiesString;
         _server.sendToAll(packet);
@@ -51,6 +53,8 @@ void GameEngine::replicateEntities(void)
 void GameEngine::Run(void)
 {
     auto &manager = LevelManager::getInstance();
+    auto &level = manager.getCurrentLevel();
+    auto world = level->getWorld();
     while (this->_isRunning)
     {
         #ifndef SERVER // CLIENT ONLY
@@ -60,7 +64,7 @@ void GameEngine::Run(void)
                     this->Shutdown();
                 }
                 if (event.type == sf::Event::KeyPressed) {
-					_client.onInput(event.key.code);
+					_client.onInput(event.key.code, world);
                 }
             }
             _window->clear();

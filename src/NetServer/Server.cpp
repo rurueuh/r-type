@@ -81,7 +81,7 @@
 			clientRef.timeNoRespond.restart().asSeconds();
 		}
 		else if (type == "input") {
-			checkInput(data);
+			checkInput(data, clientRef);
 		} else {
 			std::cout << "SERVER | received packet | DATA : " << type << ": " << data << std::endl;
 		}
@@ -106,19 +106,13 @@
 			}
 		}
 	}
-	void Server::checkInput(std::string data)
+	void Server::checkInput(std::string data, client_t &client)
 	{
 		sf::Keyboard::Key key = static_cast<sf::Keyboard::Key>(std::stoi(data));
-		const std::map<sf::Keyboard::Key, std::string> keys = {
-			{sf::Keyboard::Key::Z, "z"},
-			{sf::Keyboard::Key::Q, "q"},
-			{sf::Keyboard::Key::S, "s"},
-			{sf::Keyboard::Key::D, "d"}
-		};
-		if (keys.find(key) == keys.end()) {
+		if (Utils::KEYMAP.find(key) == Utils::KEYMAP.end()) {
 			return;
 		}
-		_input = keys.at(key);
+		_input[client.hash] = Utils::KEYMAP.at(key);
 	}
 	client_t& Server::findClient(client_t& client)
 	{
@@ -153,5 +147,36 @@
 		for (auto it = _clients.begin(); it != _clients.end(); it++) {
 			send(type, data, *it);
 		}
+	}
+	void Server::syncClientWithWorld(ECS::World* world)
+	{
+		std::vector<client_t> clients = _clients;
+		int i = 0;
+		world->each<PlayerComponent>([&](ECS::Entity* entity, PlayerComponent *player) {
+			player->hash = "";
+			if (i >= clients.size()) {
+				return;
+			}
+			player->hash = clients[i].hash;
+			i++;
+		});
+	}
+	void Server::syncClientInput(ECS::World* world)
+	{
+		auto &input = _input;
+		world->each<InputComponent>([&](ECS::Entity* entity, InputComponent* inputComponent) {
+			if (!entity->has<PlayerComponent>()) {
+				std::cerr << "ERROR: entity has no PlayerComponent (InputComponent)" << std::endl;
+				return;
+			}
+			auto player = entity->get<PlayerComponent>();
+
+			for (auto it = input.begin(); it != input.end(); it++) {
+				if (it->first == player->hash) {
+					inputComponent->input = it->second;
+					break;
+				}
+			}
+		});
 	}
 #endif

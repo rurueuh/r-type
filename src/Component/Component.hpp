@@ -10,6 +10,7 @@
 #include "ComponentBase.hpp"
 
 #include "PvComponent.hpp"
+#include "PlayerComponent.hpp"
 #include "PlayerInputComponent.hpp"
 #include "ColliderComponent.hpp"
 #include "DamageComponent.hpp"
@@ -23,12 +24,17 @@ namespace ECS {
 	class Entity;
 	namespace Component {
 
-		void FactoryAssignPvComponent(Entity* ent, std::string type, std::string str);
-		void FactoryAssignPlayerInputComponent(Entity* ent, std::string type, std::string str);
-		void FactoryAssignDrawableComponent(Entity* ent, std::string type, std::string str);
-		void FactoryAssignTransformComponent(Entity* ent, std::string type, std::string str);
+		template <typename T>
+		void FactoryAssignCreateComponent(Entity* ent, std::string type, std::string str) {
+			auto id = Utils::getRegisteredComponent(Utils::getTypeId<T>());
+			if (type == id) {
+				auto component = ent->assign<T>();
+				component->fromString(str);
+			}
+		}
 
 		// template Args...
 		void FactoryAssignComponent(Entity* ent, std::string type, std::string str = "");
+		
 	};
 };

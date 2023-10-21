@@ -13,6 +13,7 @@ int main(void)
 {
     Utils::registerComponent<PvComponent>("PvComponent");
     Utils::registerComponent<InputComponent>("PlayerInputComponent");
+    Utils::registerComponent<PlayerComponent>("PlayerComponent");
     Utils::registerComponent<DrawableComponent>("DrawableComponent");
     Utils::registerComponent<TransformComponent>("TransformComponent");
 
