@@ -16,7 +16,11 @@ class Client
 {
 public:
 	Client();
-	~Client() = default;
+	~Client() {
+		if (_networkInterceptor != nullptr) {
+			_networkInterceptor->terminate();
+		}
+	}
 
 	void send(std::string type, std::string data);
 	std::tuple<std::string, std::string> receive(void);

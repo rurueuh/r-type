@@ -9,8 +9,6 @@ void InputSystem::tick(ECS::World* world, const float& dt)
 			auto transform = entity->get<TransformComponent>();
 			auto &gameEngine = GameEngine::GetInstance();
 			auto &inputStr = input->input;
-			#ifdef SERVER
-			#endif // SERVER
 
 			if (!transform)
 				return;
