@@ -15,7 +15,10 @@
 	void Server::send(std::string type, std::string data, client_t& client)
 	{
 		sf::Packet packet;
-		packet << type << data;
+		std::string compressedType, compressedData;
+		snappy::Compress(type.data(), type.size(), &compressedType);
+		snappy::Compress(data.data(), data.size(), &compressedData);
+		packet << compressedType << compressedData;
 		if (_UDPsocket.send(packet, client.ip, client.port) != sf::Socket::Status::Done) {
 			throw std::runtime_error("error can join server");
 		}
@@ -34,8 +37,11 @@
 			std::string type;
 			std::string data;
 			packet >> type >> data;
+			std::string uncompressedType, uncompressedData;
+			snappy::Uncompress(type.data(), type.size(), &uncompressedType);
+			snappy::Uncompress(data.data(), data.size(), &uncompressedData);
 			std::cout << "RECEIVER | received packet from " << sender << ":" << port << " | DATA : " << type << ": " << data << std::endl;
-			return std::make_tuple(true, type, data, client_t{sender, port, ""});
+			return std::make_tuple(true, uncompressedType, uncompressedData, client_t{sender, port, ""});
 		}
 		return std::make_tuple(false, "ERROR", "ERROR", client_t{sender, port, ""});
 	}
@@ -75,7 +81,7 @@
 			clientRef.timeNoRespond.restart().asSeconds();
 		}
 		else if (type == "input") {
-			checkInput(data);
+			checkInput(data, clientRef);
 		} else {
 			std::cout << "SERVER | received packet | DATA : " << type << ": " << data << std::endl;
 		}
@@ -100,19 +106,13 @@
 			}
 		}
 	}
-	void Server::checkInput(std::string data)
+	void Server::checkInput(std::string data, client_t &client)
 	{
 		sf::Keyboard::Key key = static_cast<sf::Keyboard::Key>(std::stoi(data));
-		const std::map<sf::Keyboard::Key, std::string> keys = {
-			{sf::Keyboard::Key::Z, "z"},
-			{sf::Keyboard::Key::Q, "q"},
-			{sf::Keyboard::Key::S, "s"},
-			{sf::Keyboard::Key::D, "d"}
-		};
-		if (keys.find(key) == keys.end()) {
+		if (Utils::KEYMAP.find(key) == Utils::KEYMAP.end()) {
 			return;
 		}
-		_input = keys.at(key);
+		_input[client.hash] = Utils::KEYMAP.at(key);
 	}
 	client_t& Server::findClient(client_t& client)
 	{
@@ -125,8 +125,19 @@
 	}
 	void Server::sendToAll(sf::Packet& packet)
 	{
+		sf::Packet dup;
+		std::string type;
+		std::string data;
+		packet >> type >> data;
+
+		std::string compressedType, compressedData;
+		snappy::Compress(type.data(), type.size(), &compressedType);
+		snappy::Compress(data.data(), data.size(), &compressedData);
+		dup << compressedType << compressedData;
+
+
 		for (auto it = _clients.begin(); it != _clients.end(); it++) {
-			if (_UDPsocket.send(packet, it->ip, it->port) != sf::Socket::Status::Done) {
+			if (_UDPsocket.send(dup, it->ip, it->port) != sf::Socket::Status::Done) {
 				throw std::runtime_error("error can join server");
 			}
 		}
@@ -136,5 +147,36 @@
 		for (auto it = _clients.begin(); it != _clients.end(); it++) {
 			send(type, data, *it);
 		}
+	}
+	void Server::syncClientWithWorld(ECS::World* world)
+	{
+		std::vector<client_t> clients = _clients;
+		int i = 0;
+		world->each<PlayerComponent>([&](ECS::Entity* entity, PlayerComponent *player) {
+			player->hash = "";
+			if (i >= clients.size()) {
+				return;
+			}
+			player->hash = clients[i].hash;
+			i++;
+		});
+	}
+	void Server::syncClientInput(ECS::World* world)
+	{
+		auto &input = _input;
+		world->each<InputComponent>([&](ECS::Entity* entity, InputComponent* inputComponent) {
+			if (!entity->has<PlayerComponent>()) {
+				std::cerr << "ERROR: entity has no PlayerComponent (InputComponent)" << std::endl;
+				return;
+			}
+			auto player = entity->get<PlayerComponent>();
+
+			for (auto it = input.begin(); it != input.end(); it++) {
+				if (it->first == player->hash) {
+					inputComponent->input = it->second;
+					break;
+				}
+			}
+		});
 	}
 #endif

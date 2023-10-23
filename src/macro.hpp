@@ -11,4 +11,4 @@
 #include <iostream>
 
 #define DEBUG_CLOCK_CREATE sf::Clock debugClock; debugClock.restart();
-#define DEBUG_CLOCK_PRINT std::cout << "DEBUG : " << debugClock.getElapsedTime().asSeconds() << "s" << std::endl;
+#define DEBUG_CLOCK_PRINT std::cout << std::fixed << "DEBUG : " << debugClock.getElapsedTime().asSeconds() << "s" << std::endl;

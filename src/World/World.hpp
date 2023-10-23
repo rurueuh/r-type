@@ -39,12 +39,19 @@ namespace ECS {
 			 */
 			template<typename T>
 			void each(std::function<void(Entity*, T *)> f) {
-				for (auto& ent : m_entities) {
+				int i = 0;
+				for (; i < m_entities.size(); i++) {
+					if (m_entities[i]->has<T>()) {
+						auto* comp = m_entities[i]->get<T>();
+						f(m_entities[i], comp);
+					}
+				}
+				/*for (auto& ent : m_entities) {
 					if (ent->has<T>()) {
 						auto* comp = ent->get<T>();
 						f(ent, comp);
 					}
-				}
+				}*/
 			};
 
 			/**
