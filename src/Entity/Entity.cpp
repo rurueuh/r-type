@@ -1,9 +1,10 @@
 #include "Entity.hpp"
 #include "World.hpp"
 
-namespace ECS {
-	std::string Entity::serialise(void) {
-		std::string serialised = "";
+namespace ECS
+{
+	std::string Entity::serialise(void)
+	{
 		/*
 		"id": 1,
 		"components": {
@@ -17,30 +18,31 @@ namespace ECS {
 		// "[PvComponent { 100 }" "PositionComponent { 10 10 }]" : deuxieme etape sep components grace a la virgule
 		// "PvComponent { 100 }" "PositionComponent { 10 10 }" : troisieme etape retirer les crochets
 		// "PvComponent" "100" "PositionComponent" "10 10" : quatrieme etape sep components grace aux bracket
-		// 
-		serialised += std::to_string(this->getId()) + " ";
-		serialised += "[";
-		for (auto& pair : handler->components) {
-			if (pair.second.size() == 0)
+		//
+		std::ostringstream serialised;
+		serialised << this->getId() << " [";
+		for (const auto &pair : handler->components)
+		{
+			if (pair.second.empty())
 				continue;
-			serialised += "" + Utils::getRegisteredComponent(pair.first) + " { ";
-			for (void* component : pair.second) {
-				auto tr = static_cast<Component*>(component);
-				serialised += tr->toString();
+			serialised << Utils::getRegisteredComponent(pair.first) << " { ";
+			for (void *component : pair.second)
+			{
+				auto tr = static_cast<Component *>(component);
+				serialised << tr->toString();
 			}
-			serialised += " },";
+			serialised << " },";
 		}
-		serialised += "]";
-
-
+		std::string result = serialised.str();
 		size_t pos = 0;
-		while ((pos = serialised.find(",]", pos)) != std::string::npos) {
-			serialised.replace(pos, 2, "]");
+		while ((pos = result.find(",]", pos)) != std::string::npos)
+		{
+			result.replace(pos, 2, "]");
 		}
-		while ((pos = serialised.find(",[", pos)) != std::string::npos) {
-			serialised.replace(pos, 2, "[");
+		while ((pos = result.find(",[", pos)) != std::string::npos)
+		{
+			result.replace(pos, 2, "[");
 		}
-
-		return serialised;
+		return result;
 	}
 }
