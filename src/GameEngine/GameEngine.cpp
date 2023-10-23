@@ -20,30 +20,25 @@ void GameEngine::replicateEntities(void)
         _server.syncClientInput(world);
         auto entities = world->getEntities();
 
+        
         sf::Packet packet;
         packet << "entities";
-        std::string entitiesString = "";
+        std::ostringstream entitiesString;
 
-        for (auto& entity : entities) { // todo: optimise / thread him
-            std::string serialize = entity->serialise();
-            entitiesString += serialize + ":";
-	    }
-        size_t pos = 0;
-        while ((pos = entitiesString.find(",}", pos)) != std::string::npos) {
-		    entitiesString.replace(pos, 2, "}");
-	    }
-        
-        // find PlayerInputComponent {  }
-        // and change to PlayerInputComponent { ${string} }
-        // pos = 0;
-        // while ((pos = entitiesString.find("PlayerInputComponent", pos)) != std::string::npos) {
-		//	entitiesString.replace(pos + 20, 5, "{ " + string + " }");
-		//	pos += 1;
-		// }
+        for (const auto& entity : entities) {
+            entitiesString << entity->serialise() << ":";
+        }
 
+        std::string result = entitiesString.str();
+        size_t pos = result.find(",}");
+        while (pos != std::string::npos) {
+            result.replace(pos, 2, "}");
+            pos = result.find(",}", pos + 1);
+        }
 
-        packet << entitiesString;
+        packet << result;
         _server.sendToAll(packet);
+        
 	#else // CLIENT ONLY
         _client.networkSync(world);
         // TODO: send to server (client)

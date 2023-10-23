@@ -5,7 +5,7 @@
 
 DevLevel::DevLevel() : Level()
 {
-    std::vector<ECS::Entity*> starship = _world->CreateEntity(4);
+    std::vector<ECS::Entity*> starship = _world->CreateEntity(10);
     ECS::Entity* ent = _world->CreateEntity();
     ent->assign<PvComponent>(100);
     ent->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
@@ -15,7 +15,9 @@ DevLevel::DevLevel() : Level()
         ship->assign<InputComponent>();
         ship->assign<PvComponent>(100);
         ship->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-        ship->assign<TransformComponent>(sf::Vector2f(100.f, 100.f), sf::Vector2f(1.f, 1.f), 0.f);
+        float x = rand() % 1800;
+        float y = rand() % 1000;
+        ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(1.f, 1.f), 0.f);
     }
     #ifndef SERVER
         starship[0]->get<PlayerComponent>()->hash = "me";
