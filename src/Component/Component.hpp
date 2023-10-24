@@ -17,6 +17,10 @@
 #include "DrawableComponent.hpp"
 #include "TransformComponent.hpp"
 #include "PositionComponent.hpp"
+#include "HitboxComponent.hpp"
+#include "ShootComponent.hpp"
+#include "WeaponComponent.hpp"
+#include "EnemyTag.hpp"
 #include "Utils.hpp"
 #include "Entity.hpp"
 
