@@ -174,6 +174,7 @@
 			for (auto it = input.begin(); it != input.end(); it++) {
 				if (it->first == player->hash) {
 					inputComponent->input = it->second;
+					it->second = "";
 					break;
 				}
 			}

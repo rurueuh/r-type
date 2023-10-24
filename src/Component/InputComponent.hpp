@@ -2,7 +2,25 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
 #include "ComponentBase.hpp"
+
+namespace Input {
+	enum Key {
+		forward, 
+		backward,
+		left,
+		right,
+		jump,
+	};
+	const std::vector<std::pair<Key, std::string>> keyConfig = {
+		{Key::forward, "z"},
+		{Key::backward, "s"},
+		{Key::left, "q"},
+		{Key::right, "d"},
+		{Key::jump, " "},
+	};
+};
 
 struct InputComponent : public Component {
 	
@@ -10,7 +28,6 @@ struct InputComponent : public Component {
 	InputComponent() : input("") {};
 	~InputComponent() = default;
 
-	std::string input = "";
 
 	virtual std::string toString(void) {
 		std::stringstream ss = std::stringstream();
@@ -22,4 +39,11 @@ struct InputComponent : public Component {
 		std::stringstream ss = std::stringstream(str);
 		ss >> input;
 	}
+
+	bool isKeyPressed(Input::Key key) {
+		return input.find(Input::keyConfig[key].second) != std::string::npos;
+	}
+
+	std::string input = "";
+	private:
 };

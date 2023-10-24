@@ -11,7 +11,7 @@
 
 #include "PvComponent.hpp"
 #include "PlayerComponent.hpp"
-#include "PlayerInputComponent.hpp"
+#include "InputComponent.hpp"
 #include "ColliderComponent.hpp"
 #include "DamageComponent.hpp"
 #include "DrawableComponent.hpp"
@@ -21,6 +21,7 @@
 #include "ShootComponent.hpp"
 #include "WeaponComponent.hpp"
 #include "EnemyTag.hpp"
+#include "VelocityComponent.hpp"
 #include "Utils.hpp"
 #include "Entity.hpp"
 

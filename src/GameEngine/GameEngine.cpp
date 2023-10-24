@@ -59,9 +59,9 @@ void GameEngine::Run(void)
                     this->Shutdown();
                 }
                 if (event.type == sf::Event::KeyPressed) {
-					_client.onInput(event.key.code, world);
                 }
             }
+            _client.onInput(world);
             _window->clear();
         #endif
 
