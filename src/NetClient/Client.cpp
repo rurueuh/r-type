@@ -178,7 +178,7 @@
                 return;
             }
             auto map = Utils::KEYMAP;
-            sf::Keyboard::Key key;
+            sf::Keyboard::Key key = sf::Keyboard::Unknown;
             for (auto &keyMap : map) {
                 if (sf::Keyboard::isKeyPressed(keyMap.first)) {
                     key = keyMap.first;

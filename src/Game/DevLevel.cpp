@@ -15,8 +15,10 @@ DevLevel::DevLevel() : Level()
         ship->assign<InputComponent>();
         ship->assign<PvComponent>(100);
         ship->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-        ship->assign<TransformComponent>(sf::Vector2f(100.f, 100.f), sf::Vector2f(4.f, 4.f), 0.f);
         ship->assign<VelocityComponent>(0, 0);
+        const float x = rand() % 1800;
+        const float y = 900.1;
+        ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
     }
     #ifndef SERVER
         starship[0]->get<PlayerComponent>()->hash = "me";
