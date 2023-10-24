@@ -21,6 +21,15 @@ namespace ECS {
 		return m_entities.back();
 	}
 
+	std::vector<Entity*> World::CreateEntity(int nb)
+	{
+		std::vector<Entity *> entities;
+		for (int i = 0; i < nb; i++) {
+			entities.push_back(CreateEntity());
+		}
+		return entities;
+	}
+
 
 	/**
 	* @brief make all "tick" of all system register

@@ -9,8 +9,11 @@ set(SFML_STATIC TRUE)
 set(BUILD_SHARED_LIBS FALSE)
 add_subdirectory(SFML)
 
+add_subdirectory(snappy)
+
 # faire que les hpp se la sfml soit accessibles
 include_directories(SFML/include)
+include_directories(snappy)
 
 # thread
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -39,6 +42,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-static")
 # Lier votre exécutable avec les bibliothèques SFML
 target_link_libraries(rtype-client sfml-graphics sfml-window sfml-system sfml-network)
 target_link_libraries(rtype-client ${Boost_LIBRARIES})
+target_link_libraries(rtype-client snappy)
 
 # Link thread on Linux
 # target_link_libraries(rtype-client pthread)
@@ -58,6 +62,7 @@ target_compile_definitions(rtype-server PUBLIC SERVER=1)
 # Lier votre exécutable avec les bibliothèques SFML
 target_link_libraries(rtype-server sfml-network)
 target_link_libraries(rtype-server ${Boost_LIBRARIES})
+target_link_libraries(rtype-server snappy)
 
 # Link thread on Linux
 # target_link_libraries(rtype-server pthread)

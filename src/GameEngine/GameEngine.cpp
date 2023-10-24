@@ -1,4 +1,5 @@
 #include "GameEngine.hpp"
+#include "snappy.h"
 
 GameEngine::GameEngine()
 {
@@ -10,25 +11,34 @@ void GameEngine::replicateEntities(void)
     auto& manager = LevelManager::getInstance();
     auto level = manager.getCurrentLevel();
     auto world = level->getWorld();
-    auto entities = world->getEntities();
-
-    sf::Packet packet;
-    packet << "entities";
-    std::string entitiesString = "";
-
-    for (auto& entity : entities) {
-        std::string serialize = entity->serialise();
-        entitiesString += serialize + ":";
-	}
-    size_t pos = 0;
-    while ((pos = entitiesString.find(",}", pos)) != std::string::npos) {
-		entitiesString.replace(pos, 2, "}");
-	}
-    packet << entitiesString;
+    
 
     #ifdef SERVER // SERVER ONLY
         // is safe ?
+        
+        _server.syncClientWithWorld(world);
+        _server.syncClientInput(world);
+        auto entities = world->getEntities();
+
+        
+        sf::Packet packet;
+        packet << "entities";
+        std::ostringstream entitiesString;
+
+        for (const auto& entity : entities) {
+            entitiesString << entity->serialise() << ":";
+        }
+
+        std::string result = entitiesString.str();
+        size_t pos = result.find(",}");
+        while (pos != std::string::npos) {
+            result.replace(pos, 2, "}");
+            pos = result.find(",}", pos + 1);
+        }
+
+        packet << result;
         _server.sendToAll(packet);
+        
 	#else // CLIENT ONLY
         _client.networkSync(world);
         // TODO: send to server (client)
@@ -38,6 +48,8 @@ void GameEngine::replicateEntities(void)
 void GameEngine::Run(void)
 {
     auto &manager = LevelManager::getInstance();
+    auto &level = manager.getCurrentLevel();
+    auto world = level->getWorld();
     while (this->_isRunning)
     {
         #ifndef SERVER // CLIENT ONLY
@@ -47,7 +59,7 @@ void GameEngine::Run(void)
                     this->Shutdown();
                 }
                 if (event.type == sf::Event::KeyPressed) {
-					_client.onInput(event.key.code);
+					_client.onInput(event.key.code, world);
                 }
             }
             _window->clear();

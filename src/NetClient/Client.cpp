@@ -19,7 +19,10 @@ constexpr float fakeLagTime = 0.2f;
     void Client::send(std::string type, std::string data)
     {
 		sf::Packet packet;
-		packet << type << data;
+        std::string compressedType, compressedData;
+        snappy::Compress(type.data(), type.size(), &compressedType);
+        snappy::Compress(data.data(), data.size(), &compressedData);
+		packet << compressedType << compressedData;
         if (_UDPsocket.send(packet, IP, PORT) != sf::Socket::Status::Done) {
 			throw std::runtime_error("error can join server");
 		}
@@ -38,8 +41,11 @@ constexpr float fakeLagTime = 0.2f;
 			std::string type;
 			std::string data;
 			packet >> type >> data;
+            std::string uncompressedType, uncompressedData;
+            snappy::Uncompress(type.data(), type.size(), &uncompressedType);
+            snappy::Uncompress(data.data(), data.size(), &uncompressedData);
             //std::cout << "RECEIVER | received packet from " << sender << ":" << port << " | DATA : " << type << ": " << data << std::endl;
-			return std::make_tuple(type, data);
+			return std::make_tuple(uncompressedType, uncompressedData);
 		}
         //std::cerr << "error can join server" << std::endl;
 		return std::make_tuple("ERROR", "ERROR");
@@ -52,11 +58,11 @@ constexpr float fakeLagTime = 0.2f;
             _UDPsocket.setBlocking(true);
             auto [type, data] = receive();
             _UDPsocket.setBlocking(false);
-            _clientHash = data;
             if (type != "hello") {
                 std::cout << "bad type" << std::endl;
                 return false;
             }
+            _clientHash = data;
             break;
         }
 		std::cout << "client hash: " << _clientHash << std::endl;
@@ -157,6 +163,7 @@ constexpr float fakeLagTime = 0.2f;
             _mutex.unlock();
             return;
         }
+        // todo: voir si on peut pas unmutex ici pour pas bloquer le thread (recuperer une frame en avance)
         for (auto& entWorld : world->getEntities()) {
             delete entWorld;
         }
@@ -169,7 +176,19 @@ constexpr float fakeLagTime = 0.2f;
         _mutex.unlock();
     }
 
-    void Client::onInput(sf::Keyboard::Key key) {
+    void Client::onInput(sf::Keyboard::Key key, ECS::World *world) {
         this->send("input", std::to_string(key));
+        world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent *player) {
+            if (player->hash != this->getClientHash()) {
+				return;
+			}
+            if (ent->has<InputComponent>()) {
+				auto input = ent->get<InputComponent>();
+                if (Utils::KEYMAP.find(key) == Utils::KEYMAP.end()) {
+                    return;
+                }
+				input->input = Utils::KEYMAP.at(key);
+			}
+		});
     }
 //#endif

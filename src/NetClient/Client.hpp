@@ -3,6 +3,7 @@
 #include "SFML.hpp"
 #include "World/World.hpp"
 #include "Component.hpp"
+#include "snappy.h"
 
 #ifndef SERVER // CLIENT ONLY
 	constexpr int PORT = 4242;
@@ -15,7 +16,11 @@ class Client
 {
 public:
 	Client();
-	~Client() = default;
+	~Client() {
+		if (_networkInterceptor != nullptr) {
+			_networkInterceptor->terminate();
+		}
+	}
 
 	void send(std::string type, std::string data);
 	std::tuple<std::string, std::string> receive(void);
@@ -24,13 +29,13 @@ public:
 	void recvEntity(std::string data);
 
 	void networkSync(ECS::World *world);
-	void onInput(sf::Keyboard::Key key);
+	void onInput(sf::Keyboard::Key key, ECS::World *world);
 	void setWorld(ECS::World* world) { _world = world; };
 
 	std::string getClientHash(void) { return _clientHash; };
 
 private:
-	std::string _clientHash = "";
+	std::string _clientHash = "me";
 	sf::UdpSocket _UDPsocket = sf::UdpSocket();
 	std::shared_ptr<sf::Thread> _networkInterceptor = nullptr;
 	sf::Mutex _mutex = sf::Mutex();

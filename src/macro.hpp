@@ -9,3 +9,6 @@
 
 #define PRINT_ERROR(x) std::cerr << "ERROR : " << x << std::endl;
 #include <iostream>
+
+#define DEBUG_CLOCK_CREATE sf::Clock debugClock; debugClock.restart();
+#define DEBUG_CLOCK_PRINT std::cout << std::fixed << "DEBUG : " << debugClock.getElapsedTime().asSeconds() << "s" << std::endl;

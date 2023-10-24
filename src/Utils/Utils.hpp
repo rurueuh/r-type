@@ -5,9 +5,18 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
+#include "SFML.hpp"
 
 namespace Utils
 {
+	const std::unordered_map<sf::Keyboard::Key, std::string> KEYMAP = {
+			{sf::Keyboard::Key::Z, "z"},
+			{sf::Keyboard::Key::Q, "q"},
+			{sf::Keyboard::Key::S, "s"},
+			{sf::Keyboard::Key::D, "d"},
+			{sf::Keyboard::Key::Space, " "},
+	};
+
 	template <typename T>
 	inline std::type_index getTypeId()
 	{
