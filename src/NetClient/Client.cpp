@@ -1,13 +1,7 @@
 #include "Client.hpp"
+#include "GameEngine.hpp"
 
-#ifdef SERVER
-constexpr int PORT = 4242;
-const sf::IpAddress IP = sf::IpAddress::IpAddress::Any;
-constexpr bool fakeLag = false;
-constexpr float fakeLagTime = 0.2f;
-#endif
-
-//#ifndef SERVER // CLIENT ONLY
+#ifndef SERVER // CLIENT ONLY
     Client::Client()
     {
         (void)connect(IP, PORT);
@@ -176,19 +170,33 @@ constexpr float fakeLagTime = 0.2f;
         _mutex.unlock();
     }
 
-    void Client::onInput(sf::Keyboard::Key key, ECS::World *world) {
-        this->send("input", std::to_string(key));
-        world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent *player) {
-            if (player->hash != this->getClientHash()) {
-				return;
-			}
-            if (ent->has<InputComponent>()) {
-				auto input = ent->get<InputComponent>();
-                if (Utils::KEYMAP.find(key) == Utils::KEYMAP.end()) {
+    void Client::onInput(ECS::World *world) {
+        #ifndef SERVER // CLIENT ONLY
+            auto &gameEngine = GameEngine::GetInstance();
+            auto window = gameEngine.getWindow();
+            if (window->hasFocus() == false) {
+                return;
+            }
+            auto map = Utils::KEYMAP;
+            sf::Keyboard::Key key;
+            for (auto &keyMap : map) {
+                if (sf::Keyboard::isKeyPressed(keyMap.first)) {
+                    key = keyMap.first;
+                }
+            }
+            this->send("input", std::to_string(key));
+            world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent *player) {
+                if (player->hash != this->getClientHash()) {
                     return;
                 }
-				input->input = Utils::KEYMAP.at(key);
-			}
-		});
+                if (ent->has<InputComponent>()) {
+                    auto input = ent->get<InputComponent>();
+                    if (Utils::KEYMAP.find(key) == Utils::KEYMAP.end()) {
+                        return;
+                    }
+                    input->input = Utils::KEYMAP.at(key);
+                }
+            });
+        #endif
     }
-//#endif
+#endif

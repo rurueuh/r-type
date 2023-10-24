@@ -6,16 +6,17 @@
 DevLevel::DevLevel() : Level()
 {
     std::vector<ECS::Entity*> starship = _world->CreateEntity(4);
-    ECS::Entity* ent = _world->CreateEntity();
-    ent->assign<PvComponent>(100);
-    ent->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-    ent->assign<TransformComponent>(sf::Vector2f(400.f, 400.f), sf::Vector2f(1.f, 1.f), 0.f);
+    // ECS::Entity* ent = _world->CreateEntity();
+    // ent->assign<PvComponent>(100);
+    // ent->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
+    // ent->assign<TransformComponent>(sf::Vector2f(400.f, 400.f), sf::Vector2f(1.f, 1.f), 0.f);
     for (auto ship : starship) {
         ship->assign<PlayerComponent>();
         ship->assign<InputComponent>();
         ship->assign<PvComponent>(100);
         ship->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-        ship->assign<TransformComponent>(sf::Vector2f(100.f, 100.f), sf::Vector2f(1.f, 1.f), 0.f);
+        ship->assign<TransformComponent>(sf::Vector2f(100.f, 100.f), sf::Vector2f(4.f, 4.f), 0.f);
+        ship->assign<VelocityComponent>(0, 0);
     }
     #ifndef SERVER
         starship[0]->get<PlayerComponent>()->hash = "me";
@@ -25,6 +26,8 @@ DevLevel::DevLevel() : Level()
         _world->registerSystem<TransformSystem>(0);
         _world->registerSystem<DrawableSystem>(1);
         _world->registerSystem<InputSystem>(2);
+        _world->registerSystem<PlayerInputSystem>(3);
+        _world->registerSystem<VelocitySystem>(4);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }
