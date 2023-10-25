@@ -7,6 +7,7 @@
 
 namespace Input {
 	enum Key {
+		none, 
 		forward, 
 		backward,
 		left,
@@ -40,6 +41,13 @@ struct InputComponent : public Component {
 		ss >> input;
 	}
 
+	Input::Key getKeyPressed(void) {
+		for (auto key : Input::keyConfig) {
+			if (input.find(key.second) != std::string::npos)
+				return key.first;
+		}
+		return Input::Key::none;
+	}
 	bool isKeyPressed(Input::Key key) {
 		return input.find(Input::keyConfig[key].second) != std::string::npos;
 	}
