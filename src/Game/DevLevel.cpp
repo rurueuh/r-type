@@ -5,7 +5,7 @@
 
 DevLevel::DevLevel() : Level()
 {
-    std::vector<ECS::Entity*> starship = _world->CreateEntity(4000);
+    std::vector<ECS::Entity*> starship = _world->CreateEntity(4);
     // ECS::Entity* ent = _world->CreateEntity();
     // ent->assign<PvComponent>(100);
     // ent->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
@@ -27,7 +27,7 @@ DevLevel::DevLevel() : Level()
     try {
         _world->registerSystem<TransformSystem>(0);
         _world->registerSystem<DrawableSystem>(1);
-        _world->registerSystem<InputSystem>(2);
+        //_world->registerSystem<InputSystem>(2);
         _world->registerSystem<PlayerInputSystem>(3);
         _world->registerSystem<VelocitySystem>(4);
     } catch (const std::exception &e) {

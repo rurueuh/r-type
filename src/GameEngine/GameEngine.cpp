@@ -1,5 +1,6 @@
 #include "GameEngine.hpp"
 #include "snappy.h"
+#include <algorithm>
 
 GameEngine::GameEngine()
 {
@@ -9,6 +10,9 @@ GameEngine::GameEngine()
 void thread_serialize(std::vector<ECS::Entity*> &entities, int start, int stop, std::string& result)
 {
     std::string tmp = "";
+    if (stop > entities.size()) {
+        return;
+    };
     for (int i = start; i < stop; i++) {
         result += entities[i]->serialise() + ":";
     }
@@ -36,13 +40,13 @@ void GameEngine::replicateEntities(void)
 
         auto maxThread = std::thread::hardware_concurrency();
         std::vector<std::shared_ptr<sf::Thread>> listThread;
-        int entitiesPerThread = entities.size() / maxThread;
+        int entitiesPerThread = std::max((unsigned int)entities.size() / maxThread, (unsigned int)1);
         int remainingEntities = entities.size() % maxThread;
-        for (int i = 0; i < maxThread; i++) {
+        for (unsigned int i = 0; i < maxThread; i++) {
             entitiesString.push_back(std::string());
         }
 
-        for (int i = 0; i < maxThread; i++) {
+        for (unsigned int i = 0; i < maxThread; i++) {
             int start = i * entitiesPerThread;
             int stop = (i + 1) * entitiesPerThread;
             std::shared_ptr<sf::Thread> thread = std::make_shared<sf::Thread>(std::bind(&thread_serialize, entities, start, stop, std::ref(entitiesString[i])));
@@ -50,11 +54,11 @@ void GameEngine::replicateEntities(void)
             thread->launch();
         }
 
-        for (auto thread : listThread) {
+        for (auto &thread : listThread) {
             thread->wait();
         }
 
-        for (auto str : entitiesString) {
+        for (auto &str : entitiesString) {
             entitiesStream << str;
         }
 
