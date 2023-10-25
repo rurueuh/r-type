@@ -27,7 +27,7 @@ DevLevel::DevLevel() : Level()
     try {
         _world->registerSystem<TransformSystem>(0);
         _world->registerSystem<DrawableSystem>(1);
-        _world->registerSystem<InputSystem>(2);
+        //_world->registerSystem<InputSystem>(2);
         _world->registerSystem<PlayerInputSystem>(3);
         _world->registerSystem<VelocitySystem>(4);
     } catch (const std::exception &e) {
