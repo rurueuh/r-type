@@ -17,7 +17,7 @@ DevLevel::DevLevel() : Level()
         ship->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
         ship->assign<VelocityComponent>(0, 0);
         const float x = rand() % 1800;
-        const float y = 900.1;
+        const float y = rand() % 800;
         ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
     }
     #ifndef SERVER
@@ -28,7 +28,6 @@ DevLevel::DevLevel() : Level()
         _world->registerSystem<TransformSystem>(0);
         _world->registerSystem<DrawableSystem>(1);
         _world->registerSystem<InputSystem>(2);
-        _world->registerSystem<PlayerInputSystem>(3);
         _world->registerSystem<VelocitySystem>(4);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
