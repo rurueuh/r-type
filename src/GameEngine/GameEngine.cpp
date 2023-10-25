@@ -10,7 +10,7 @@ void thread_serialize(std::vector<ECS::Entity*> &entities, int start, int stop, 
 {
     std::string tmp = "";
     for (int i = start; i < stop; i++) {
-        result += entities[i]->serialise();
+        result += entities[i]->serialise() + ":";
     }
 }
 
