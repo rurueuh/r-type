@@ -3,7 +3,14 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <map>
+#include <unordered_map>
+#include <functional>
 #include "ComponentBase.hpp"
+
+namespace ECS {
+	class Entity;
+}
 
 namespace Input {
 	enum Key {
@@ -26,6 +33,7 @@ namespace Input {
 struct InputComponent : public Component {
 	
 	InputComponent(std::string input) : input(input) {};
+	InputComponent(std::unordered_map<Input::Key, std::function<void(ECS::Entity *, const float&)>> functionInput) : functionInput(functionInput) {};
 	InputComponent() : input("") {};
 	~InputComponent() = default;
 
@@ -42,7 +50,7 @@ struct InputComponent : public Component {
 	}
 
 	Input::Key getKeyPressed(void) {
-		for (auto key : Input::keyConfig) {
+		for (auto &key : Input::keyConfig) {
 			if (input.find(key.second) != std::string::npos)
 				return key.first;
 		}
@@ -53,5 +61,6 @@ struct InputComponent : public Component {
 	}
 
 	std::string input = "";
+	std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float &)>> functionInput = {};
 	private:
 };

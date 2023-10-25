@@ -21,7 +21,7 @@ void thread_serialize(std::vector<ECS::Entity*> &entities, int start, int stop, 
 void GameEngine::replicateEntities(void)
 {
     auto& manager = LevelManager::getInstance();
-    auto level = manager.getCurrentLevel();
+    auto &level = manager.getCurrentLevel();
     auto world = level->getWorld();
     
 
@@ -35,11 +35,11 @@ void GameEngine::replicateEntities(void)
         
         sf::Packet packet;
         packet << "entities";
-        std::vector<std::string> entitiesString;
-        std::ostringstream entitiesStream;
+        std::vector<std::string> entitiesString = {};
+        std::ostringstream entitiesStream = std::ostringstream();
 
-        auto maxThread = std::thread::hardware_concurrency();
-        std::vector<std::shared_ptr<sf::Thread>> listThread;
+        auto maxThread = std::thread::hardware_concurrency() / 2;
+        std::vector<std::shared_ptr<sf::Thread>> listThread = {};
         int entitiesPerThread = std::max((unsigned int)entities.size() / maxThread, (unsigned int)1);
         int remainingEntities = entities.size() % maxThread;
         for (unsigned int i = 0; i < maxThread; i++) {
@@ -50,8 +50,8 @@ void GameEngine::replicateEntities(void)
             int start = i * entitiesPerThread;
             int stop = (i + 1) * entitiesPerThread;
             std::shared_ptr<sf::Thread> thread = std::make_shared<sf::Thread>(std::bind(&thread_serialize, entities, start, stop, std::ref(entitiesString[i])));
-            listThread.push_back(thread);
             thread->launch();
+            listThread.push_back(thread);
         }
 
         for (auto &thread : listThread) {

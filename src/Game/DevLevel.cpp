@@ -2,22 +2,57 @@
 #include "Component.hpp"
 #include "TestSystem.hpp"
 #include "GameEngine.hpp"
+#include "World.hpp"
+#include "Entity.hpp"
+
+static void forward(ECS::Entity *ent, const float &dt)
+{
+	ent->get<VelocityComponent>()->velocity.y -= 1 * dt * 142;
+}
+
+static void backward(ECS::Entity *ent, const float &dt)
+{
+	ent->get<VelocityComponent>()->velocity.y += 1 * dt * 142;
+}
+
+static void left(ECS::Entity *ent, const float &dt)
+{
+	ent->get<VelocityComponent>()->velocity.x -= 1 * dt * 142;
+}
+
+static void right(ECS::Entity *ent, const float &dt)
+{
+	ent->get<VelocityComponent>()->velocity.x += 1 * dt * 142;
+}
+
+static void shoot(ECS::Entity *ent, const float &dt)
+{
+    auto transform = ent->get<TransformComponent>();
+    auto world = ent->getWorld();
+    auto bullet = world->CreateEntity();
+    bullet->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
+    bullet->assign<TransformComponent>(transform->position, sf::Vector2f(1.f, 1.f), 0.f);
+    bullet->assign<VelocityComponent>(620, 0);
+}
 
 DevLevel::DevLevel() : Level()
 {
+    const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> input = {
+        { Input::Key::forward, forward},
+        { Input::Key::backward, backward},
+		{ Input::Key::left, left},
+		{ Input::Key::right, right},
+        { Input::Key::jump, shoot}
+    };
     std::vector<ECS::Entity*> starship = _world->CreateEntity(4);
-    // ECS::Entity* ent = _world->CreateEntity();
-    // ent->assign<PvComponent>(100);
-    // ent->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-    // ent->assign<TransformComponent>(sf::Vector2f(400.f, 400.f), sf::Vector2f(1.f, 1.f), 0.f);
     for (auto ship : starship) {
         ship->assign<PlayerComponent>();
-        ship->assign<InputComponent>();
+        ship->assign<InputComponent>(input);
         ship->assign<PvComponent>(100);
         ship->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-        ship->assign<VelocityComponent>(0, 0);
-        const float x = rand() % 1800;
-        const float y = rand() % 800;
+        ship->assign<VelocityComponent>(0.1f, 0.1f);
+        const float x = static_cast<float>(rand() % 1800);
+        const float y = static_cast<float>(rand() % 800);
         ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
     }
     #ifndef SERVER
