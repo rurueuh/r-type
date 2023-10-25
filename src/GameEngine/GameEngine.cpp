@@ -1,9 +1,21 @@
 #include "GameEngine.hpp"
 #include "snappy.h"
+#include <algorithm>
 
 GameEngine::GameEngine()
 {
     srand(time(NULL));
+}
+
+void thread_serialize(std::vector<ECS::Entity*> &entities, int start, int stop, std::string& result)
+{
+    std::string tmp = "";
+    if (stop > entities.size()) {
+        return;
+    };
+    for (int i = start; i < stop; i++) {
+        result += entities[i]->serialise() + ":";
+    }
 }
 
 void GameEngine::replicateEntities(void)
@@ -23,13 +35,34 @@ void GameEngine::replicateEntities(void)
         
         sf::Packet packet;
         packet << "entities";
-        std::ostringstream entitiesString;
+        std::vector<std::string> entitiesString;
+        std::ostringstream entitiesStream;
 
-        for (const auto& entity : entities) {
-            entitiesString << entity->serialise() << ":";
+        auto maxThread = std::thread::hardware_concurrency();
+        std::vector<std::shared_ptr<sf::Thread>> listThread;
+        int entitiesPerThread = std::max((unsigned int)entities.size() / maxThread, (unsigned int)1);
+        int remainingEntities = entities.size() % maxThread;
+        for (unsigned int i = 0; i < maxThread; i++) {
+            entitiesString.push_back(std::string());
         }
 
-        std::string result = entitiesString.str();
+        for (unsigned int i = 0; i < maxThread; i++) {
+            int start = i * entitiesPerThread;
+            int stop = (i + 1) * entitiesPerThread;
+            std::shared_ptr<sf::Thread> thread = std::make_shared<sf::Thread>(std::bind(&thread_serialize, entities, start, stop, std::ref(entitiesString[i])));
+            listThread.push_back(thread);
+            thread->launch();
+        }
+
+        for (auto &thread : listThread) {
+            thread->wait();
+        }
+
+        for (auto &str : entitiesString) {
+            entitiesStream << str;
+        }
+
+        std::string result = entitiesStream.str();
         size_t pos = result.find(",}");
         while (pos != std::string::npos) {
             result.replace(pos, 2, "}");
