@@ -5,7 +5,7 @@
 
 DevLevel::DevLevel() : Level()
 {
-    std::vector<ECS::Entity*> starship = _world->CreateEntity(4);
+    std::vector<ECS::Entity*> starship = _world->CreateEntity(4000);
     // ECS::Entity* ent = _world->CreateEntity();
     // ent->assign<PvComponent>(100);
     // ent->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
