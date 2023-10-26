@@ -36,6 +36,7 @@ static void shoot(ECS::Entity *ent, const float &dt)
     auto bullet = world->CreateEntity();
     bullet->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
     bullet->assign<TransformComponent>(transform->position, sf::Vector2f(1.f, 1.f), 0.f);
+    bullet->assign<LifeSpan>(3.f);
     if (!velocity)
         bullet->assign<VelocityComponent>(620.f, 0.f);
     else
@@ -71,7 +72,8 @@ DevLevel::DevLevel() : Level()
         _world->registerSystem<ECS::System::DrawableSystem>(1);
         _world->registerSystem<ECS::System::InputSystem>(2);
         _world->registerSystem<ECS::System::VelocitySystem>(3);
-        _world->registerSystem<ECS::System::HpSystem>(4);
+        _world->registerSystem<ECS::System::LifeSpanSystem>(4);
+        _world->registerSystem<ECS::System::HpSystem>(5);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }

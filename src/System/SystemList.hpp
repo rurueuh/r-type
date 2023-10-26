@@ -12,3 +12,4 @@
 #include "InputSystem.hpp"
 #include "VelocitySystem.hpp"
 #include "HpSystem.hpp"
+#include "LifeSpan.hpp"

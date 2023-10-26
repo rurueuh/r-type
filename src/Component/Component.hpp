@@ -22,6 +22,8 @@
 #include "WeaponComponent.hpp"
 #include "EnemyTag.hpp"
 #include "VelocityComponent.hpp"
+#include "LifeSpan.hpp"
+
 #include "Utils.hpp"
 #include "Entity.hpp"
 

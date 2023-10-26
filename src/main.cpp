@@ -16,6 +16,7 @@ int main(void)
     Utils::registerComponent<DrawableComponent>("DrawableComponent");
     Utils::registerComponent<TransformComponent>("TransformComponent");
     Utils::registerComponent<VelocityComponent>("VelocityComponent");
+    Utils::registerComponent<LifeSpan>("LifeSpan");
 
     auto &engine = GameEngine::GetInstance();
     engine.Init<DevLevel>();
