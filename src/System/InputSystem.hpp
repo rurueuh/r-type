@@ -10,13 +10,29 @@
 #include "System.hpp"
 #include "World.hpp"
 
-class InputSystem : public ECS::BaseSystem {
-public:
-    InputSystem() = default;
-    ~InputSystem() = default;
 
-    virtual void tick(ECS::World* world, const float& dt) override;
+namespace ECS::System {
+    class InputSystem : public ECS::BaseSystem {
+    public:
+        InputSystem() = default;
+        ~InputSystem() = default;
 
-protected:
-private:
-};
+        virtual void tick(ECS::World* world, const float& dt) override
+        {
+            world->each<InputComponent>(
+                [&](ECS::Entity* entity,
+                    InputComponent* input) {
+                        auto inputKey = input->getKeyPressed();
+
+                        for (auto& f : input->functionInput) {
+                            if (inputKey == f.first)
+                                f.second(entity, dt);
+                        }
+                        input->input = "";
+                });
+        }
+
+    protected:
+    private:
+    };
+}

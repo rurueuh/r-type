@@ -1,6 +1,5 @@
 #include "DevLevel.hpp"
 #include "Component.hpp"
-#include "TestSystem.hpp"
 #include "GameEngine.hpp"
 #include "World.hpp"
 #include "Entity.hpp"
@@ -8,7 +7,6 @@
 static void forward(ECS::Entity *ent, const float &dt)
 {
 	ent->get<VelocityComponent>()->velocity.y -= 1 * dt * 142;
-    std::cout << "forward" << std::endl;
 }
 
 static void backward(ECS::Entity *ent, const float &dt)
@@ -28,12 +26,20 @@ static void right(ECS::Entity *ent, const float &dt)
 
 static void shoot(ECS::Entity *ent, const float &dt)
 {
+    static sf::Clock cooldown;
+    if (cooldown.getElapsedTime().asSeconds() < 0.5)
+		return;
+    cooldown.restart();
     auto transform = ent->get<TransformComponent>();
+    auto velocity = ent->get<VelocityComponent>();
     auto world = ent->getWorld();
     auto bullet = world->CreateEntity();
     bullet->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
     bullet->assign<TransformComponent>(transform->position, sf::Vector2f(1.f, 1.f), 0.f);
-    bullet->assign<VelocityComponent>(620, 0);
+    if (!velocity)
+        bullet->assign<VelocityComponent>(620.f, 0.f);
+    else
+        bullet->assign<VelocityComponent>(620.f + (velocity->velocity.x), 0.f + (velocity->velocity.y));
 }
 
 DevLevel::DevLevel() : Level()
@@ -61,10 +67,10 @@ DevLevel::DevLevel() : Level()
     #endif // SERVER
 
     try {
-        _world->registerSystem<TransformSystem>(0);
-        _world->registerSystem<DrawableSystem>(1);
-        _world->registerSystem<InputSystem>(2);
-        _world->registerSystem<VelocitySystem>(3);
+        _world->registerSystem<ECS::System::TransformSystem>(0);
+        _world->registerSystem<ECS::System::DrawableSystem>(1);
+        _world->registerSystem<ECS::System::InputSystem>(2);
+        _world->registerSystem<ECS::System::VelocitySystem>(3);
         _world->registerSystem<ECS::System::HpSystem>(4);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
@@ -78,10 +84,9 @@ DevLevel::~DevLevel()
 void DevLevel::update(const float dt)
 {
     static sf::Clock clock;
-    if (clock.getElapsedTime().asSeconds() > 0.05) {
+    if (clock.getElapsedTime().asSeconds() > 0.001) {
 		clock.restart();
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
-            pv->health -= 1;
 		});
         _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
             //transform->position.x += 1;

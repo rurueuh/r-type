@@ -12,7 +12,7 @@
 
 struct VelocityComponent : public Component {
     public:
-        VelocityComponent(int x, int y) : velocity(sf::Vector2f(x, y)) {};
+        VelocityComponent(float x, float y) : velocity(sf::Vector2f(x, y)) {};
         VelocityComponent(sf::Vector2f velocity) : velocity(velocity) {};
         VelocityComponent() = default;
         ~VelocityComponent() = default;
