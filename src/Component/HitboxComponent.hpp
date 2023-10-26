@@ -15,10 +15,13 @@ struct Hitbox : public Component {
     Hitbox(sf::IntRect rect) : rect(rect) {};
     Hitbox() : rect({}) {};
 
-    virtual std::string toString() override {
-        std::stringstream ss = std::stringstream();
-        ss << rect.left << ' ' << rect.top << ' ' << rect.width << ' ' << rect.height;
-        return ss.str();
+    inline virtual std::string toString() const override {
+        std::string str = "";
+        str += std::to_string(rect.left) + " ";
+        str += std::to_string(rect.top) + " ";
+        str += std::to_string(rect.width) + " ";
+        str += std::to_string(rect.height);
+        return str;
     }
 
     virtual void fromString(std::string str) override {

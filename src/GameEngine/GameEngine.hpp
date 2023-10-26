@@ -27,6 +27,18 @@ public:
 	void Run(void);
 	void Shutdown(void);
 	sf::RenderWindow *getWindow(void) { return _window; }
+	void printFPS(void) {
+		static sf::Clock clock;
+		static int frame = 0;
+		static float time = 0;
+		frame++;
+		time += clock.restart().asSeconds();
+		if (time >= 1) {
+			std::cout << "FPS: " << frame << std::endl;
+			frame = 0;
+			time = 0;
+		}
+	}
 
 	#ifdef SERVER // SERVER ONLY
 		Server &getServer(void) { return _server; }

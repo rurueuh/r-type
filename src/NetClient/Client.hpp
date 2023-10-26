@@ -38,6 +38,7 @@ private:
 	std::string _clientHash = "me";
 	sf::UdpSocket _UDPsocket = sf::UdpSocket();
 	std::shared_ptr<sf::Thread> _networkInterceptor = nullptr;
+	bool _isReadySync = false;
 	sf::Mutex _mutex = sf::Mutex();
 
 	std::vector<ECS::Entity*> _entities;

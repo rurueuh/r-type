@@ -1,5 +1,6 @@
 #include "Client.hpp"
 #include "GameEngine.hpp"
+#include <memory>
 
 #ifndef SERVER // CLIENT ONLY
     Client::Client()
@@ -84,6 +85,27 @@
             
 		}
     }
+    static ECS::Entity* CreateEntity(std::string& token)
+    {
+        size_t id = std::stoi(token.substr(0, token.find(" ")));
+        ECS::Entity* newentity = new ECS::Entity(nullptr, id);
+        std::string components = "";
+        size_t pos = 0;
+        if ((pos = token.find("[")) != std::string::npos) {
+            components = token.substr(pos + 1, token.find("]") - pos - 1);
+            token.erase(pos, token.find("]") - pos + 1);
+        }
+        std::stringstream ss2(components);
+        while (std::getline(ss2, token, ',')) {
+            std::stringstream ss3(token);
+            std::string componentName;
+            std::string componentData;
+            std::getline(ss3, componentName, '{');
+            std::getline(ss3, componentData, '}');
+            ECS::Component::FactoryAssignComponent(newentity, componentName, componentData);
+        }
+        return newentity;
+    }
     void Client::recvEntity(std::string data)
     {
         #ifdef DEBUG
@@ -101,10 +123,11 @@
         i++;
 
         _mutex.lock();
-        if (this->_entities.size() != 0) {
+        if (this->_isReadySync != false) {
             _mutex.unlock();
 			return;
         }
+        _mutex.unlock();
         for (auto& ent : this->_entities) {
             delete ent;
         }
@@ -121,39 +144,23 @@
         size_t id = 0;
         std::stringstream ss(data);
         std::string token;
+        std::vector<std::string> entitiesToCreate = {};
+        DEBUG_CLOCK_CREATE
         while (std::getline(ss, token, ':')) {
-            // std::cout << token << std::endl;
-            size_t id = std::stoi(token.substr(0, token.find(" ")));
-            std::string components = "";
-            size_t pos = 0;
-            if ((pos = token.find("[")) != std::string::npos) {
-                components = token.substr(pos + 1, token.find("]") - pos - 1);
-				token.erase(pos, token.find("]") - pos + 1);
-			}
-            std::stringstream ss2(components);
-            ECS::Entity *newentity = new ECS::Entity(nullptr, id);
-            while (std::getline(ss2, token, ',')) {
-				// std::cout << token << std::endl;
-				std::stringstream ss3(token);
-				std::string componentName;
-				std::string componentData;
-                std::getline(ss3, componentName, '{');
-                std::getline(ss3, componentData, '}');
-				// std::cout << "nameComp " << componentName << std::endl;
-                // std::cout << "data " << componentData << std::endl;
-
-                ECS::Component::FactoryAssignComponent(newentity, componentName, componentData);
-
-			}
-            //std::cout << "new entity : " << newentity.serialise() << std::endl;
+            entitiesToCreate.push_back(token);
+            ECS::Entity *newentity = CreateEntity(token);
             this->_entities.push_back(newentity);
 		}
+        DEBUG_CLOCK_PRINT
+        _mutex.lock();
+        _isReadySync = true;
 		_mutex.unlock();
     }
+    
     void Client::networkSync(ECS::World* world)
     {
         _mutex.lock();
-        if (this->_entities.size() == 0) {
+        if (this->_isReadySync == false) {
             _mutex.unlock();
             return;
         }
@@ -167,6 +174,7 @@
 		}
         world->setEntities(this->_entities);
         this->_entities.clear();
+        this->_isReadySync = false;
         _mutex.unlock();
     }
 

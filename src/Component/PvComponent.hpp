@@ -9,10 +9,10 @@ struct PvComponent : public Component {
     PvComponent() : health(0) {};
     int health = 0;
 
-    virtual std::string toString(void) {
-        std::stringstream ss = std::stringstream();
-        ss << health;
-        return ss.str();
+    inline virtual std::string toString(void) const {
+        std::string str = "";
+        str += std::to_string(health);
+        return str;
 	}
 
     virtual void fromString(std::string str) override {

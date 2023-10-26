@@ -15,10 +15,12 @@ struct WeaponComponent : public Component {
     WeaponComponent(int damage, float fireRate, ShootType type) : damage(damage), fireRate(fireRate), type(type) {};
     WeaponComponent() : damage(0), fireRate(0), type(ShootType::MISSILE) {};
 
-    virtual std::string toString() override {
-        std::stringstream ss = std::stringstream();
-        ss << damage << ' ' << fireRate << ' ' << type;
-        return ss.str();
+    inline virtual std::string toString() const override {
+        std::string str = "";
+        str += std::to_string(damage) + " ";
+        str += std::to_string(fireRate) + " ";
+        str += std::to_string(type);
+        return str;
     }
 
     virtual void fromString(std::string str) override {

@@ -17,10 +17,14 @@ struct TransformComponent : public Component {
     sf::Vector2f scale;
     float rotation;
 
-    virtual std::string toString() override {
-        std::stringstream ss = std::stringstream();
-        ss << position.x << ' ' << position.y << ' ' << scale.x << ' ' << scale.y << ' ' << rotation;
-        return ss.str();
+    inline virtual std::string toString() const override {
+        std::string str = "";
+        str += std::to_string(position.x) + " ";
+        str += std::to_string(position.y) + " ";
+        str += std::to_string(scale.x) + " ";
+        str += std::to_string(scale.y) + " ";
+        str += std::to_string(rotation);
+        return str;
     }
 
     virtual void fromString(std::string str) override {

@@ -16,10 +16,11 @@ struct ShootComponent : public Component {
     ShootComponent() : damage(0), type(ShootType::MISSILE) {};
 
 
-    virtual std::string toString() override {
-        std::stringstream ss = std::stringstream();
-        ss << damage << ' ' << type;
-        return ss.str();
+    inline virtual std::string toString() const override {
+        std::string str = "";
+        str += std::to_string(damage) + " ";
+        str += std::to_string(type);
+        return str;
     }
 
     virtual void fromString(std::string str) override {

@@ -12,7 +12,7 @@
 struct EnemyTag : public Component {
     EnemyTag() {};
 
-    virtual std::string toString() override {
+    inline virtual std::string toString() const override {
         return "EnemyTag";
     }
 
