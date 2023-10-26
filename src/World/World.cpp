@@ -50,10 +50,12 @@ namespace ECS {
 
 	void World::updateWorld(void)
 	{
-		for (auto& ent : m_entities) {
-			if (ent->isDead()) {
-				// TODO: remove entity from world
+		
+		for (size_t i = 0; i < m_entities.size(); i++) {
+			if (m_entities[i]->isDead()) {
 				std::cout << "a entity die" << std::endl;
+				delete m_entities[i];
+				m_entities.erase(m_entities.begin() + i);
 			}
 		}
 	}
