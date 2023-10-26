@@ -19,10 +19,11 @@ struct VelocityComponent : public Component {
 
         sf::Vector2f velocity = sf::Vector2f(0, 0);
 
-        virtual std::string toString(void) {
-            std::stringstream ss = std::stringstream();
-            ss << velocity.x << " " << velocity.y;
-            return ss.str();
+        inline virtual std::string toString(void) const {
+            std::string str = "";
+            str += std::to_string(velocity.x) + " ";
+            str += std::to_string(velocity.y);
+            return str;
         }
 
         virtual void fromString(std::string str) override {

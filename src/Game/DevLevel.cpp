@@ -44,15 +44,15 @@ DevLevel::DevLevel() : Level()
 		{ Input::Key::right, right},
         { Input::Key::jump, shoot}
     };
-    std::vector<ECS::Entity*> starship = _world->CreateEntity(4);
+    std::vector<ECS::Entity*> starship = _world->CreateEntity(100);
     for (auto ship : starship) {
         ship->assign<PlayerComponent>();
         ship->assign<InputComponent>(input);
         ship->assign<PvComponent>(100);
         ship->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
         ship->assign<VelocityComponent>(0.1f, 0.1f);
-        const float x = static_cast<float>(rand() % 1800);
-        const float y = static_cast<float>(rand() % 800);
+        const float x = 400;
+        const float y = 400;
         ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
     }
     #ifndef SERVER

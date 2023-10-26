@@ -31,10 +31,14 @@ struct DrawableComponent : public Component {
         #endif
     };
 
-    virtual std::string toString() override {
-        std::stringstream ss = std::stringstream();
-        ss << path << ' ' << area.left << ' ' << area.top << ' ' << area.width << ' ' << area.height;
-        return ss.str();
+    inline virtual std::string toString() const override {
+        std::string str = "";
+        str += path + " ";
+        str += std::to_string(area.left) + " ";
+        str += std::to_string(area.top) + " ";
+        str += std::to_string(area.width) + " ";
+        str += std::to_string(area.height);
+        return str;
     }
 
     virtual void fromString( std::string str) override {

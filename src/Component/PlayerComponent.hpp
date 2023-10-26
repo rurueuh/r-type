@@ -12,10 +12,10 @@ struct PlayerComponent : public Component {
 
 	std::string hash = "";
 
-	virtual std::string toString(void) {
-		std::stringstream ss = std::stringstream();
-		ss << hash;
-		return ss.str();
+	inline virtual std::string toString(void) const {
+		std::string str = "";
+		str += hash;
+		return str;
 	}
 
 	virtual void fromString(std::string str) override {
