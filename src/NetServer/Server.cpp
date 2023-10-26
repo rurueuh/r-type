@@ -40,7 +40,7 @@
 			std::string uncompressedType, uncompressedData;
 			snappy::Uncompress(type.data(), type.size(), &uncompressedType);
 			snappy::Uncompress(data.data(), data.size(), &uncompressedData);
-			std::cout << "RECEIVER | received packet from " << sender << ":" << port << " | DATA : " << type << ": " << data << std::endl;
+			//std::cout << "RECEIVER | received packet from " << sender << ":" << port << " | DATA : " << type << ": " << data << std::endl;
 			return std::make_tuple(true, uncompressedType, uncompressedData, client_t{sender, port, ""});
 		}
 		return std::make_tuple(false, "ERROR", "ERROR", client_t{sender, port, ""});
@@ -109,6 +109,10 @@
 	void Server::checkInput(std::string data, client_t &client)
 	{
 		sf::Keyboard::Key key = static_cast<sf::Keyboard::Key>(std::stoi(data));
+		if (key == sf::Keyboard::Unknown) {
+			_input[client.hash] = "";
+			return;
+		}
 		if (Utils::KEYMAP.find(key) == Utils::KEYMAP.end()) {
 			return;
 		}
@@ -174,7 +178,6 @@
 			for (auto it = input.begin(); it != input.end(); it++) {
 				if (it->first == player->hash) {
 					inputComponent->input = it->second;
-					it->second = "";
 					break;
 				}
 			}

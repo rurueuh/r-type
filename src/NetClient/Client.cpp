@@ -22,7 +22,7 @@
 			throw std::runtime_error("error can join server");
 		}
         #ifdef DEBUG
-		    std::cout << "SENDER | message sent to " << IP << ":" << PORT << " | DATA : " << type << ": " << data << std::endl;
+		    //std::cout << "SENDER | message sent to " << IP << ":" << PORT << " | DATA : " << type << ": " << data << std::endl;
         #endif
     }
 
@@ -145,13 +145,11 @@
         std::stringstream ss(data);
         std::string token;
         std::vector<std::string> entitiesToCreate = {};
-        DEBUG_CLOCK_CREATE
         while (std::getline(ss, token, ':')) {
             entitiesToCreate.push_back(token);
             ECS::Entity *newentity = CreateEntity(token);
             this->_entities.push_back(newentity);
 		}
-        DEBUG_CLOCK_PRINT
         _mutex.lock();
         _isReadySync = true;
 		_mutex.unlock();

@@ -8,6 +8,7 @@
 static void forward(ECS::Entity *ent, const float &dt)
 {
 	ent->get<VelocityComponent>()->velocity.y -= 1 * dt * 142;
+    std::cout << "forward" << std::endl;
 }
 
 static void backward(ECS::Entity *ent, const float &dt)
@@ -44,7 +45,7 @@ DevLevel::DevLevel() : Level()
 		{ Input::Key::right, right},
         { Input::Key::jump, shoot}
     };
-    std::vector<ECS::Entity*> starship = _world->CreateEntity(100);
+    std::vector<ECS::Entity*> starship = _world->CreateEntity(2);
     for (auto ship : starship) {
         ship->assign<PlayerComponent>();
         ship->assign<InputComponent>(input);
@@ -79,7 +80,10 @@ void DevLevel::update(const float dt)
     if (clock.getElapsedTime().asSeconds() > 0.01) {
 		clock.restart();
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
-            pv->health += 1;
+            pv->health -= 1;
+            if (pv->health <= 0) {
+				//ent->die();
+			}
 		});
         _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
             //transform->position.x += 1;
