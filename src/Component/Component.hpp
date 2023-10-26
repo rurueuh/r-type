@@ -23,7 +23,7 @@
 #include "EnemyTag.hpp"
 #include "VelocityComponent.hpp"
 #include "LifeSpan.hpp"
-
+#include "OnDie.hpp"
 #include "Utils.hpp"
 #include "Entity.hpp"
 

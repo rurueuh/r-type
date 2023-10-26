@@ -17,6 +17,7 @@ int main(void)
     Utils::registerComponent<TransformComponent>("TransformComponent");
     Utils::registerComponent<VelocityComponent>("VelocityComponent");
     Utils::registerComponent<LifeSpan>("LifeSpan");
+    Utils::registerComponent<OnDie>("OnDie");
 
     auto &engine = GameEngine::GetInstance();
     engine.Init<DevLevel>();

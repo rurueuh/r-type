@@ -37,6 +37,9 @@ static void shoot(ECS::Entity *ent, const float &dt)
     bullet->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
     bullet->assign<TransformComponent>(transform->position, sf::Vector2f(1.f, 1.f), 0.f);
     bullet->assign<LifeSpan>(3.f);
+    bullet->assign<OnDie>([](ECS::World *world,ECS::Entity* ent) {
+        std::cout << "Bullet die" << std::endl;
+    });
     if (!velocity)
         bullet->assign<VelocityComponent>(620.f, 0.f);
     else

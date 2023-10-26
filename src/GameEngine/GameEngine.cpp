@@ -9,7 +9,7 @@ GameEngine::GameEngine()
 void GameEngine::replicateEntities(void)
 {
     auto& manager = LevelManager::getInstance();
-    auto level = manager.getCurrentLevel();
+    auto &level = manager.getCurrentLevel();
     auto world = level->getWorld();
 
 

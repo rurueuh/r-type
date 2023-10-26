@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "System.hpp"
 #include "SFML.hpp"
+#include "Component.hpp"
 
 class ComponentHandler;
 
