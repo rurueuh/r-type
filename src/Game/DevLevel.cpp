@@ -65,6 +65,7 @@ DevLevel::DevLevel() : Level()
         _world->registerSystem<DrawableSystem>(1);
         _world->registerSystem<InputSystem>(2);
         _world->registerSystem<VelocitySystem>(3);
+        _world->registerSystem<ECS::System::HpSystem>(4);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }
@@ -77,13 +78,10 @@ DevLevel::~DevLevel()
 void DevLevel::update(const float dt)
 {
     static sf::Clock clock;
-    if (clock.getElapsedTime().asSeconds() > 0.01) {
+    if (clock.getElapsedTime().asSeconds() > 0.05) {
 		clock.restart();
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
             pv->health -= 1;
-            if (pv->health <= 0) {
-				//ent->die();
-			}
 		});
         _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
             //transform->position.x += 1;
