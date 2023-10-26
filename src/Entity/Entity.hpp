@@ -22,7 +22,7 @@ namespace InternalECS {
 
 	class ComponentHandler {
 	public:
-		std::unordered_map<std::type_index, std::vector<void*>> components = std::unordered_map<std::type_index, std::vector<void*>>();
+		std::unordered_map<std::type_index, std::vector<Component *>> components = std::unordered_map<std::type_index, std::vector<Component *>>();
 		std::unordered_map<void*, std::vector<std::type_index>> entities;
 
 		template <typename T, typename... Args>
@@ -84,7 +84,7 @@ namespace ECS {
 		template <typename T>
 		bool has() {
 			auto& components = handler->components[Utils::getTypeId<T>()];
-			if (components == std::vector<void*>())
+			if (components == std::vector<Component *>())
 				return false;
 			return true;
 		}
