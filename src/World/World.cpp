@@ -54,9 +54,6 @@ namespace ECS {
 		
 		for (size_t i = 0; i < m_entities.size(); i++) {
 			if (m_entities[i]->isDead()) {
-				if (m_entities[i]->has<OnDie>()) {
-					m_entities[i]->get<OnDie>()->_onDie(this, m_entities[i]);
-				}
 				#ifndef SERVER
 					auto &engine = GameEngine::GetInstance();
 					auto &client = engine.getClient();
@@ -65,6 +62,9 @@ namespace ECS {
 						return;
 					}
 				#endif // SERVER
+				if (m_entities[i]->has<OnDie>()) {
+					m_entities[i]->get<OnDie>()->_onDie(this, m_entities[i]);
+				}
 				delete m_entities[i];
 
 				m_entities.erase(m_entities.begin() + i);
