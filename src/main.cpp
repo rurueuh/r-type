@@ -20,6 +20,7 @@ int main(void)
     Utils::registerComponent<OnDie>("OnDie");
     Utils::registerComponent<EnemyTag>("ETag");
     Utils::registerComponent<BackgroundTag>("BTag");
+    Utils::registerComponent<CollisionComponent>("CollisionComponent");
 
     auto &engine = GameEngine::GetInstance();
     engine.Init<DevLevel>();

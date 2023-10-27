@@ -58,7 +58,11 @@ namespace ECS {
 
 
 		Entity(World* world, size_t id) : m_world(world), m_id(id) {}
-		~Entity() = default;
+		~Entity() {
+			if (handler != nullptr) {
+				delete handler;
+			}
+		}
 
 		World* getWorld() const { return m_world; }
 		size_t getId() const { return m_id; }

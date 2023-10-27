@@ -13,6 +13,8 @@ typedef struct infoBackground {
 class DevLevel : public Level {
 public:
 	DevLevel();
+	void CreatePlayers();
+	void CreateBackground(sf::RenderWindow* window, sf::Vector2u& size);
 	~DevLevel();
 
 	virtual void update(const float dt) override;
@@ -25,5 +27,13 @@ private:
 		{"../assets/back3.png", sf::IntRect(0, 0, 272, 160), -30},
 		{"../assets/back4.png", sf::IntRect(0, 0, 272, 160), -120},
 		{"../assets/back5.png", sf::IntRect(0, 0, 272, 160), -150},
+	};
+
+	std::vector<sf::IntRect> _infoPlayers = {
+		sf::IntRect(1, 3, 32, 14),
+		sf::IntRect(1, 20, 32, 14),
+		sf::IntRect(1, 37, 32, 14),
+		sf::IntRect(1, 54, 32, 14),
+		sf::IntRect(1, 71, 32, 14),
 	};
 };
