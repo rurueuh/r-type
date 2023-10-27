@@ -2,15 +2,15 @@
 ** EPITECH PROJECT, 2023
 ** B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel
 ** File description:
-** EnemyTag
+** BackgroundTag
 */
 
 #pragma once
 
 #include "ComponentBase.hpp"
 
-struct EnemyTag : public Component {
-    EnemyTag() {};
+struct BackgroundTag : public Component {
+    BackgroundTag() {};
 
     inline virtual std::string toString() const override {
         return "";

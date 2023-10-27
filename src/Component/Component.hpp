@@ -21,9 +21,12 @@
 #include "ShootComponent.hpp"
 #include "WeaponComponent.hpp"
 #include "EnemyTag.hpp"
+#include "BackgroundTag.hpp"
 #include "VelocityComponent.hpp"
 #include "LifeSpan.hpp"
 #include "OnDie.hpp"
+
+
 #include "Utils.hpp"
 #include "Entity.hpp"
 

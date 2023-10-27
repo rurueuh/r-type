@@ -9,6 +9,7 @@
 
 #include "SFML.hpp"
 #include "ComponentBase.hpp"
+#include "DrawableComponent.hpp"
 
 struct TransformComponent : public Component {
     TransformComponent(sf::Vector2f position, sf::Vector2f scale, float rotation) : position(position), scale(scale), rotation(rotation) {};
@@ -31,4 +32,12 @@ struct TransformComponent : public Component {
         std::stringstream ss = std::stringstream(str);
         ss >> position.x >> position.y >> scale.x >> scale.y >> rotation;
     }
+
+    void setFullScreen(sf::RenderWindow* window, sf::IntRect &area) {
+		sf::Vector2u size = window->getSize();
+        sf::Vector2f scale = sf::Vector2f((float)size.x / area.width, (float)size.y / area.height);
+        sf::Vector2f position = sf::Vector2f(area.left, area.top);
+        this->scale = scale;
+        this->position = position;
+	}
 };

@@ -18,6 +18,8 @@ int main(void)
     Utils::registerComponent<VelocityComponent>("VelocityComponent");
     Utils::registerComponent<LifeSpan>("LifeSpan");
     Utils::registerComponent<OnDie>("OnDie");
+    Utils::registerComponent<EnemyTag>("ETag");
+    Utils::registerComponent<BackgroundTag>("BTag");
 
     auto &engine = GameEngine::GetInstance();
     engine.Init<DevLevel>();

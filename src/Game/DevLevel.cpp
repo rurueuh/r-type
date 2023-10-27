@@ -48,6 +48,26 @@ static void shoot(ECS::Entity *ent, const float &dt)
 
 DevLevel::DevLevel() : Level()
 {
+    auto window = GameEngine::GetInstance().getWindow();
+    auto size = window->getSize();
+    
+    for (int i = 0; i < _backgrounds.size(); i += 2) {
+        auto d = _backgrounds[i]->assign<DrawableComponent>(_infoBackgrounds[i / 2].path, _infoBackgrounds[i / 2].area);
+        auto t = _backgrounds[i]->assign<TransformComponent>(sf::Vector2f(0, 0), sf::Vector2f(1.f, 1.f), 0.f);
+        _backgrounds[i]->assign<VelocityComponent>(_infoBackgrounds[i / 2].speed, 0.f);
+        _backgrounds[i]->assign<BackgroundTag>();
+        t->setFullScreen(window, d->area);
+        t->scale += sf::Vector2f(0.1f, 0.1f);
+
+        auto rect2 = _infoBackgrounds[i / 2].area;
+        rect2.left = size.x;
+        auto d2 = _backgrounds[i + 1]->assign<DrawableComponent>(_infoBackgrounds[i / 2].path, rect2);
+        auto t2 = _backgrounds[i + 1]->assign<TransformComponent>(sf::Vector2f(0, 0), sf::Vector2f(1.f, 1.f), 0.f);
+        _backgrounds[i + 1]->assign<VelocityComponent>(_infoBackgrounds[i / 2].speed, 0.f);
+        _backgrounds[i + 1]->assign<BackgroundTag>();
+        t2->setFullScreen(window, d2->area);
+        t2->scale += sf::Vector2f(0.1f, 0.1f);
+	}
     const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> input = {
         { Input::Key::forward, forward},
         { Input::Key::backward, backward},
@@ -94,10 +114,26 @@ void DevLevel::update(const float dt)
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
 		});
         _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
-            //transform->position.x += 1;
-            if (transform->position.x > 1800) {
-				transform->position.x = 0;
-			}
+            if (ent->has<BackgroundTag>()) {
+                auto window = GameEngine::GetInstance().getWindow();
+                if (transform->position.x < -1580) {
+					auto drawable = ent->get<DrawableComponent>();
+					auto size = GameEngine::GetInstance().getWindow()->getSize();
+					transform->position.x = size.x - 0;
+					drawable->area.left = size.x - 0;
+					drawable->area.width = size.x - 0;
+				}
+            }
         });
+        for (int i = 0; i < _infoBackgrounds.size(); i++) {
+            auto &e = _backgrounds[i * 2];
+            auto &e2 = _backgrounds[i * 2 + 1];
+
+            auto t = e->get<VelocityComponent>();
+            auto t2 = e2->get<VelocityComponent>();
+
+            t->velocity = sf::Vector2f(_infoBackgrounds[i].speed, 0.f);
+            t2->velocity = sf::Vector2f(_infoBackgrounds[i].speed, 0.f);
+        }
 	}
 }
