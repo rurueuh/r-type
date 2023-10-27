@@ -49,8 +49,10 @@ static void shoot(ECS::Entity *ent, const float &dt)
 DevLevel::DevLevel() : Level()
 {
     auto window = GameEngine::GetInstance().getWindow();
-    auto size = window->getSize();
-    
+    sf::Vector2u size = { 1600, 900 };
+    #ifndef SERVER
+        size = window->getSize();
+    #endif
     for (int i = 0; i < _backgrounds.size(); i += 2) {
         auto d = _backgrounds[i]->assign<DrawableComponent>(_infoBackgrounds[i / 2].path, _infoBackgrounds[i / 2].area);
         auto t = _backgrounds[i]->assign<TransformComponent>(sf::Vector2f(0, 0), sf::Vector2f(1.f, 1.f), 0.f);
@@ -118,13 +120,23 @@ void DevLevel::update(const float dt)
                 auto window = GameEngine::GetInstance().getWindow();
                 if (transform->position.x < -1580) {
 					auto drawable = ent->get<DrawableComponent>();
-					auto size = GameEngine::GetInstance().getWindow()->getSize();
+                    sf::Vector2u size = { 1600, 900 };
+                    #ifndef SERVER
+                        size = GameEngine::GetInstance().getWindow()->getSize();
+                    #endif
 					transform->position.x = size.x - 0;
 					drawable->area.left = size.x - 0;
 					drawable->area.width = size.x - 0;
 				}
             }
         });
+        std::vector<ECS::Entity*> backgrounds = {};
+        _world->each<VelocityComponent>([&](ECS::Entity* ent, VelocityComponent* velocity) {
+            if (ent->has<BackgroundTag>()) {
+                backgrounds.push_back(ent);
+            }
+		});
+        _backgrounds = backgrounds;
         for (int i = 0; i < _infoBackgrounds.size(); i++) {
             auto &e = _backgrounds[i * 2];
             auto &e2 = _backgrounds[i * 2 + 1];

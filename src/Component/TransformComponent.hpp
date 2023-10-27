@@ -34,7 +34,10 @@ struct TransformComponent : public Component {
     }
 
     void setFullScreen(sf::RenderWindow* window, sf::IntRect &area) {
-		sf::Vector2u size = window->getSize();
+        sf::Vector2u size = { 1600, 900 };
+    #ifndef SERVER
+            size = window->getSize();
+    #endif
         sf::Vector2f scale = sf::Vector2f((float)size.x / area.width, (float)size.y / area.height);
         sf::Vector2f position = sf::Vector2f(area.left, area.top);
         this->scale = scale;
