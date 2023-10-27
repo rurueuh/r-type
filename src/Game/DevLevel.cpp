@@ -40,10 +40,28 @@ static void shoot(ECS::Entity *ent, const float &dt)
     bullet->assign<OnDie>([](ECS::World *world,ECS::Entity* ent) {
         std::cout << "Bullet die" << std::endl;
     });
+    bullet->assign<CollisionComponent>(sf::FloatRect(transform->position.x, transform->position.y, 32, 14),
+        ECS::Collision::BULLET_PLAYER);
     if (!velocity)
         bullet->assign<VelocityComponent>(620.f, 0.f);
     else
         bullet->assign<VelocityComponent>(620.f + (velocity->velocity.x), 0.f + (velocity->velocity.y));
+}
+
+static void collisionPlayerWall(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
+{
+	auto transform = e1->get<TransformComponent>();
+	auto velocity = e1->get<VelocityComponent>();
+	if (!transform || !velocity)
+		return;
+	transform->position.x -= velocity->velocity.x;
+	transform->position.y -= velocity->velocity.y;
+	velocity->velocity = sf::Vector2f(0.f, 0.f);
+}
+
+static void collisionBulletWall(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
+{
+    e2->die();
 }
 
 DevLevel::DevLevel() : Level()
@@ -53,6 +71,59 @@ DevLevel::DevLevel() : Level()
     #ifndef SERVER
         size = window->getSize();
     #endif
+    CreateBackground(window, size);
+    CreatePlayers();
+    auto wall = _world->CreateEntity();
+    wall->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
+    wall->assign<TransformComponent>(sf::Vector2f(600, 600), sf::Vector2f(3.f, 3.f), 0.f);
+    wall->assign<CollisionComponent>(sf::FloatRect(600, 600, 32 * 3, 14 * 3), ECS::Collision::WALL);
+    CollisionActionList collisionAction = {
+        { {ECS::Collision::PLAYER, ECS::Collision::WALL}, collisionPlayerWall},
+		{ {ECS::Collision::BULLET_PLAYER, ECS::Collision::WALL}, collisionBulletWall }
+	};
+    try {
+        _world->registerSystem<ECS::System::TransformSystem>(0);
+        _world->registerSystem<ECS::System::DrawableSystem>(1);
+        _world->registerSystem<ECS::System::CollisionSystem>(2, collisionAction);
+        _world->registerSystem<ECS::System::InputSystem>(3);
+        _world->registerSystem<ECS::System::VelocitySystem>(4);
+        _world->registerSystem<ECS::System::LifeSpanSystem>(5);
+        _world->registerSystem<ECS::System::HpSystem>(6);
+    } catch (const std::exception &e) {
+        std::cout << "ERROR : " << e.what() << std::endl;
+    }
+}
+
+void DevLevel::CreatePlayers()
+{
+    const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> input = {
+        { Input::Key::forward, forward },
+        { Input::Key::backward, backward },
+        { Input::Key::left, left },
+        { Input::Key::right, right },
+        { Input::Key::jump, shoot }
+    };
+    std::vector<ECS::Entity*> starship = _world->CreateEntity(6);
+    size_t i = 0;
+    for (auto ship : starship) {
+        ship->assign<PlayerComponent>();
+        ship->assign<InputComponent>(input);
+        ship->assign<PvComponent>(100);
+        ship->assign<DrawableComponent>("../assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
+        ship->assign<VelocityComponent>(0.1f, 0.1f);
+        const float x = 400;
+        const float y = 400;
+        ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
+        ship->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::PLAYER);
+        i++;
+    }
+#ifndef SERVER
+    starship[0]->get<PlayerComponent>()->hash = "me";
+#endif // SERVER
+}
+
+void DevLevel::CreateBackground(sf::RenderWindow* window, sf::Vector2u& size)
+{
     for (int i = 0; i < _backgrounds.size(); i += 2) {
         auto d = _backgrounds[i]->assign<DrawableComponent>(_infoBackgrounds[i / 2].path, _infoBackgrounds[i / 2].area);
         auto t = _backgrounds[i]->assign<TransformComponent>(sf::Vector2f(0, 0), sf::Vector2f(1.f, 1.f), 0.f);
@@ -69,38 +140,6 @@ DevLevel::DevLevel() : Level()
         _backgrounds[i + 1]->assign<BackgroundTag>();
         t2->setFullScreen(window, d2->area);
         t2->scale += sf::Vector2f(0.1f, 0.1f);
-	}
-    const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> input = {
-        { Input::Key::forward, forward},
-        { Input::Key::backward, backward},
-		{ Input::Key::left, left},
-		{ Input::Key::right, right},
-        { Input::Key::jump, shoot}
-    };
-    std::vector<ECS::Entity*> starship = _world->CreateEntity(2);
-    for (auto ship : starship) {
-        ship->assign<PlayerComponent>();
-        ship->assign<InputComponent>(input);
-        ship->assign<PvComponent>(100);
-        ship->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-        ship->assign<VelocityComponent>(0.1f, 0.1f);
-        const float x = 400;
-        const float y = 400;
-        ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
-    }
-    #ifndef SERVER
-        starship[0]->get<PlayerComponent>()->hash = "me";
-    #endif // SERVER
-
-    try {
-        _world->registerSystem<ECS::System::TransformSystem>(0);
-        _world->registerSystem<ECS::System::DrawableSystem>(1);
-        _world->registerSystem<ECS::System::InputSystem>(2);
-        _world->registerSystem<ECS::System::VelocitySystem>(3);
-        _world->registerSystem<ECS::System::LifeSpanSystem>(4);
-        _world->registerSystem<ECS::System::HpSystem>(5);
-    } catch (const std::exception &e) {
-        std::cout << "ERROR : " << e.what() << std::endl;
     }
 }
 
@@ -124,9 +163,9 @@ void DevLevel::update(const float dt)
                     #ifndef SERVER
                         size = GameEngine::GetInstance().getWindow()->getSize();
                     #endif
-					transform->position.x = size.x - 0;
-					drawable->area.left = size.x - 0;
-					drawable->area.width = size.x - 0;
+					transform->position.x = (float)size.x;
+					drawable->area.left = size.x;
+					drawable->area.width = size.x;
 				}
             }
         });

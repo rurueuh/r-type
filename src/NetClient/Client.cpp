@@ -9,6 +9,7 @@
         _UDPsocket.setBlocking(false);
         _networkInterceptor = std::make_shared<sf::Thread>(&Client::update, this);
         _networkInterceptor->launch();
+        _threadGarbage->launch();
     }
 
     void Client::send(std::string type, std::string data)
@@ -163,10 +164,10 @@
             return;
         }
         // todo: voir si on peut pas unmutex ici pour pas bloquer le thread (recuperer une frame en avance)
-        for (auto& entWorld : world->getEntities()) {
-            delete entWorld;
-        }
-        world->getEntities().clear();
+        this->_mutexGarbage.lock();
+        _entitiesGarbage = world->getEntities();
+        this->_mutexGarbage.unlock();
+        world->getEntities() = {};
         for (auto& ent : this->_entities) {
             ent->assingWorld(world);
 		}

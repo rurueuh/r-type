@@ -12,7 +12,7 @@
 #include "PvComponent.hpp"
 #include "PlayerComponent.hpp"
 #include "InputComponent.hpp"
-#include "ColliderComponent.hpp"
+#include "CollisionComponent.hpp"
 #include "DamageComponent.hpp"
 #include "DrawableComponent.hpp"
 #include "TransformComponent.hpp"

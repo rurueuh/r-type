@@ -39,7 +39,7 @@ struct TransformComponent : public Component {
             size = window->getSize();
     #endif
         sf::Vector2f scale = sf::Vector2f((float)size.x / area.width, (float)size.y / area.height);
-        sf::Vector2f position = sf::Vector2f(area.left, area.top);
+        sf::Vector2f position = sf::Vector2f((float)area.left, (float)area.top);
         this->scale = scale;
         this->position = position;
 	}

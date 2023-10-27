@@ -12,8 +12,6 @@ enum ShootType {
     LASER = 0,
     MISSILE,
     NONE
-
-
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ShootType &type)

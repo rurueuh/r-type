@@ -39,7 +39,7 @@ namespace ECS::System {
                     drawable->sprite.setRotation(transform->rotation);
                     auto& sprite = drawable->sprite;
                     window->draw(sprite);
-                    //window->draw(rect);
+                    window->draw(rect);
                     });
     #endif
             }
