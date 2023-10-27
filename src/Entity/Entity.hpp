@@ -35,7 +35,7 @@ namespace InternalECS {
 
 		~ComponentHandler() {
 			for (auto& pair : components) {
-				for (void* component : pair.second) {
+				for (Component* component : pair.second) {
 					delete component;
 				}
 			}
