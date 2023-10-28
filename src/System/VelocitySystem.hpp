@@ -19,7 +19,6 @@ namespace ECS::System {
         ~VelocitySystem() = default;
 
         virtual void tick(ECS::World* world, const float& dt) {
-            DCC
             world->each<VelocityComponent>(
                 [&](ECS::Entity* entity,
                     VelocityComponent* velocity) {
@@ -40,7 +39,7 @@ namespace ECS::System {
                             velocity->velocity.y = 0;
                         else
                             velocity->velocity.y -= velocity->velocity.y * 0.1f * dt;
-                         std::cout << velocity->velocity.x << " " << velocity->velocity.y << std::endl;
+                        // std::cout << velocity->velocity.x << " " << velocity->velocity.y << std::endl;
                 });
         }
 
