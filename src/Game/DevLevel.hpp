@@ -18,6 +18,7 @@ public:
 	~DevLevel();
 
 	virtual void update(const float dt) override;
+	void BackgroundParallax();
 private:
 	std::vector<ECS::Entity*> _backgrounds = _world->CreateEntity(10);
 	

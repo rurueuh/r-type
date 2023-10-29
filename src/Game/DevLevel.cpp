@@ -3,6 +3,7 @@
 #include "GameEngine.hpp"
 #include "World.hpp"
 #include "Entity.hpp"
+#include "DeadLevel.hpp"
 
 static void forward(ECS::Entity *ent, const float &dt)
 {
@@ -64,6 +65,29 @@ static void collisionBulletWall(ECS::World *world, ECS::Entity *e1, ECS::Entity 
     e2->die();
 }
 
+static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
+{
+    // get all player
+std::vector<ECS::Entity*> players = {};
+    world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
+	players.push_back(ent);
+	});
+	// check if all player are dead
+	bool allDead = true;
+	for (auto player : players) {
+		if (player->get<PvComponent>()->_health > 0)
+			allDead = false;
+	}
+	if (allDead) {
+		std::cout << "All player are dead" << std::endl;
+        auto &levelManager = LevelManager::getInstance();
+        levelManager.addLevel<DeadLevel>();
+        levelManager.removeLevel<DevLevel>();
+        levelManager.setCurrentLevel<DeadLevel>();
+
+	}
+}
+
 DevLevel::DevLevel() : Level()
 {
     auto window = GameEngine::GetInstance().getWindow();
@@ -108,13 +132,14 @@ void DevLevel::CreatePlayers()
     for (auto ship : starship) {
         ship->assign<PlayerComponent>();
         ship->assign<InputComponent>(input);
-        ship->assign<PvComponent>(100);
+        ship->assign<PvComponent>(100, 100);
         ship->assign<DrawableComponent>("../assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
         ship->assign<VelocityComponent>(0.1f, 0.1f);
         const float x = 400;
         const float y = 400;
         ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
         ship->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::PLAYER);
+        ship->assign<OnDie>(checkPlayerEnd);
         i++;
     }
 #ifndef SERVER
@@ -150,41 +175,47 @@ DevLevel::~DevLevel()
 void DevLevel::update(const float dt)
 {
     static sf::Clock clock;
-    if (clock.getElapsedTime().asSeconds() > 0.001) {
+    if (clock.getElapsedTime().asSeconds() > 0.1) {
 		clock.restart();
+        BackgroundParallax();
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
+			pv->_health -= 1;
 		});
-        _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
-            if (ent->has<BackgroundTag>()) {
-                auto window = GameEngine::GetInstance().getWindow();
-                if (transform->position.x < -1580) {
-					auto drawable = ent->get<DrawableComponent>();
-                    sf::Vector2u size = { 1600, 900 };
-                    #ifndef SERVER
-                        size = GameEngine::GetInstance().getWindow()->getSize();
-                    #endif
-					transform->position.x = (float)size.x;
-					drawable->area.left = size.x;
-					drawable->area.width = size.x;
-				}
-            }
-        });
-        std::vector<ECS::Entity*> backgrounds = {};
-        _world->each<VelocityComponent>([&](ECS::Entity* ent, VelocityComponent* velocity) {
-            if (ent->has<BackgroundTag>()) {
-                backgrounds.push_back(ent);
-            }
-		});
-        _backgrounds = backgrounds;
-        for (int i = 0; i < _infoBackgrounds.size(); i++) {
-            auto &e = _backgrounds[i * 2];
-            auto &e2 = _backgrounds[i * 2 + 1];
-
-            auto t = e->get<VelocityComponent>();
-            auto t2 = e2->get<VelocityComponent>();
-
-            t->velocity = sf::Vector2f(_infoBackgrounds[i].speed, 0.f);
-            t2->velocity = sf::Vector2f(_infoBackgrounds[i].speed, 0.f);
-        }
 	}
+}
+
+void DevLevel::BackgroundParallax()
+{
+    _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
+        if (ent->has<BackgroundTag>()) {
+            auto window = GameEngine::GetInstance().getWindow();
+            if (transform->position.x < -1580) {
+                auto drawable = ent->get<DrawableComponent>();
+                sf::Vector2u size = { 1600, 900 };
+#ifndef SERVER
+                size = GameEngine::GetInstance().getWindow()->getSize();
+#endif
+                transform->position.x = (float)size.x;
+                drawable->area.left = size.x;
+                drawable->area.width = size.x;
+            }
+        }
+        });
+    std::vector<ECS::Entity*> backgrounds = {};
+    _world->each<VelocityComponent>([&](ECS::Entity* ent, VelocityComponent* velocity) {
+        if (ent->has<BackgroundTag>()) {
+            backgrounds.push_back(ent);
+        }
+        });
+    _backgrounds = backgrounds;
+    for (int i = 0; i < _infoBackgrounds.size(); i++) {
+        auto& e = _backgrounds[i * 2];
+        auto& e2 = _backgrounds[i * 2 + 1];
+
+        auto t = e->get<VelocityComponent>();
+        auto t2 = e2->get<VelocityComponent>();
+
+        t->velocity = sf::Vector2f(_infoBackgrounds[i].speed, 0.f);
+        t2->velocity = sf::Vector2f(_infoBackgrounds[i].speed, 0.f);
+    }
 }
