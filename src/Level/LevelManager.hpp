@@ -29,6 +29,28 @@ public:
 		return _currentLevel;
 	}
 
+	template <typename T>
+	void setCurrentLevel() {
+		for (auto &level : _levelLists) {
+			if (typeid(*level) == typeid(T)) {
+				_currentLevel = level;
+				return;
+			}
+		}
+	}
+
+	template <typename T>
+	void removeLevel() {
+		for (auto it = _levelLists.begin(); it != _levelLists.end(); ++it) {
+			if (typeid(**it) == typeid(T)) {
+				if (_currentLevel == *it)
+					_currentLevel = _levelLists.back();
+				_levelLists.erase(it);
+				return;
+			}
+		}
+	}
+
 private:
 	LevelManager() = default;
 
