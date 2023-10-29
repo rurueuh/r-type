@@ -127,12 +127,13 @@ void DevLevel::CreatePlayers()
         { Input::Key::right, right },
         { Input::Key::jump, shoot }
     };
+    shoot(nullptr, 0.f); // for start cooldown shoot
     std::vector<ECS::Entity*> starship = _world->CreateEntity(6);
     size_t i = 0;
     for (auto ship : starship) {
         ship->assign<PlayerComponent>();
         ship->assign<InputComponent>(input);
-        ship->assign<PvComponent>(100, 100);
+        ship->assign<PvComponent>(100.f, 100.f);
         ship->assign<DrawableComponent>("../assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
         ship->assign<VelocityComponent>(0.1f, 0.1f);
         const float x = 400;
@@ -176,11 +177,12 @@ void DevLevel::update(const float dt)
 {
     static sf::Clock clock;
     if (clock.getElapsedTime().asSeconds() > 0.1) {
-		clock.restart();
         BackgroundParallax();
+        std::cout << dt << std::endl;
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
-			pv->_health -= 1;
+            pv->_health -= 1.f * dt * 100.f;
 		});
+		clock.restart();
 	}
 }
 

@@ -64,8 +64,9 @@ void GameEngine::Run(void)
         _client.onInput(world);
         _window->clear();
 #endif
-
-        manager.update();
+        static sf::Clock clock;
+        const float dt = clock.restart().asSeconds();
+        manager.update(dt);
         this->replicateEntities();
 
 #ifndef SERVER // CLIENT ONLY

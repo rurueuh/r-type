@@ -5,10 +5,10 @@
 #include "ComponentBase.hpp"
 
 struct PvComponent : public Component {
-    PvComponent(int health, int max) : _health(health), _maxHealth(max)  {};
+    PvComponent(float health, float max) : _health(health), _maxHealth(max)  {};
     PvComponent() : _health(0), _maxHealth(0) {};
-    int _health = 0;
-    int _maxHealth = 0;
+    float _health = 0;
+    float _maxHealth = 0;
 
     inline virtual std::string toString(void) const {
         std::string str = "";

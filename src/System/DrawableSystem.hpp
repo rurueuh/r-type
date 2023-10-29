@@ -41,7 +41,7 @@ namespace ECS::System {
                 auto pv = entity->get<PvComponent>();
                 if (pv) {
                     auto hpMax = pv->_maxHealth;
-                    constexpr int maxHpBar = 100;
+                    constexpr float maxHpBar = 100.f;
                     hpMax = std::max(hpMax, maxHpBar);
                     constexpr int offset = 20;
                     constexpr int height = 15;
