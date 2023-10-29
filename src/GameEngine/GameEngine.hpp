@@ -7,6 +7,9 @@
 #include <chrono>
 #include <thread>
 
+// todo: refactor this
+void setLevel(const std::string& str);
+
 class GameEngine
 {
 public:
