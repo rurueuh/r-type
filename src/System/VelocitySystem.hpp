@@ -30,8 +30,15 @@ namespace ECS::System {
                         transform->position.y += velocity->velocity.y * dt;
 
                         // remove 0.1f (static value) to each velocity (0.1f is the friction)
-                        velocity->velocity.x -= velocity->velocity.x * 0.1f * dt;
-                        velocity->velocity.y -= velocity->velocity.y * 0.1f * dt;
+                        constexpr float frictionFix = 0.5f;
+                        if (velocity->velocity.x < frictionFix && velocity->velocity.x > -frictionFix)
+                            velocity->velocity.x = 0;
+                        else 
+                            velocity->velocity.x -= velocity->velocity.x * frictionFix * dt;
+                        if (velocity->velocity.y < frictionFix && velocity->velocity.y > -frictionFix)
+                            velocity->velocity.y = 0;
+                        else
+                            velocity->velocity.y -= velocity->velocity.y * 0.1f * dt;
                         // std::cout << velocity->velocity.x << " " << velocity->velocity.y << std::endl;
                 });
         }
