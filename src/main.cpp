@@ -4,9 +4,25 @@
 #include "Component.hpp"
 #include "LevelManager.hpp"
 #include "DevLevel.hpp"
+#include "DeadLevel.hpp"
 #include "GameEngine.hpp"
 #include "Utils/Utils.hpp"
 #include <snappy.h>
+
+void setLevel(const std::string &str)
+{
+    if (str == "DevLevel") {
+		LevelManager::getInstance().addLevel<DevLevel>();
+        LevelManager::getInstance().setCurrentLevel<DevLevel>();
+    }
+
+    else if (str == "DeadLevel") {
+        LevelManager::getInstance().addLevel<DeadLevel>();
+		LevelManager::getInstance().setCurrentLevel<DeadLevel>();
+    }
+    else
+        std::cerr << "Unknown level: " << str << std::endl;
+}
 
 int main(void)
 {
@@ -21,6 +37,9 @@ int main(void)
     Utils::registerComponent<EnemyTag>("ETag");
     Utils::registerComponent<BackgroundTag>("BTag");
     Utils::registerComponent<CollisionComponent>("CollisionComponent");
+
+    Utils::registerLevel<DevLevel>("DevLevel");
+    Utils::registerLevel<DeadLevel>("DeadLevel");
 
     auto &engine = GameEngine::GetInstance();
     engine.Init<DevLevel>();

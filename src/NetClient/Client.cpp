@@ -82,6 +82,9 @@
             if (type == "entities") {
 				recvEntity(data);
 			}
+            if (type == "level") {
+				recvLevel(data);
+			}
 			//sf::sleep(sf::microseconds(5));
             
 		}
@@ -155,6 +158,11 @@
         _isReadySync = true;
 		_mutex.unlock();
     }
+
+    void Client::recvLevel(std::string data)
+    {
+        currentLevelServer = data;
+    }
     
     void Client::networkSync(ECS::World* world)
     {
@@ -167,6 +175,14 @@
         this->_mutexGarbage.lock();
         _entitiesGarbage = world->getEntities();
         this->_mutexGarbage.unlock();
+        auto& levelManager = LevelManager::getInstance();
+        auto& level = levelManager.getCurrentLevel();
+        auto& typeinfo = typeid(*level);
+        auto string = Utils::getRegisteredLevel(typeinfo);
+        if (currentLevelServer != "" && string != currentLevelServer) {
+			setLevel(currentLevelServer);
+		}
+        
         world->getEntities() = {};
         for (auto& ent : this->_entities) {
             ent->assingWorld(world);

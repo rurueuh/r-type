@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "LevelManager.hpp"
 
 #ifdef SERVER // SERVER ONLY
 	Server::Server()
@@ -164,6 +165,12 @@
 			player->hash = clients[i].hash;
 			i++;
 		});
+		
+		auto &levelManager = LevelManager::getInstance();
+		auto &level = levelManager.getCurrentLevel();
+		auto &typeinfo = typeid(*level);
+		auto string = Utils::getRegisteredLevel(typeinfo);
+		sendToAll("level", string);
 	}
 	void Server::syncClientInput(ECS::World* world)
 	{

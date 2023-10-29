@@ -30,6 +30,7 @@ public:
 	bool connect(sf::IpAddress ip, unsigned short port);
 	void update(void);
 	void recvEntity(std::string data);
+	void recvLevel(std::string data);
 
 	void networkSync(ECS::World *world);
 	void onInput(ECS::World *world);
@@ -56,6 +57,8 @@ private:
 	bool _isReadySync = false;
 	sf::Mutex _mutex = sf::Mutex();
 	sf::Mutex _mutexGarbage = sf::Mutex();
+
+	std::string currentLevelServer = "";
 
 	std::vector<ECS::Entity*> _entities;
 	std::vector<ECS::Entity*> _entitiesGarbage;
