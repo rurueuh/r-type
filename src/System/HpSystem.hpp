@@ -14,8 +14,10 @@ namespace ECS {
 
             virtual void tick(ECS::World* world, const float& dt) override {
                 world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
-                    if (pv->health <= 0) {
+                    if (pv->_health <= 0) {
 				        ent->die();
+			        } else if (pv->_health > pv->_maxHealth) {
+				        pv->_health = pv->_maxHealth;
 			        }
 		        });
             }

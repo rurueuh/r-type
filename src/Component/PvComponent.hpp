@@ -5,18 +5,20 @@
 #include "ComponentBase.hpp"
 
 struct PvComponent : public Component {
-    PvComponent(int health) : health(health) {};
-    PvComponent() : health(0) {};
-    int health = 0;
+    PvComponent(int health, int max) : _health(health), _maxHealth(max)  {};
+    PvComponent() : _health(0), _maxHealth(0) {};
+    int _health = 0;
+    int _maxHealth = 0;
 
     inline virtual std::string toString(void) const {
         std::string str = "";
-        str += std::to_string(health);
+        str += std::to_string(_health) + " ";
+        str += std::to_string(_maxHealth);
         return str;
 	}
 
     virtual void fromString(std::string str) override {
         std::stringstream ss = std::stringstream(str);
-        ss >> health;
+        ss >> _health >> _maxHealth;
     }
 };

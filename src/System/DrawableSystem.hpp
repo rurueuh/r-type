@@ -24,25 +24,64 @@ namespace ECS::System {
 
                 world->each<DrawableComponent>([&](ECS::Entity* entity, DrawableComponent* drawable) {
                     auto transform = entity->get<TransformComponent>();
-                    sf::RectangleShape rect;
-                    rect.setSize(sf::Vector2f(drawable->sprite.getTextureRect().width * transform->scale.x, drawable->sprite.getTextureRect().height * transform->scale.y));
-                    rect.setOutlineColor(sf::Color::Red);
-                    rect.setOutlineThickness(1);
-                    rect.setFillColor(sf::Color::Transparent);
-                    rect.setPosition(transform->position);
 
                     if (!transform)
                         return;
-                    // todo: move this to a system
-                    drawable->sprite.setPosition(transform->position);
-                    drawable->sprite.setScale(transform->scale);
-                    drawable->sprite.setRotation(transform->rotation);
-                    auto& sprite = drawable->sprite;
-                    window->draw(sprite);
-                    window->draw(rect);
+                    drawHPBar(entity, transform, drawable, window);
+
+                    drawDebugRect(drawable, transform, window);
+                    drawSprite(drawable, transform, window);
                     });
     #endif
             }
+#ifndef SERVER
+
+            void drawHPBar(ECS::Entity* entity, TransformComponent* transform, DrawableComponent* drawable, sf::RenderWindow* window)
+            {
+                auto pv = entity->get<PvComponent>();
+                if (pv) {
+                    auto hpMax = pv->_maxHealth;
+                    constexpr int maxHpBar = 100;
+                    hpMax = std::max(hpMax, maxHpBar);
+                    constexpr int offset = 20;
+                    constexpr int height = 15;
+
+                    sf::RectangleShape rectBack;
+                    rectBack.setSize(sf::Vector2f((float)hpMax * 2, (float)height));
+                    rectBack.setFillColor(sf::Color::Color(255, 255, 255, 150));
+                    auto midX = transform->position.x + (drawable->sprite.getTextureRect().width * transform->scale.x) / 2;
+                    rectBack.setPosition(midX - hpMax, transform->position.y - offset);
+
+                    sf::RectangleShape rectFront;
+                    rectFront.setSize(sf::Vector2f((float)pv->_health * 2, (float)height));
+                    rectFront.setFillColor(sf::Color::Color(255, 0, 0, 255));
+                    rectFront.setPosition(midX - hpMax, transform->position.y - offset);
+
+                    window->draw(rectBack);
+                    window->draw(rectFront);
+                }
+            }
+
+            void drawSprite(DrawableComponent* drawable, TransformComponent* transform, sf::RenderWindow* window)
+            {
+                drawable->sprite.setPosition(transform->position);
+                drawable->sprite.setScale(transform->scale);
+                drawable->sprite.setRotation(transform->rotation);
+                auto& sprite = drawable->sprite;
+                window->draw(sprite);
+            }
+
+            void drawDebugRect(DrawableComponent* drawable, TransformComponent* transform, sf::RenderWindow* window)
+            {
+                sf::RectangleShape rect;
+                rect.setSize(sf::Vector2f(drawable->sprite.getTextureRect().width * transform->scale.x, drawable->sprite.getTextureRect().height * transform->scale.y));
+                rect.setOutlineColor(sf::Color::Red);
+                rect.setOutlineThickness(1);
+                rect.setFillColor(sf::Color::Transparent);
+                rect.setPosition(transform->position);
+                window->draw(rect);
+            }
+#endif
 
         protected:
         private:
