@@ -74,14 +74,11 @@ void GameEngine::Run(void)
 #endif
         static sf::Clock clockFrame;
         float deltaTime = clockFrame.restart().asSeconds();
-        const auto TIMESLEEP = sf::milliseconds(16);
-        if (deltaTime < 0.1) {
-            auto time = TIMESLEEP - sf::seconds(deltaTime);
-            if (time.asMicroseconds() > 0)
-                sf::sleep(TIMESLEEP - sf::seconds(deltaTime));
-        }
-        else {
-            sf::sleep(TIMESLEEP);
+        const auto TIMESLEEP = sf::milliseconds(12);
+        auto time = TIMESLEEP - sf::seconds(deltaTime);
+        if (time.asMicroseconds() > 0) {
+            //std::cout << "sleep: " << time.asSeconds() << std::endl;
+            sf::sleep(TIMESLEEP - sf::seconds(deltaTime));
         }
         printFPS();
     }
