@@ -42,7 +42,7 @@ namespace ECS::System {
                 if (pv) {
                     auto hpMax = pv->_maxHealth;
                     constexpr float maxHpBar = 100.f;
-                    hpMax = std::max(hpMax, maxHpBar);
+                    hpMax = std::min(hpMax, maxHpBar);
                     constexpr int offset = 20;
                     constexpr int height = 15;
 
