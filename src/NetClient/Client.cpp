@@ -49,20 +49,35 @@
 
     bool Client::connect(sf::IpAddress ip, unsigned short port)
     {
-        send("hello", "client");
+        std::shared_ptr<sf::Thread> threadConnect = std::make_shared<sf::Thread>(&Client::threadConnect, this);
+        threadConnect->launch();
+        sf::Clock timeOut;
         while (1) {
-            _UDPsocket.setBlocking(true);
-            auto [type, data] = receive();
-            _UDPsocket.setBlocking(false);
-            if (type != "hello") {
-                std::cout << "bad type" << std::endl;
+            if (timeOut.getElapsedTime().asSeconds() > 5) {
+                std::cerr << "error can join server" << std::endl;
+                threadConnect->terminate();
                 return false;
             }
-            _clientHash = data;
-            break;
+            if (_clientHash != "me") {
+                break;
+            }
         }
+        threadConnect->terminate();
 		std::cout << "client hash: " << _clientHash << std::endl;
 	    return true;
+    }
+    
+    void Client::threadConnect(void)
+    {
+        send("hello", "client");
+        _UDPsocket.setBlocking(true);
+        auto [type, data] = receive();
+        _UDPsocket.setBlocking(false);
+        if (type != "hello") {
+            std::cout << "bad type" << std::endl;
+            return;
+        }
+        _clientHash = data;
     }
 
     void Client::update(void)
