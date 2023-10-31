@@ -37,13 +37,18 @@ int main(void)
     Utils::registerComponent<EnemyTag>("ETag");
     Utils::registerComponent<BackgroundTag>("BTag");
     Utils::registerComponent<CollisionComponent>("CollisionComponent");
+    Utils::registerComponent<TextComponent>("TextComponent");
 
     Utils::registerLevel<DevLevel>("DevLevel");
     Utils::registerLevel<DeadLevel>("DeadLevel");
 
-    auto &engine = GameEngine::GetInstance();
-    engine.Init<DevLevel>();
-    engine.Run();
+    try {
+        auto &engine = GameEngine::GetInstance();
+        engine.Init<DeadLevel>();
+        engine.Run();
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     return 0;
 }
