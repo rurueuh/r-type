@@ -47,6 +47,7 @@ public:
 		Server &getServer(void) { return _server; }
 	#else // CLIENT ONLY
 		Client &getClient(void) { return _client; }
+		sf::Font &getFont(void) { return _font; }
 	#endif
 		
 private:
@@ -61,6 +62,7 @@ private:
 		Server _server;
 	#else // CLIENT ONLY
 		Client _client;
+		sf::Font _font;
 	#endif
 
 };

@@ -3,6 +3,9 @@
 
 GameEngine::GameEngine()
 {
+    #ifndef SERVER
+        _font.loadFromFile("../assets/font.ttf");
+    #endif
     srand(time(NULL));
 }
 
