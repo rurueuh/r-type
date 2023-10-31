@@ -211,6 +211,8 @@ void DevLevel::BackgroundParallax()
         }
         });
     _backgrounds = backgrounds;
+    if (_backgrounds.size() == 0)
+        return;
     for (int i = 0; i < _infoBackgrounds.size(); i++) {
         auto& e = _backgrounds[i * 2];
         auto& e2 = _backgrounds[i * 2 + 1];

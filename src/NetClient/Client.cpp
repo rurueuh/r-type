@@ -100,6 +100,9 @@
             if (type == "level") {
 				recvLevel(data);
 			}
+            if (type == "disconnect") {
+                GameEngine::GetInstance().Shutdown();
+            }
 			//sf::sleep(sf::microseconds(5));
             
 		}

@@ -14,8 +14,13 @@ class GameEngine
 {
 public:
 	static GameEngine& GetInstance() {
-		static GameEngine instance;
-		return instance;
+		try {
+			static GameEngine instance;
+			return instance;
+		} catch (const std::exception &e) {
+			std::cerr << e.what() << std::endl;
+			exit(84);
+		}
 	}
 
 	template<typename T>

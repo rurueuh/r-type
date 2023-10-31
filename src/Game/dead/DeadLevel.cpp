@@ -78,8 +78,13 @@ static void use(ECS::Entity *ent, const float &dt)
         LevelManager::getInstance().addLevel<DevLevel>();
         LevelManager::getInstance().setCurrentLevel<DevLevel>();
     } else {
+        #ifndef SERVER
         auto &gameEngine = GameEngine::GetInstance();
         gameEngine.Shutdown();
+        #else
+            auto &gameEngine = GameEngine::GetInstance();
+            gameEngine.getServer().disconnectClient();
+        #endif
     }
 }
 
