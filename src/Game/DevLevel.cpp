@@ -31,6 +31,8 @@ static void shoot(ECS::Entity *ent, const float &dt)
     if (cooldown.getElapsedTime().asSeconds() < 0.5)
 		return;
     cooldown.restart();
+    if (!ent) // for start cooldown shoot
+        return;
     auto transform = ent->get<TransformComponent>();
     auto velocity = ent->get<VelocityComponent>();
     auto world = ent->getWorld();
@@ -180,7 +182,7 @@ void DevLevel::update(const float dt)
         BackgroundParallax();
         std::cout << dt << std::endl;
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
-            pv->_health -= 1.f * dt * 100.f;
+            pv->_health -= 1.f * dt * 1000.f;
 		});
 		clock.restart();
 	}
