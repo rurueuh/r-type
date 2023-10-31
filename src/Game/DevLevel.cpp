@@ -180,7 +180,6 @@ void DevLevel::update(const float dt)
     static sf::Clock clock;
     if (clock.getElapsedTime().asSeconds() > 0.1) {
         BackgroundParallax();
-        std::cout << dt << std::endl;
         _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
             pv->_health -= 1.f * dt * 1000.f;
 		});
