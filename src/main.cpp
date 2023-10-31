@@ -44,7 +44,7 @@ int main(void)
 
     try {
         auto &engine = GameEngine::GetInstance();
-        engine.Init<DeadLevel>();
+        engine.Init<DevLevel>();
         engine.Run();
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
