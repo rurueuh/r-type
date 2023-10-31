@@ -51,10 +51,10 @@ void GameEngine::replicateEntities(void)
 void GameEngine::Run(void)
 {
     auto& manager = LevelManager::getInstance();
-    auto& level = manager.getCurrentLevel();
-    auto world = level->getWorld();
     while (this->_isRunning)
     {
+        auto& level = manager.getCurrentLevel();
+        auto world = level->getWorld();
 #ifndef SERVER // CLIENT ONLY
         sf::Event event;
         while (_window->pollEvent(event)) {
