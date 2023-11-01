@@ -63,6 +63,13 @@ static void collisionPlayerWall(ECS::World *world, ECS::Entity *e1, ECS::Entity 
 static void collisionBulletWall(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
 {
     e2->die();
+    e1->die();
+}
+
+static void collisionBulletAllyToEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
+{
+	e2->die();
+	e1->die();
 }
 
 static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
@@ -88,6 +95,29 @@ std::vector<ECS::Entity*> players = {};
 	}
 }
 
+static void shootEnemy(ECS::World *world, const float &dt, ECS::Entity *ent)
+{
+	static sf::Clock cooldown;
+	if (cooldown.getElapsedTime().asSeconds() < 1.5)
+		return;
+	cooldown.restart();
+	auto transform = ent->get<TransformComponent>();
+	auto velocity = ent->get<VelocityComponent>();
+	auto bullet = world->CreateEntity();
+	bullet->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
+	bullet->assign<TransformComponent>(transform->position, sf::Vector2f(-1.f, 1.f), 0.f);
+	bullet->assign<LifeSpan>(2.f);
+    bullet->assign<OnDie>([](ECS::World* world, ECS::Entity* ent) {
+		std::cout << "Bullet die" << std::endl;
+	});
+	bullet->assign<CollisionComponent>(sf::FloatRect(transform->position.x, transform->position.y, 32, 14),
+        ECS::Collision::BULLET_ENEMY);
+	if (!velocity)
+		bullet->assign<VelocityComponent>(-620.f, 0.f);
+	else
+		bullet->assign<VelocityComponent>(-620.f + (velocity->velocity.x), 0.f + (velocity->velocity.y));
+}
+
 DevLevel::DevLevel() : Level()
 {
     auto window = GameEngine::GetInstance().getWindow();
@@ -95,6 +125,14 @@ DevLevel::DevLevel() : Level()
     #ifndef SERVER
         size = window->getSize();
     #endif
+    auto enemy = _world->CreateEntity();
+    enemy->assign<DrawableComponent>("../assets/enemy.png", sf::IntRect(5, 6, 21, 24));
+    enemy->assign<TransformComponent>(sf::Vector2f(800, 400), sf::Vector2f(2.f, 2.f), 0.f);
+    enemy->assign<CollisionComponent>(sf::FloatRect(800, 400, 21 * 2, 24 * 2), ECS::Collision::ENEMY);
+    enemy->assign<VelocityComponent>(0.1f, 0.1f);
+    enemy->assign<PvComponent>(60.f, 60.f);
+    enemy->assign<EnemyTag>();
+    enemy->assign<EnemyPath>(FOLLOW_PLAYER);
     CreateBackground(window, size);
     CreatePlayers();
     auto wall = _world->CreateEntity();
@@ -103,8 +141,15 @@ DevLevel::DevLevel() : Level()
     wall->assign<CollisionComponent>(sf::FloatRect(600, 600, 32 * 3, 14 * 3), ECS::Collision::WALL);
     CollisionActionList collisionAction = {
         { {ECS::Collision::PLAYER, ECS::Collision::WALL}, collisionPlayerWall},
-		{ {ECS::Collision::BULLET_PLAYER, ECS::Collision::WALL}, collisionBulletWall }
+        { {ECS::Collision::BULLET_PLAYER, ECS::Collision::WALL}, collisionBulletWall },
+        { {ECS::Collision::BULLET_PLAYER, ECS::Collision::ENEMY }, collisionBulletWall },
+        { {ECS::Collision::BULLET_ENEMY, ECS::Collision::BULLET_PLAYER}, collisionBulletAllyToEnemy },
+		//{ {ECS::Collision::BULLET_ENEMY, ECS::Collision::WALL}, collisionB/*ulletWall },
+		//{ {ECS::Collision::BULLET_ENEMY, ECS::Collision::PLAYER}, collisionBulletWall },*/
 	};
+    ECS::System::Path::ShootPathType typeOfShoot = {
+        { FOLLOW_PLAYER, shootEnemy }
+    };
     try {
         _world->registerSystem<ECS::System::TransformSystem>(0);
         _world->registerSystem<ECS::System::DrawableSystem>(1);
@@ -113,6 +158,7 @@ DevLevel::DevLevel() : Level()
         _world->registerSystem<ECS::System::VelocitySystem>(4);
         _world->registerSystem<ECS::System::LifeSpanSystem>(5);
         _world->registerSystem<ECS::System::HpSystem>(6);
+        _world->registerSystem<ECS::System::PathSystem>(7, typeOfShoot);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }
@@ -178,10 +224,6 @@ void DevLevel::update(const float dt)
     static sf::Clock clock;
     if (clock.getElapsedTime().asSeconds() > 0.1) {
         BackgroundParallax();
-        std::cout << dt << std::endl;
-        _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
-            pv->_health -= 1.f * dt * 100.f;
-		});
 		clock.restart();
 	}
 }

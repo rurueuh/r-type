@@ -25,6 +25,7 @@
 #include "VelocityComponent.hpp"
 #include "LifeSpan.hpp"
 #include "OnDie.hpp"
+#include "EnemyPath.hpp"
 
 
 #include "Utils.hpp"
