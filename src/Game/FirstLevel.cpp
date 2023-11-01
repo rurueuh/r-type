@@ -122,3 +122,96 @@ FirstLevel::FirstLevel() : Level()
         std::cout << "ERROR : " << e.what() << std::endl;
     }
 }
+
+void FirstLevel::CreatePlayers()
+{}
+
+void FirstLevel::CreateBackground(sf::RenderWindow* window, sf::Vector2u& size)
+{}
+
+void FirstLevel::CreateWall(sf::RenderWindow* window, sf::Vector2u& size)
+{}
+
+FirstLevel::~FirstLevel()
+{
+}
+
+void FirstLevel::update(const float dt)
+{
+    static sf::Clock clock;
+    static sf::Clock enemySpawnClock;
+    static bool schwarziSpawned = false;
+    static bool fliesSpawned = false;
+    static bool bossSpawned = false;
+
+    if (clock.getElapsedTime().asSeconds() > 0.1) {
+        BackgroundParallax();
+        ScrollWalls(dt)
+        _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
+            pv->_health -= 1.f * dt * 1000.f;
+		});
+		clock.restart();
+	}
+    if (!enemiesSpawned && clock.getElapsedTime().asSeconds() > 5.0f) {
+        CreateEnemies(1);
+        schwarziSpawned = true;
+    }
+    if (!enemiesSpawned && clock.getElapsedTime().asSeconds() > 10.0f) {
+        CreateEnemies(2);
+        fliesSpawned = true;
+    }
+    if (!enemiesSpawned && clock.getElapsedTime().asSeconds() > 15.0f) {
+        CreateEnemies(3);
+        bossSpawned = true;
+    }
+}
+
+void FirstLevel::CreateEnemies(size_t id)
+{}
+
+void DevLevel::BackgroundParallax()
+{
+    _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
+        if (ent->has<BackgroundTag>()) {
+            auto window = GameEngine::GetInstance().getWindow();
+            if (transform->position.x < -1580) {
+                auto drawable = ent->get<DrawableComponent>();
+                sf::Vector2u size = { 1600, 900 };
+#ifndef SERVER
+                size = GameEngine::GetInstance().getWindow()->getSize();
+#endif
+                transform->position.x = (float)size.x;
+                drawable->area.left = size.x;
+                drawable->area.width = size.x;
+            }
+        }
+        });
+    std::vector<ECS::Entity*> backgrounds = {};
+    _world->each<VelocityComponent>([&](ECS::Entity* ent, VelocityComponent* velocity) {
+        if (ent->has<BackgroundTag>()) {
+            backgrounds.push_back(ent);
+        }
+        });
+    _backgrounds = backgrounds;
+    if (_backgrounds.size() == 0)
+        return;
+    for (int i = 0; i < _infoBackgrounds.size(); i++) {
+        auto& e = _backgrounds[i * 2];
+        auto& e2 = _backgrounds[i * 2 + 1];
+
+        auto t = e->get<VelocityComponent>();
+        auto t2 = e2->get<VelocityComponent>();
+
+        t->velocity = sf::Vector2f(_infoBackgrounds[i].speed, 0.f);
+        t2->velocity = sf::Vector2f(_infoBackgrounds[i].speed, 0.f);
+    }
+}
+
+void FirstLevel::ScrollWalls(const float dt)
+{
+    _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
+        if (ent->has<DrawableComponent>()) {
+            transform->position.x -= 10.0f * dt; // Adjust the scroll speed as needed
+        }
+    });
+}
