@@ -35,8 +35,8 @@ static void shoot(ECS::Entity *ent, const float &dt)
     auto velocity = ent->get<VelocityComponent>();
     auto world = ent->getWorld();
     auto bullet = world->CreateEntity();
-    bullet->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-    bullet->assign<TransformComponent>(transform->position, sf::Vector2f(1.f, 1.f), 0.f);
+    bullet->assign<DrawableComponent>("../assets/sheet1.png", sf::IntRect(337, 255, 12, 4));
+    bullet->assign<TransformComponent>(transform->position, sf::Vector2f(2.f, 2.f), 0.f);
     bullet->assign<LifeSpan>(3.f);
     bullet->assign<OnDie>([](ECS::World *world,ECS::Entity* ent) {
         std::cout << "Bullet die" << std::endl;
@@ -104,8 +104,8 @@ static void shootEnemy(ECS::World *world, const float &dt, ECS::Entity *ent)
 	auto transform = ent->get<TransformComponent>();
 	auto velocity = ent->get<VelocityComponent>();
 	auto bullet = world->CreateEntity();
-	bullet->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
-	bullet->assign<TransformComponent>(transform->position, sf::Vector2f(-1.f, 1.f), 0.f);
+	bullet->assign<DrawableComponent>("../assets/sheet1.png", sf::IntRect(337, 255, 12, 4));
+	bullet->assign<TransformComponent>(transform->position, sf::Vector2f(-2.f, 2.f), 0.f);
 	bullet->assign<LifeSpan>(2.f);
     bullet->assign<OnDie>([](ECS::World* world, ECS::Entity* ent) {
 		std::cout << "Bullet die" << std::endl;
