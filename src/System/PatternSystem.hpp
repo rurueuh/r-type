@@ -15,7 +15,10 @@ class PatternSystem : public ECS::BaseSystem {
         PatternSystem() = default;
         ~PatternSystem() = default;
 
-        virtual void tick(ECS::World* world, const float& dt) override;
+        virtual void tick(ECS::World* world, const float& dt) override 
+        {
+            
+        }
 
     protected:
     private:
