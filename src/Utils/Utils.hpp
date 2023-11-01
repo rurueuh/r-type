@@ -5,9 +5,18 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
+#include "SFML.hpp"
 
 namespace Utils
 {
+	const std::unordered_map<sf::Keyboard::Key, std::string> KEYMAP = {
+			{sf::Keyboard::Key::Z, "z"},
+			{sf::Keyboard::Key::Q, "q"},
+			{sf::Keyboard::Key::S, "s"},
+			{sf::Keyboard::Key::D, "d"},
+			{sf::Keyboard::Key::Space, " "},
+	};
+
 	template <typename T>
 	inline std::type_index getTypeId()
 	{
@@ -27,6 +36,7 @@ namespace Utils
 	}
 
 	inline std::unordered_map <std::type_index, std::string > typeMap;
+	inline std::unordered_map <std::type_index, std::string > typeLevel;
 
 	template <typename T>
 	inline void registerComponent(std::string str)
@@ -41,5 +51,20 @@ namespace Utils
 		if (typeMap.find(index) == typeMap.end())
 			return "Unknown";
 		return typeMap[index];
+	}
+
+	template <typename T>
+	inline void registerLevel(std::string str)
+	{
+		if (typeLevel.find(getTypeId<T>()) != typeLevel.end())
+			std::cerr << "WARNING: Level " << getTypeName(getTypeId<T>()) << " already registered" << std::endl;
+		typeLevel[getTypeId<T>()] = str;
+	}
+
+	inline std::string getRegisteredLevel(std::type_index index)
+	{
+		if (typeLevel.find(index) == typeLevel.end())
+			return "Unknown";
+		return typeLevel[index];
 	}
 }

@@ -1,4 +1,5 @@
 #include "World.hpp"
+#include "GameEngine.hpp"
 
 namespace ECS {
 	World* World::CreateWorld()
@@ -50,10 +51,23 @@ namespace ECS {
 
 	void World::updateWorld(void)
 	{
-		for (auto& ent : m_entities) {
-			if (ent->isDead()) {
-				// TODO: remove entity from world
-				std::cout << "a entity die" << std::endl;
+		
+		for (size_t i = 0; i < m_entities.size(); i++) {
+			if (m_entities[i]->isDead()) {
+				#ifndef SERVER
+					auto &engine = GameEngine::GetInstance();
+					auto &client = engine.getClient();
+					auto hash = client.getClientHash();
+					if (hash != "me") { // MULTIPLAYER so delete be do in replication
+						return;
+					}
+				#endif // SERVER
+				if (m_entities[i]->has<OnDie>()) {
+					m_entities[i]->get<OnDie>()->_onDie(this, m_entities[i]);
+				}
+				delete m_entities[i];
+
+				m_entities.erase(m_entities.begin() + i);
 			}
 		}
 	}

@@ -10,13 +10,29 @@
 #include "System.hpp"
 #include "World.hpp"
 
-class TransformSystem : public ECS::BaseSystem {
+namespace ECS::System {
+    class TransformSystem : public ECS::BaseSystem {
     public:
         TransformSystem() = default;
         ~TransformSystem() = default;
 
-        virtual void tick(ECS::World* world, const float& dt) override;
+        virtual void tick(ECS::World* world, const float& dt) override
+        {
+#ifndef SERVER
+            world->each<TransformComponent>(
+                [&](ECS::Entity* entity,
+                    TransformComponent* transform) {
+                        auto drawable = entity->get<DrawableComponent>();
+                        if (!drawable)
+                            return;
+                        drawable->sprite.setPosition(transform->position);
+                        drawable->sprite.setScale(transform->scale);
+                        drawable->sprite.setRotation(transform->rotation);
+                });
+#endif
+        }
 
     protected:
     private:
-};
+    };
+}

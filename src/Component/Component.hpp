@@ -10,12 +10,24 @@
 #include "ComponentBase.hpp"
 
 #include "PvComponent.hpp"
-#include "PlayerInputComponent.hpp"
-#include "ColliderComponent.hpp"
+#include "PlayerComponent.hpp"
+#include "InputComponent.hpp"
+#include "CollisionComponent.hpp"
 #include "DamageComponent.hpp"
 #include "DrawableComponent.hpp"
 #include "TransformComponent.hpp"
 #include "PositionComponent.hpp"
+#include "HitboxComponent.hpp"
+#include "ShootComponent.hpp"
+#include "WeaponComponent.hpp"
+#include "EnemyTag.hpp"
+#include "BackgroundTag.hpp"
+#include "VelocityComponent.hpp"
+#include "LifeSpan.hpp"
+#include "OnDie.hpp"
+#include "TextComponent.hpp"
+
+
 #include "Utils.hpp"
 #include "Entity.hpp"
 
@@ -23,12 +35,17 @@ namespace ECS {
 	class Entity;
 	namespace Component {
 
-		void FactoryAssignPvComponent(Entity* ent, std::string type, std::string str);
-		void FactoryAssignPlayerInputComponent(Entity* ent, std::string type, std::string str);
-		void FactoryAssignDrawableComponent(Entity* ent, std::string type, std::string str);
-		void FactoryAssignTransformComponent(Entity* ent, std::string type, std::string str);
+		template <typename T>
+		void FactoryAssignCreateComponent(Entity* ent, std::string type, std::string str) {
+			auto id = Utils::getRegisteredComponent(Utils::getTypeId<T>());
+			if (type == id) {
+				auto component = ent->assign<T>();
+				component->fromString(str);
+			}
+		}
 
 		// template Args...
 		void FactoryAssignComponent(Entity* ent, std::string type, std::string str = "");
+		
 	};
 };

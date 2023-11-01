@@ -1,9 +1,11 @@
 build
 build-win
 build-linux
+package-win
 .vscode
 .vs
 html/
 latex/
 cmake-build-debug
 out/
+/SFML

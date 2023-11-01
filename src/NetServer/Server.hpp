@@ -2,6 +2,9 @@
 
 #include "SFML.hpp"
 #include <memory>
+#include "snappy.h"
+#include "World.hpp"
+#include "Component.hpp"
 
 #ifdef SERVER // SERVER ONLY
 	constexpr int PORT = 4242;
@@ -18,6 +21,9 @@
 		bool operator==(const client_t& other) const {
 			return ip.toInteger() == other.ip.toInteger() && port == other.port;
 		}
+		bool operator!=(const client_t& other) const {
+			return !(*this == other);
+		}
 	} client_t;
 
 	class Server
@@ -32,18 +38,22 @@
 		void onMessage(std::string type, std::string data, client_t &client);
 		void sendCheckAlive(void);
 		void checkAlive(void);
-		void checkInput(std::string data);
+		void checkInput(std::string data, client_t &client);
 		client_t &findClient(client_t &client);
 
 		void sendToAll(sf::Packet &packet);
 		void sendToAll(std::string type, std::string data);
 
-		std::string getInput(void) { return _input; };
+		void syncClientWithWorld(ECS::World *world);
+		void syncClientInput(ECS::World *world);
+		void disconnectClient();
+
+		std::unordered_map<std::string, std::string> &getInput(void) { return _input; };
 	private:
 		sf::UdpSocket _UDPsocket = sf::UdpSocket();
 		std::shared_ptr<sf::Thread> _networkInterceptor = nullptr;
 		std::shared_ptr<sf::Thread> _aliveChecker = nullptr;
 		std::vector<client_t> _clients = {};
-		std::string _input = "";
+		std::unordered_map<std::string, std::string> _input = std::unordered_map<std::string, std::string>();
 	};
 #endif

@@ -9,5 +9,9 @@
 
 #include "DrawableSystem.hpp"
 #include "TransformSystem.hpp"
-#include "TestSystem.hpp"
 #include "InputSystem.hpp"
+#include "VelocitySystem.hpp"
+#include "HpSystem.hpp"
+#include "LifeSpan.hpp"
+#include "CollisionSystem.hpp"
+#include "TextSystem.hpp"

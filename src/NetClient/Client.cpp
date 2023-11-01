@@ -1,30 +1,29 @@
 #include "Client.hpp"
+#include "GameEngine.hpp"
+#include <memory>
 
-#ifdef SERVER
-constexpr int PORT = 4242;
-const sf::IpAddress IP = sf::IpAddress::IpAddress::Any;
-constexpr bool fakeLag = false;
-constexpr float fakeLagTime = 0.2f;
-#endif
-
-//#ifndef SERVER // CLIENT ONLY
+#ifndef SERVER // CLIENT ONLY
     Client::Client()
     {
         (void)connect(IP, PORT);
         _UDPsocket.setBlocking(false);
         _networkInterceptor = std::make_shared<sf::Thread>(&Client::update, this);
         _networkInterceptor->launch();
+        _threadGarbage->launch();
     }
 
     void Client::send(std::string type, std::string data)
     {
 		sf::Packet packet;
-		packet << type << data;
+        std::string compressedType, compressedData;
+        snappy::Compress(type.data(), type.size(), &compressedType);
+        snappy::Compress(data.data(), data.size(), &compressedData);
+		packet << compressedType << compressedData;
         if (_UDPsocket.send(packet, IP, PORT) != sf::Socket::Status::Done) {
 			throw std::runtime_error("error can join server");
 		}
         #ifdef DEBUG
-		    std::cout << "SENDER | message sent to " << IP << ":" << PORT << " | DATA : " << type << ": " << data << std::endl;
+		    //std::cout << "SENDER | message sent to " << IP << ":" << PORT << " | DATA : " << type << ": " << data << std::endl;
         #endif
     }
 
@@ -38,8 +37,11 @@ constexpr float fakeLagTime = 0.2f;
 			std::string type;
 			std::string data;
 			packet >> type >> data;
+            std::string uncompressedType, uncompressedData;
+            snappy::Uncompress(type.data(), type.size(), &uncompressedType);
+            snappy::Uncompress(data.data(), data.size(), &uncompressedData);
             //std::cout << "RECEIVER | received packet from " << sender << ":" << port << " | DATA : " << type << ": " << data << std::endl;
-			return std::make_tuple(type, data);
+			return std::make_tuple(uncompressedType, uncompressedData);
 		}
         //std::cerr << "error can join server" << std::endl;
 		return std::make_tuple("ERROR", "ERROR");
@@ -47,20 +49,35 @@ constexpr float fakeLagTime = 0.2f;
 
     bool Client::connect(sf::IpAddress ip, unsigned short port)
     {
-        send("hello", "client");
+        std::shared_ptr<sf::Thread> threadConnect = std::make_shared<sf::Thread>(&Client::threadConnect, this);
+        threadConnect->launch();
+        sf::Clock timeOut;
         while (1) {
-            _UDPsocket.setBlocking(true);
-            auto [type, data] = receive();
-            _UDPsocket.setBlocking(false);
-            _clientHash = data;
-            if (type != "hello") {
-                std::cout << "bad type" << std::endl;
+            if (timeOut.getElapsedTime().asSeconds() > 5) {
+                std::cerr << "error can join server" << std::endl;
+                threadConnect->terminate();
                 return false;
             }
-            break;
+            if (_clientHash != "me") {
+                break;
+            }
         }
+        threadConnect->terminate();
 		std::cout << "client hash: " << _clientHash << std::endl;
 	    return true;
+    }
+    
+    void Client::threadConnect(void)
+    {
+        send("hello", "client");
+        _UDPsocket.setBlocking(true);
+        auto [type, data] = receive();
+        _UDPsocket.setBlocking(false);
+        if (type != "hello") {
+            std::cout << "bad type" << std::endl;
+            return;
+        }
+        _clientHash = data;
     }
 
     void Client::update(void)
@@ -80,9 +97,36 @@ constexpr float fakeLagTime = 0.2f;
             if (type == "entities") {
 				recvEntity(data);
 			}
+            if (type == "level") {
+				recvLevel(data);
+			}
+            if (type == "disconnect") {
+                GameEngine::GetInstance().Shutdown();
+            }
 			//sf::sleep(sf::microseconds(5));
             
 		}
+    }
+    static ECS::Entity* CreateEntity(std::string& token)
+    {
+        size_t id = std::stoi(token.substr(0, token.find(" ")));
+        ECS::Entity* newentity = new ECS::Entity(nullptr, id);
+        std::string components = "";
+        size_t pos = 0;
+        if ((pos = token.find("[")) != std::string::npos) {
+            components = token.substr(pos + 1, token.find("]") - pos - 1);
+            token.erase(pos, token.find("]") - pos + 1);
+        }
+        std::stringstream ss2(components);
+        while (std::getline(ss2, token, ',')) {
+            std::stringstream ss3(token);
+            std::string componentName;
+            std::string componentData;
+            std::getline(ss3, componentName, '{');
+            std::getline(ss3, componentData, '}');
+            ECS::Component::FactoryAssignComponent(newentity, componentName, componentData);
+        }
+        return newentity;
     }
     void Client::recvEntity(std::string data)
     {
@@ -95,16 +139,17 @@ constexpr float fakeLagTime = 0.2f;
         if (clock.getElapsedTime().asSeconds() > 1) {
 			clock.restart();
             std::cout << "entities recv in 1s: " << i << std::endl;
-            //std::cout << "entities recv: " << data << std::endl;
+            std::cout << "entities recv: " << data << std::endl;
 			i = 0;
 		}
         i++;
 
         _mutex.lock();
-        if (this->_entities.size() != 0) {
+        if (this->_isReadySync != false) {
             _mutex.unlock();
 			return;
         }
+        _mutex.unlock();
         for (auto& ent : this->_entities) {
             delete ent;
         }
@@ -121,55 +166,78 @@ constexpr float fakeLagTime = 0.2f;
         size_t id = 0;
         std::stringstream ss(data);
         std::string token;
+        std::vector<std::string> entitiesToCreate = {};
         while (std::getline(ss, token, ':')) {
-            // std::cout << token << std::endl;
-            size_t id = std::stoi(token.substr(0, token.find(" ")));
-            std::string components = "";
-            size_t pos = 0;
-            if ((pos = token.find("[")) != std::string::npos) {
-                components = token.substr(pos + 1, token.find("]") - pos - 1);
-				token.erase(pos, token.find("]") - pos + 1);
-			}
-            std::stringstream ss2(components);
-            ECS::Entity *newentity = new ECS::Entity(nullptr, id);
-            while (std::getline(ss2, token, ',')) {
-				// std::cout << token << std::endl;
-				std::stringstream ss3(token);
-				std::string componentName;
-				std::string componentData;
-                std::getline(ss3, componentName, '{');
-                std::getline(ss3, componentData, '}');
-				// std::cout << "nameComp " << componentName << std::endl;
-                // std::cout << "data " << componentData << std::endl;
-
-                ECS::Component::FactoryAssignComponent(newentity, componentName, componentData);
-
-			}
-            //std::cout << "new entity : " << newentity.serialise() << std::endl;
+            entitiesToCreate.push_back(token);
+            ECS::Entity *newentity = CreateEntity(token);
             this->_entities.push_back(newentity);
 		}
+        _mutex.lock();
+        _isReadySync = true;
 		_mutex.unlock();
     }
+
+    void Client::recvLevel(std::string data)
+    {
+        currentLevelServer = data;
+    }
+    
     void Client::networkSync(ECS::World* world)
     {
         _mutex.lock();
-        if (this->_entities.size() == 0) {
+        if (this->_isReadySync == false) {
             _mutex.unlock();
             return;
         }
-        for (auto& entWorld : world->getEntities()) {
-            delete entWorld;
-        }
-        world->getEntities().clear();
+        // todo: voir si on peut pas unmutex ici pour pas bloquer le thread (recuperer une frame en avance)
+        this->_mutexGarbage.lock();
+        _entitiesGarbage = world->getEntities();
+        this->_mutexGarbage.unlock();
+        auto& levelManager = LevelManager::getInstance();
+        auto& level = levelManager.getCurrentLevel();
+        auto& typeinfo = typeid(*level);
+        auto string = Utils::getRegisteredLevel(typeinfo);
+        if (currentLevelServer != "" && string != currentLevelServer) {
+			setLevel(currentLevelServer);
+		}
+        
+        world->getEntities() = {};
         for (auto& ent : this->_entities) {
             ent->assingWorld(world);
 		}
         world->setEntities(this->_entities);
         this->_entities.clear();
+        this->_isReadySync = false;
         _mutex.unlock();
     }
 
-    void Client::onInput(sf::Keyboard::Key key) {
-        this->send("input", std::to_string(key));
+    void Client::onInput(ECS::World *world) {
+        #ifndef SERVER // CLIENT ONLY
+            auto &gameEngine = GameEngine::GetInstance();
+            auto window = gameEngine.getWindow();
+            if (window->hasFocus() == false) {
+                return;
+            }
+            auto map = Utils::KEYMAP;
+            sf::Keyboard::Key key = sf::Keyboard::Unknown;
+            for (auto &keyMap : map) {
+                if (sf::Keyboard::isKeyPressed(keyMap.first)) {
+                    key = keyMap.first;
+                }
+            }
+            this->send("input", std::to_string(key));
+            world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent *player) {
+                if (player->hash != this->getClientHash()) {
+                    return;
+                }
+                if (ent->has<InputComponent>()) {
+                    auto input = ent->get<InputComponent>();
+                    if (Utils::KEYMAP.find(key) == Utils::KEYMAP.end()) {
+                        return;
+                    }
+                    input->input = Utils::KEYMAP.at(key);
+                }
+            });
+        #endif
     }
-//#endif
+#endif

@@ -4,11 +4,37 @@
 #include "Component.hpp"
 #include "SystemList.hpp"
 
+typedef struct infoBackground {
+	std::string path;
+	sf::IntRect area;
+	float speed;
+} infoBackground;
+
 class DevLevel : public Level {
 public:
 	DevLevel();
+	void CreatePlayers();
+	void CreateBackground(sf::RenderWindow* window, sf::Vector2u& size);
 	~DevLevel();
 
 	virtual void update(const float dt) override;
+	void BackgroundParallax();
+private:
+	std::vector<ECS::Entity*> _backgrounds = _world->CreateEntity(10);
 	
+	std::vector<infoBackground> _infoBackgrounds = {
+		{"../assets/back1.png", sf::IntRect(0, 0, 272, 160), -80},
+		{"../assets/back2.png", sf::IntRect(0, 0, 272, 160), -50},
+		{"../assets/back3.png", sf::IntRect(0, 0, 272, 160), -30},
+		{"../assets/back4.png", sf::IntRect(0, 0, 272, 160), -120},
+		{"../assets/back5.png", sf::IntRect(0, 0, 272, 160), -150},
+	};
+
+	std::vector<sf::IntRect> _infoPlayers = {
+		sf::IntRect(1, 3, 32, 14),
+		sf::IntRect(1, 20, 32, 14),
+		sf::IntRect(1, 37, 32, 14),
+		sf::IntRect(1, 54, 32, 14),
+		sf::IntRect(1, 71, 32, 14),
+	};
 };
