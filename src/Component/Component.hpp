@@ -26,6 +26,7 @@
 #include "LifeSpan.hpp"
 #include "OnDie.hpp"
 #include "TextComponent.hpp"
+#include "PatternComponent.hpp"
 
 
 #include "Utils.hpp"
