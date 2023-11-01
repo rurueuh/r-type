@@ -48,13 +48,13 @@ namespace ECS::System {
 
                     sf::RectangleShape rectBack;
                     rectBack.setSize(sf::Vector2f((float)hpMax * 2, (float)height));
-                    rectBack.setFillColor(sf::Color::Color(255, 255, 255, 150));
+                    rectBack.setFillColor(sf::Color(255, 255, 255, 150));
                     auto midX = transform->position.x + (drawable->sprite.getTextureRect().width * transform->scale.x) / 2;
                     rectBack.setPosition(midX - hpMax, transform->position.y - offset);
 
                     sf::RectangleShape rectFront;
                     rectFront.setSize(sf::Vector2f((float)pv->_health * 2, (float)height));
-                    rectFront.setFillColor(sf::Color::Color(255, 0, 0, 255));
+                    rectFront.setFillColor(sf::Color(255, 0, 0, 255));
                     rectFront.setPosition(midX - hpMax, transform->position.y - offset);
 
                     window->draw(rectBack);

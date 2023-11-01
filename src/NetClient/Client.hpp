@@ -28,6 +28,7 @@ public:
 	void send(std::string type, std::string data);
 	std::tuple<std::string, std::string> receive(void);
 	bool connect(sf::IpAddress ip, unsigned short port);
+	void threadConnect(void);
 	void update(void);
 	void recvEntity(std::string data);
 	void recvLevel(std::string data);

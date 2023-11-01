@@ -190,4 +190,9 @@
 			}
 		});
 	}
+	void Server::disconnectClient()
+	{
+		sendToAll("disconnect", "");
+		_clients.clear();
+	}
 #endif

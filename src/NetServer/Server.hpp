@@ -46,6 +46,7 @@
 
 		void syncClientWithWorld(ECS::World *world);
 		void syncClientInput(ECS::World *world);
+		void disconnectClient();
 
 		std::unordered_map<std::string, std::string> &getInput(void) { return _input; };
 	private:

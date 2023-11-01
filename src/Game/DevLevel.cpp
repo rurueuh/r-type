@@ -31,6 +31,8 @@ static void shoot(ECS::Entity *ent, const float &dt)
     if (cooldown.getElapsedTime().asSeconds() < 0.5)
 		return;
     cooldown.restart();
+    if (!ent) // for start cooldown shoot
+        return;
     auto transform = ent->get<TransformComponent>();
     auto velocity = ent->get<VelocityComponent>();
     auto world = ent->getWorld();
@@ -252,6 +254,8 @@ void DevLevel::BackgroundParallax()
         }
         });
     _backgrounds = backgrounds;
+    if (_backgrounds.size() == 0)
+        return;
     for (int i = 0; i < _infoBackgrounds.size(); i++) {
         auto& e = _backgrounds[i * 2];
         auto& e2 = _backgrounds[i * 2 + 1];

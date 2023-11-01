@@ -14,8 +14,13 @@ class GameEngine
 {
 public:
 	static GameEngine& GetInstance() {
-		static GameEngine instance;
-		return instance;
+		try {
+			static GameEngine instance;
+			return instance;
+		} catch (const std::exception &e) {
+			std::cerr << e.what() << std::endl;
+			exit(84);
+		}
 	}
 
 	template<typename T>
@@ -47,6 +52,7 @@ public:
 		Server &getServer(void) { return _server; }
 	#else // CLIENT ONLY
 		Client &getClient(void) { return _client; }
+		sf::Font &getFont(void) { return _font; }
 	#endif
 		
 private:
@@ -61,6 +67,7 @@ private:
 		Server _server;
 	#else // CLIENT ONLY
 		Client _client;
+		sf::Font _font;
 	#endif
 
 };
