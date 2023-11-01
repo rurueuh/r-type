@@ -68,10 +68,26 @@ static void collisionBulletWall(ECS::World *world, ECS::Entity *e1, ECS::Entity 
     e1->die();
 }
 
-static void collisionBulletAllyToEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
+static void collisionBulletAllyToBulletEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
 {
-	e2->die();
 	e1->die();
+    e2->die();
+}
+
+static void collisionBulletAllyToEnemy(ECS::World* world, ECS::Entity* e1, ECS::Entity* e2)
+{
+	e1->die();
+	auto pv = e2->get<PvComponent>();
+    if (pv)
+		pv->_health -= 20;
+}
+
+static void collisionBulletEnemyToPlayer(ECS::World* world, ECS::Entity* e1, ECS::Entity* e2)
+{
+    e1->die();
+    auto pv = e2->get<PvComponent>();
+    if (pv)
+		pv->_health -= 10;
 }
 
 static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
@@ -144,10 +160,10 @@ DevLevel::DevLevel() : Level()
     CollisionActionList collisionAction = {
         { {ECS::Collision::PLAYER, ECS::Collision::WALL}, collisionPlayerWall},
         { {ECS::Collision::BULLET_PLAYER, ECS::Collision::WALL}, collisionBulletWall },
-        { {ECS::Collision::BULLET_PLAYER, ECS::Collision::ENEMY }, collisionBulletWall },
-        { {ECS::Collision::BULLET_ENEMY, ECS::Collision::BULLET_PLAYER}, collisionBulletAllyToEnemy },
-		//{ {ECS::Collision::BULLET_ENEMY, ECS::Collision::WALL}, collisionB/*ulletWall },
-		//{ {ECS::Collision::BULLET_ENEMY, ECS::Collision::PLAYER}, collisionBulletWall },*/
+        { {ECS::Collision::BULLET_PLAYER, ECS::Collision::ENEMY }, collisionBulletAllyToEnemy },
+        { {ECS::Collision::BULLET_ENEMY, ECS::Collision::BULLET_PLAYER}, collisionBulletAllyToBulletEnemy },
+		//{ {ECS::Collision::BULLET_ENEMY, ECS::Collision::WALL}, collisionBulletWall },
+		{ {ECS::Collision::BULLET_ENEMY, ECS::Collision::PLAYER}, collisionBulletEnemyToPlayer },
 	};
     ECS::System::Path::ShootPathType typeOfShoot = {
         { FOLLOW_PLAYER, shootEnemy }
