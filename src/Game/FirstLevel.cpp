@@ -130,7 +130,28 @@ void FirstLevel::CreateBackground(sf::RenderWindow* window, sf::Vector2u& size)
 {}
 
 void FirstLevel::CreateWall(sf::RenderWindow* window, sf::Vector2u& size)
-{}
+{
+    sf::Texture wallTexture;
+    if (!wallTexture.loadFromFile("../assets/firstLevelWalls.png")) {
+        // Handle the case where loading the texture fails
+        std::cerr << "Failed to load wall texture." << std::endl;
+        return;
+    }
+
+    for (unsigned int x = 0; x < wallTexture.getSize().x; ++x) {
+        for (unsigned int y = 0; y < wallTexture.getSize().y; ++y) {
+            sf::Color pixelColor = wallTexture.getPixel(x, y);
+
+            if (pixelColor == sf::Color::Black) {
+                // Create a wall entity at the corresponding position
+                auto wall = _world->CreateEntity();
+                wall->assign<DrawableComponent>("file.png", sf::IntRect(x, y, 1, 1)); // Assuming 1 pixel wall
+                wall->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(1.f, 1.f), 0.f);
+                wall->assign<CollisionComponent>(sf::FloatRect(x, y, 1, 1), ECS::Collision::WALL);
+            }
+        }
+    }
+}
 
 FirstLevel::~FirstLevel()
 {
