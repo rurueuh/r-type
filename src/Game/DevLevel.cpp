@@ -115,10 +115,10 @@ std::vector<ECS::Entity*> players = {};
 
 static void shootEnemy(ECS::World *world, const float &dt, ECS::Entity *ent)
 {
-	static sf::Clock cooldown;
-	if (cooldown.getElapsedTime().asSeconds() < 1.5)
-		return;
-	cooldown.restart();
+	auto cooldown = ent->get<DataComponent>()->get<float>("timeShoot");
+    if (cooldown < 3.5)
+        return;
+    ent->get<DataComponent>()->set("timeShoot", 0.f);
 	auto transform = ent->get<TransformComponent>();
 	auto velocity = ent->get<VelocityComponent>();
 	auto bullet = world->CreateEntity();
@@ -149,14 +149,6 @@ DevLevel::DevLevel() : Level()
     #ifndef SERVER
         size = window->getSize();
     #endif
-    auto enemy = _world->CreateEntity();
-    enemy->assign<DrawableComponent>("../assets/enemy.png", sf::IntRect(5, 6, 21, 24));
-    enemy->assign<TransformComponent>(sf::Vector2f(800, 400), sf::Vector2f(2.f, 2.f), 0.f);
-    enemy->assign<CollisionComponent>(sf::FloatRect(800, 400, 21 * 2, 24 * 2), ECS::Collision::ENEMY);
-    enemy->assign<VelocityComponent>(0.1f, 0.1f);
-    enemy->assign<PvComponent>(60.f, 60.f);
-    enemy->assign<EnemyTag>();
-    enemy->assign<EnemyPath>(FOLLOW_PLAYER);
     CreateBackground(window, size);
     CreatePlayers();
     auto wall = _world->CreateEntity();
@@ -251,6 +243,15 @@ void DevLevel::update(const float dt)
     auto dataComponentLevel = data[0]->get<DataComponent>();
 
     static sf::Clock clock;
+    std::vector<ECS::Entity*> Enemy = _world->GetEntitiesByTag<EnemyTag>();
+    for (auto enemy : Enemy) {
+        auto dataComponentEnemy = enemy->get<DataComponent>();
+        if (!dataComponentEnemy)
+            continue;
+        auto timeShoot = dataComponentEnemy->get<float>("timeShoot");
+        timeShoot += dt;
+        dataComponentEnemy->set("timeShoot", timeShoot);
+    }
     if (clock.getElapsedTime().asSeconds() > 0.1) {
         BackgroundParallax();
 		clock.restart();
@@ -258,6 +259,11 @@ void DevLevel::update(const float dt)
     // Spawn enemy
     auto time = _clockEnemy.getElapsedTime().asSeconds();
     #ifndef SERVER
+        {
+            auto players = _world->GetEntitiesByTag<PlayerComponent>();
+            if (players[0]->get<PlayerComponent>()->hash == "me")
+                dataComponentLevel->set("timeLevel", time);
+        }
         time = dataComponentLevel->get<float>("timeLevel");
     #else
         dataComponentLevel->set("timeLevel", time);
@@ -267,7 +273,6 @@ void DevLevel::update(const float dt)
         auto info = _infoEnemy[i];
         if (info.time <= time) {
             auto enemy = _world->CreateEntity();
-            
             enemy->assign<DrawableComponent>("../assets/enemy.png", sf::IntRect(5, 6, 21, 24));
             enemy->assign<TransformComponent>(info.position, sf::Vector2f(2.f, 2.f), 0.f);
             enemy->assign<CollisionComponent>(sf::FloatRect(800, 400, 21 * 2, 24 * 2), ECS::Collision::ENEMY);
@@ -275,6 +280,7 @@ void DevLevel::update(const float dt)
             enemy->assign<PvComponent>(info.hp, info.hp);
             enemy->assign<EnemyTag>();
             enemy->assign<EnemyPath>(FOLLOW_PLAYER);
+            enemy->assign<DataComponent>();
             std::erase(_infoEnemy, info);
             break;
         }

@@ -47,6 +47,8 @@ struct DataComponent : public Component {
 
     template <typename T>
     inline bool has(std::string key) {
+        if (_data.size() == 0)
+            return false;
         return _data.find(key) != _data.end();
     }
 
