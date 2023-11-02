@@ -41,11 +41,10 @@ public:
 
 	template <typename T>
 	void removeLevel() {
-		for (auto it = _levelLists.begin(); it != _levelLists.end(); ++it) {
-			if (typeid(**it) == typeid(T)) {
-				if (_currentLevel == *it)
-					_currentLevel = _levelLists.back();
-				_levelLists.erase(it);
+		int i = 0;
+		for (i = 0; i < _levelLists.size(); i++) {
+			if (typeid(*_levelLists[i]) == typeid(T)) {
+				_levelLists.erase(_levelLists.begin() + i);
 				return;
 			}
 		}
