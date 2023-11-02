@@ -1,10 +1,9 @@
-#include "DeadLevel.hpp"
+#include "LobbyLevel.hpp"
 #include "Component.hpp"
 #include "GameEngine.hpp"
 #include "World.hpp"
 #include "Entity.hpp"
 #include "DevLevel.hpp"
-#include "LobbyLevel.hpp"
 
 static sf::Clock cooldownInput;
 static constexpr float cooldown = 0.25;
@@ -26,9 +25,9 @@ static void forward(ECS::Entity *ent, const float &dt)
     world->each<TextComponent>([&](ECS::Entity* ent, TextComponent* text) {
         if (x == 1) {
             if (selector == 0) {
-                text->_text = "Restart <";
+                text->_text = "Start <";
             } else {
-                text->_text = "Restart";
+                text->_text = "Start";
             }
         } else if (x == 2) {
             if (selector == 0) {
@@ -57,9 +56,9 @@ static void backward(ECS::Entity *ent, const float &dt)
     world->each<TextComponent>([&](ECS::Entity* ent, TextComponent* text) {
         if (x == 1) {
             if (selector == 0) {
-                text->_text = "Restart <";
+                text->_text = "Start <";
             } else {
-                text->_text = "Restart";
+                text->_text = "Start";
             }
         } else if (x == 2) {
             if (selector == 0) {
@@ -74,10 +73,10 @@ static void backward(ECS::Entity *ent, const float &dt)
 
 static void use(ECS::Entity *ent, const float &dt)
 {
-    LevelManager::getInstance().removeLevel<DeadLevel>();
+    LevelManager::getInstance().removeLevel<LobbyLevel>();
     if (selector == 0) {
-        LevelManager::getInstance().addLevel<LobbyLevel>();
-        LevelManager::getInstance().setCurrentLevel<LobbyLevel>();
+        LevelManager::getInstance().addLevel<DevLevel>();
+        LevelManager::getInstance().setCurrentLevel<DevLevel>();
         sf::sleep(sf::seconds(1));
     } else {
         #ifndef SERVER
@@ -93,7 +92,7 @@ static void use(ECS::Entity *ent, const float &dt)
     }
 }
 
-DeadLevel::DeadLevel()
+LobbyLevel::LobbyLevel()
 {
     const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> input = {
         { Input::Key::forward, forward},
@@ -116,7 +115,7 @@ DeadLevel::DeadLevel()
     text->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/4), sf::Vector2f(1, 1), 0);
 
     auto restart = _world->CreateEntity();
-    restart->assign<TextComponent>("Restart <");
+    restart->assign<TextComponent>("Start <");
     restart->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/2), sf::Vector2f(1, 1), 0);
 
     auto quit = _world->CreateEntity();
@@ -134,10 +133,10 @@ DeadLevel::DeadLevel()
 	}
 }
 
-DeadLevel::~DeadLevel()
+LobbyLevel::~LobbyLevel()
 {
 }
 
-void DeadLevel::update(const float dt)
+void LobbyLevel::update(const float dt)
 {
 }
