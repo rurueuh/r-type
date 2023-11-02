@@ -124,10 +124,55 @@ FirstLevel::FirstLevel() : Level()
 }
 
 void FirstLevel::CreatePlayers()
-{}
+{
+    const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> input = {
+        { Input::Key::forward, forward },
+        { Input::Key::backward, backward },
+        { Input::Key::left, left },
+        { Input::Key::right, right },
+        { Input::Key::jump, shoot }
+    };
+    shoot(nullptr, 0.f); // for start cooldown shoot
+    std::vector<ECS::Entity*> starship = _world->CreateEntity(6);
+    size_t i = 0;
+    for (auto ship : starship) {
+        ship->assign<PlayerComponent>();
+        ship->assign<InputComponent>(input);
+        ship->assign<PvComponent>(100.f, 100.f);
+        ship->assign<DrawableComponent>("../assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
+        ship->assign<VelocityComponent>(0.1f, 0.1f);
+        const float x = 400;
+        const float y = 400;
+        ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
+        ship->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::PLAYER);
+        ship->assign<OnDie>(checkPlayerEnd);
+        i++;
+    }
+#ifndef SERVER
+    starship[0]->get<PlayerComponent>()->hash = "me";
+#endif // SERVER
+}
 
 void FirstLevel::CreateBackground(sf::RenderWindow* window, sf::Vector2u& size)
-{}
+{
+    for (int i = 0; i < _backgrounds.size(); i += 2) {
+        auto d = _backgrounds[i]->assign<DrawableComponent>(_infoBackgrounds[i / 2].path, _infoBackgrounds[i / 2].area);
+        auto t = _backgrounds[i]->assign<TransformComponent>(sf::Vector2f(0, 0), sf::Vector2f(1.f, 1.f), 0.f);
+        _backgrounds[i]->assign<VelocityComponent>(_infoBackgrounds[i / 2].speed, 0.f);
+        _backgrounds[i]->assign<BackgroundTag>();
+        t->setFullScreen(window, d->area);
+        t->scale += sf::Vector2f(0.1f, 0.1f);
+
+        auto rect2 = _infoBackgrounds[i / 2].area;
+        rect2.left = size.x;
+        auto d2 = _backgrounds[i + 1]->assign<DrawableComponent>(_infoBackgrounds[i / 2].path, rect2);
+        auto t2 = _backgrounds[i + 1]->assign<TransformComponent>(sf::Vector2f(0, 0), sf::Vector2f(1.f, 1.f), 0.f);
+        _backgrounds[i + 1]->assign<VelocityComponent>(_infoBackgrounds[i / 2].speed, 0.f);
+        _backgrounds[i + 1]->assign<BackgroundTag>();
+        t2->setFullScreen(window, d2->area);
+        t2->scale += sf::Vector2f(0.1f, 0.1f);
+    }
+}
 
 void FirstLevel::CreateWall(sf::RenderWindow* window, sf::Vector2u& size)
 {
@@ -143,9 +188,8 @@ void FirstLevel::CreateWall(sf::RenderWindow* window, sf::Vector2u& size)
             sf::Color pixelColor = wallTexture.getPixel(x, y);
 
             if (pixelColor == sf::Color::Black) {
-                // Create a wall entity at the corresponding position
                 auto wall = _world->CreateEntity();
-                wall->assign<DrawableComponent>("file.png", sf::IntRect(x, y, 1, 1)); // Assuming 1 pixel wall
+                wall->assign<DrawableComponent>("file.png", sf::IntRect(x, y, 1, 1));
                 wall->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(1.f, 1.f), 0.f);
                 wall->assign<CollisionComponent>(sf::FloatRect(x, y, 1, 1), ECS::Collision::WALL);
             }
@@ -173,22 +217,50 @@ void FirstLevel::update(const float dt)
 		});
 		clock.restart();
 	}
-    if (!enemiesSpawned && clock.getElapsedTime().asSeconds() > 5.0f) {
+    if (!schwarziSpawned && clock.getElapsedTime().asSeconds() > 5.0f) {
         CreateEnemies(1);
         schwarziSpawned = true;
     }
-    if (!enemiesSpawned && clock.getElapsedTime().asSeconds() > 10.0f) {
+    if (!fliesSpawned && clock.getElapsedTime().asSeconds() > 10.0f) {
         CreateEnemies(2);
         fliesSpawned = true;
     }
-    if (!enemiesSpawned && clock.getElapsedTime().asSeconds() > 15.0f) {
+    if (!bossSpawned && clock.getElapsedTime().asSeconds() > 15.0f) {
         CreateEnemies(3);
         bossSpawned = true;
     }
 }
 
 void FirstLevel::CreateEnemies(size_t id)
-{}
+{
+    auto enemy = _world->CreateEntity();
+
+    switch (id) {
+        case 1:
+            enemy->assign<DrawableComponent>("../assets/enemies/schwarzi.png", sf::IntRect(0, 0, 32, 32));
+            enemy->assign<TransformComponent>(sf::Vector2f(800, 100), sf::Vector2f(1.f, 1.f), 0.f);
+            enemy->assign<EnemyTag>
+            enemy->assign<PatternComponent>("lllaallliirrr")
+            break;
+        case 2:
+            enemy->assign<DrawableComponent>("../assets/enemies/flies.png", sf::IntRect(0, 0, 32, 32));
+            enemy->assign<TransformComponent>(sf::Vector2f(800, 100), sf::Vector2f(1.f, 1.f), 0.f);
+            enemy->assign<EnemyTag>
+            enemy->assign<PatternComponent>("aaaaiiii")
+            break;
+        case 3:
+            enemy->assign<DrawableComponent>("../assets/enemies/boss.png", sf::IntRect(0, 0, 32, 32));
+            enemy->assign<TransformComponent>(sf::Vector2f(800, 100), sf::Vector2f(1.f, 1.f), 0.f);
+            enemy->assign<EnemyTag>
+            enemy->assign<PvComponent>(3.f, 3.f)
+            enemy->assign<PatternComponent>("o")
+            break;
+        
+        default:
+            break;
+    }
+    enemy->assign<CollisionComponent>(sf::FloatRect(800, 100, 32, 32), ECS::Collision::ENEMY);
+}
 
 void DevLevel::BackgroundParallax()
 {
@@ -232,7 +304,7 @@ void FirstLevel::ScrollWalls(const float dt)
 {
     _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
         if (ent->has<DrawableComponent>()) {
-            transform->position.x -= 10.0f * dt; // Adjust the scroll speed as needed
+            transform->position.x -= 10.0f * dt;
         }
     });
 }
