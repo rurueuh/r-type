@@ -3,6 +3,7 @@
 #include "System.hpp"
 #include "Component.hpp"
 #include "GameEngine.hpp"
+#include <math.h>
 
 namespace ECS::System::Path {
     typedef std::map<EnemyPathType, void(*)(ECS::World*, const float&, ECS::Entity*)> ShootPathType;
@@ -42,7 +43,7 @@ namespace ECS {
                 auto transform = ent->get<TransformComponent>();
                 auto velocity = ent->get<VelocityComponent>();
 
-                float distanceBetween = (float)sqrt(pow(transform->position.x - playerTransform->position.x, 2) + pow(transform->position.y - playerTransform->position.y, 2));
+                float distanceBetween = (float)std::sqrt(std::pow(transform->position.x - playerTransform->position.x, 2) + pow(transform->position.y - playerTransform->position.y, 2));
                 distanceBetween = distanceBetween / 100.f;
                 constexpr float maxSpeed = 128.f;
                 distanceBetween = std::max(distanceBetween, maxSpeed);
