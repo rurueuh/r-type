@@ -43,6 +43,7 @@ int main(void)
     Utils::registerComponent<BackgroundTag>("BTag");
     Utils::registerComponent<CollisionComponent>("CollisionComponent");
     Utils::registerComponent<TextComponent>("TextComponent");
+    Utils::registerComponent<EnemyPath>("EnemyPath");
 
     Utils::registerLevel<DevLevel>("DevLevel");
     Utils::registerLevel<LobbyLevel>("LobbyLevel");

@@ -109,7 +109,7 @@ DeadLevel::DeadLevel()
 
 	auto player = _world->CreateEntity();
     player->assign<DrawableComponent>("../assets/player.png");
-    player->assign<TransformComponent>(sf::Vector2f(200, 200), sf::Vector2f(1, 1), 0);
+    player->assign<TransformComponent>(sf::Vector2f(200.f, 200.f), sf::Vector2f(1.f, 1.f), 0.f);
 
     auto text = _world->CreateEntity();
     text->assign<TextComponent>("You died");
