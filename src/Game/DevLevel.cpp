@@ -138,6 +138,12 @@ static void shootEnemy(ECS::World *world, const float &dt, ECS::Entity *ent)
 
 DevLevel::DevLevel() : Level()
 {
+    auto levelEntity = _world->CreateEntity();
+    levelEntity->assign<DataComponent>();
+    levelEntity->assign<LevelTag>();
+    std::sort(_infoEnemy.begin(), _infoEnemy.end(), [](const infoEnemySpawn_t& a, const infoEnemySpawn_t& b) {
+        return a.time < b.time;
+    });
     auto window = GameEngine::GetInstance().getWindow();
     sf::Vector2u size = { 1600, 900 };
     #ifndef SERVER
@@ -239,11 +245,54 @@ DevLevel::~DevLevel()
 
 void DevLevel::update(const float dt)
 {
+    std::vector<ECS::Entity*> data = _world->GetEntitiesByTag<LevelTag>();
+    if (data.size() == 0)
+        return;
+    auto dataComponentLevel = data[0]->get<DataComponent>();
+
     static sf::Clock clock;
     if (clock.getElapsedTime().asSeconds() > 0.1) {
         BackgroundParallax();
 		clock.restart();
 	}
+    // Spawn enemy
+    auto time = _clockEnemy.getElapsedTime().asSeconds();
+    #ifndef SERVER
+        time = dataComponentLevel->get<float>("timeLevel");
+    #else
+        dataComponentLevel->set("timeLevel", time);
+    #endif
+    std::size_t i = 0;
+    for (; i < _infoEnemy.size(); i++) {
+        auto info = _infoEnemy[i];
+        if (info.time <= time) {
+            auto enemy = _world->CreateEntity();
+            
+            enemy->assign<DrawableComponent>("../assets/enemy.png", sf::IntRect(5, 6, 21, 24));
+            enemy->assign<TransformComponent>(info.position, sf::Vector2f(2.f, 2.f), 0.f);
+            enemy->assign<CollisionComponent>(sf::FloatRect(800, 400, 21 * 2, 24 * 2), ECS::Collision::ENEMY);
+            enemy->assign<VelocityComponent>(0.1f, 0.1f);
+            enemy->assign<PvComponent>(info.hp, info.hp);
+            enemy->assign<EnemyTag>();
+            enemy->assign<EnemyPath>(FOLLOW_PLAYER);
+            std::erase(_infoEnemy, info);
+            break;
+        }
+    }
+    if (_infoEnemy.size() == 0) {
+        std::vector<ECS::Entity *> enemies = {};
+        _world->each<EnemyTag>([&](ECS::Entity *ent, EnemyTag *tag) {
+            enemies.push_back(ent);
+        });
+        if (enemies.size() == 0) {
+            std::cout << "All enemy are dead" << std::endl;
+            auto &levelManager = LevelManager::getInstance();
+            levelManager.addLevel<DeadLevel>();
+            levelManager.removeLevel<DevLevel>();
+            levelManager.setCurrentLevel<DeadLevel>();
+        }
+    }
+
 }
 
 void DevLevel::BackgroundParallax()

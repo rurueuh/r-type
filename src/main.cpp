@@ -44,6 +44,7 @@ int main(void)
     Utils::registerComponent<CollisionComponent>("CollisionComponent");
     Utils::registerComponent<TextComponent>("TextComponent");
     Utils::registerComponent<EnemyPath>("EnemyPath");
+    Utils::registerComponent<DataComponent>("DataComponent");
 
     Utils::registerLevel<DevLevel>("DevLevel");
     Utils::registerLevel<LobbyLevel>("LobbyLevel");

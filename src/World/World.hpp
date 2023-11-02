@@ -88,6 +88,17 @@ namespace ECS {
 
 			std::vector<Entity*> getEntities() { return m_entities; };
 			void setEntities(std::vector<Entity*> entities) { m_entities = entities; };
+
+			template <typename T>
+			std::vector<Entity*> GetEntitiesByTag(void) {
+				std::vector<Entity*> entities = {};
+				for (auto& ent : m_entities) {
+					if (ent->has<T>()) {
+						entities.push_back(ent);
+					}
+				}
+				return entities;
+			}
 		private:
 			World() {};
 			~World() {};

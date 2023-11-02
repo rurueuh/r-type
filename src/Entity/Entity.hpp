@@ -88,7 +88,7 @@ namespace ECS {
 		template <typename T>
 		bool has() {
 			auto& components = handler->components[Utils::getTypeId<T>()];
-			if (components == std::vector<Component *>())
+			if (components.size() == 0)
 				return false;
 			return true;
 		}

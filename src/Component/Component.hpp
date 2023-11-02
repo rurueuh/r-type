@@ -27,6 +27,8 @@
 #include "OnDie.hpp"
 #include "TextComponent.hpp"
 #include "EnemyPath.hpp"
+#include "dataComponent.hpp"
+#include "LevelTag.hpp"
 
 
 #include "Utils.hpp"
