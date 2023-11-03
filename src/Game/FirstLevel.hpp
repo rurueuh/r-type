@@ -16,20 +16,21 @@ class FirstLevel : public Level {
 		void CreatePlayers();
 		void CreateBackground(sf::RenderWindow* window, sf::Vector2u& size);
 		void CreateWall(sf::RenderWindow* window, sf::Vector2u& size);
-		void CreateEnemy(size_t id);
+		void CreateEnemies(size_t id);
 		~FirstLevel();
 
 		virtual void update(const float dt) override;
 		void BackgroundParallax();
+		void ScrollWalls(const float dt);
 	private:
 		std::vector<ECS::Entity*> _backgrounds = _world->CreateEntity(10);
 		
 		std::vector<infoBackground> _infoBackgrounds = {
-			{"../assets/back1.png", sf::IntRect(0, 0, 272, 160), -80},
-			{"../assets/back2.png", sf::IntRect(0, 0, 272, 160), -50},
-			{"../assets/back3.png", sf::IntRect(0, 0, 272, 160), -30},
-			{"../assets/back4.png", sf::IntRect(0, 0, 272, 160), -120},
-			{"../assets/back5.png", sf::IntRect(0, 0, 272, 160), -150},
+			{"./assets/back1.png", sf::IntRect(0, 0, 272, 160), -80},
+			{"./assets/back2.png", sf::IntRect(0, 0, 272, 160), -50},
+			{"./assets/back3.png", sf::IntRect(0, 0, 272, 160), -30},
+			{"./assets/back4.png", sf::IntRect(0, 0, 272, 160), -120},
+			{"./assets/back5.png", sf::IntRect(0, 0, 272, 160), -150},
 		};
 
 		std::vector<sf::IntRect> _infoPlayers = {

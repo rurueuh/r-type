@@ -1,4 +1,4 @@
-#include "First_Level.hpp"
+#include "FirstLevel.hpp"
 #include "Component.hpp"
 #include "GameEngine.hpp"
 #include "World.hpp"
@@ -37,7 +37,7 @@ static void shoot(ECS::Entity *ent, const float &dt)
     auto velocity = ent->get<VelocityComponent>();
     auto world = ent->getWorld();
     auto bullet = world->CreateEntity();
-    bullet->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
+    bullet->assign<DrawableComponent>("./assets/player.png", sf::IntRect(1, 3, 32, 14));
     bullet->assign<TransformComponent>(transform->position, sf::Vector2f(1.f, 1.f), 0.f);
     bullet->assign<LifeSpan>(3.f);
     bullet->assign<OnDie>([](ECS::World *world,ECS::Entity* ent) {
@@ -67,6 +67,18 @@ static void collisionBulletWall(ECS::World *world, ECS::Entity *e1, ECS::Entity 
     e2->die();
 }
 
+static void collisionPlayerEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
+{
+    auto pv = e1->get<PvComponent>();
+    pv -= 1;
+}
+
+static void collisionBulletEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
+{
+    auto pv = e2->get<PvComponent>();
+    pv -= 1;
+}
+
 static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
 {
     // get all player
@@ -84,7 +96,7 @@ std::vector<ECS::Entity*> players = {};
 		std::cout << "All player are dead" << std::endl;
         auto &levelManager = LevelManager::getInstance();
         levelManager.addLevel<DeadLevel>();
-        levelManager.removeLevel<DevLevel>();
+        levelManager.removeLevel<FirstLevel>();
         levelManager.setCurrentLevel<DeadLevel>();
 
 	}
@@ -98,10 +110,10 @@ FirstLevel::FirstLevel() : Level()
         size = window->getSize();
     #endif
     CreateBackground(window, size);
-    CreateWall(window, size);
+    //CreateWall(window, size);
     CreatePlayers();
     auto wall = _world->CreateEntity();
-    wall->assign<DrawableComponent>("../assets/player.png", sf::IntRect(1, 3, 32, 14));
+    wall->assign<DrawableComponent>("./assets/player.png", sf::IntRect(1, 3, 32, 14));
     wall->assign<TransformComponent>(sf::Vector2f(600, 600), sf::Vector2f(3.f, 3.f), 0.f);
     wall->assign<CollisionComponent>(sf::FloatRect(600, 600, 32 * 3, 14 * 3), ECS::Collision::WALL);
     CollisionActionList collisionAction = {
@@ -139,7 +151,7 @@ void FirstLevel::CreatePlayers()
         ship->assign<PlayerComponent>();
         ship->assign<InputComponent>(input);
         ship->assign<PvComponent>(100.f, 100.f);
-        ship->assign<DrawableComponent>("../assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
+        ship->assign<DrawableComponent>("./assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
         ship->assign<VelocityComponent>(0.1f, 0.1f);
         const float x = 400;
         const float y = 400;
@@ -174,7 +186,7 @@ void FirstLevel::CreateBackground(sf::RenderWindow* window, sf::Vector2u& size)
     }
 }
 
-void FirstLevel::CreateWall(sf::RenderWindow* window, sf::Vector2u& size)
+/*void FirstLevel::CreateWall(sf::RenderWindow* window, sf::Vector2u& size)
 {
     sf::Texture wallTexture;
     if (!wallTexture.loadFromFile("../assets/firstLevelWalls.png")) {
@@ -185,17 +197,14 @@ void FirstLevel::CreateWall(sf::RenderWindow* window, sf::Vector2u& size)
 
     for (unsigned int x = 0; x < wallTexture.getSize().x; ++x) {
         for (unsigned int y = 0; y < wallTexture.getSize().y; ++y) {
-            sf::Color pixelColor = wallTexture.getPixel(x, y);
 
-            if (pixelColor == sf::Color::Black) {
                 auto wall = _world->CreateEntity();
-                wall->assign<DrawableComponent>("file.png", sf::IntRect(x, y, 1, 1));
+                wall->assign<DrawableComponent>("../assets/firstLevelWalls.png", sf::IntRect(x, y, 1, 1));
                 wall->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(1.f, 1.f), 0.f);
                 wall->assign<CollisionComponent>(sf::FloatRect(x, y, 1, 1), ECS::Collision::WALL);
-            }
         }
     }
-}
+}*/
 
 FirstLevel::~FirstLevel()
 {
@@ -211,10 +220,7 @@ void FirstLevel::update(const float dt)
 
     if (clock.getElapsedTime().asSeconds() > 0.1) {
         BackgroundParallax();
-        ScrollWalls(dt)
-        _world->each<PvComponent>([&](ECS::Entity* ent, PvComponent* pv) {
-            pv->_health -= 1.f * dt * 1000.f;
-		});
+        //ScrollWalls(dt);
 		clock.restart();
 	}
     if (!schwarziSpawned && clock.getElapsedTime().asSeconds() > 5.0f) {
@@ -237,23 +243,28 @@ void FirstLevel::CreateEnemies(size_t id)
 
     switch (id) {
         case 1:
-            enemy->assign<DrawableComponent>("../assets/enemies/schwarzi.png", sf::IntRect(0, 0, 32, 32));
+            enemy->assign<DrawableComponent>("./assets/enemies/schwarzi.png", sf::IntRect(0, 0, 32, 32));
             enemy->assign<TransformComponent>(sf::Vector2f(800, 100), sf::Vector2f(1.f, 1.f), 0.f);
-            enemy->assign<EnemyTag>
-            enemy->assign<PatternComponent>("lllaallliirrr")
+            enemy->assign<EnemyTag>();
+            enemy->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::ENEMY);
+            enemy->assign<PvComponent>(1.f, 1.f);
+            enemy->assign<PatternComponent>("lllaallliirrr", 0);
             break;
         case 2:
-            enemy->assign<DrawableComponent>("../assets/enemies/flies.png", sf::IntRect(0, 0, 32, 32));
+            enemy->assign<DrawableComponent>("./assets/enemies/flies.png", sf::IntRect(0, 0, 32, 32));
             enemy->assign<TransformComponent>(sf::Vector2f(800, 100), sf::Vector2f(1.f, 1.f), 0.f);
-            enemy->assign<EnemyTag>
-            enemy->assign<PatternComponent>("aaaaiiii")
+            enemy->assign<EnemyTag>();
+            enemy->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::ENEMY);
+            enemy->assign<PvComponent>(1.f, 1.f);
+            enemy->assign<PatternComponent>("aaaaiiii", 0);
             break;
         case 3:
-            enemy->assign<DrawableComponent>("../assets/enemies/boss.png", sf::IntRect(0, 0, 32, 32));
+            enemy->assign<DrawableComponent>("./assets/enemies/boss.png", sf::IntRect(0, 0, 32, 32));
             enemy->assign<TransformComponent>(sf::Vector2f(800, 100), sf::Vector2f(1.f, 1.f), 0.f);
-            enemy->assign<EnemyTag>
-            enemy->assign<PvComponent>(3.f, 3.f)
-            enemy->assign<PatternComponent>("o")
+            enemy->assign<EnemyTag>();
+            enemy->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::ENEMY);
+            enemy->assign<PvComponent>(3.f, 3.f);
+            enemy->assign<PatternComponent>("o", 0);
             break;
         
         default:
@@ -262,7 +273,7 @@ void FirstLevel::CreateEnemies(size_t id)
     enemy->assign<CollisionComponent>(sf::FloatRect(800, 100, 32, 32), ECS::Collision::ENEMY);
 }
 
-void DevLevel::BackgroundParallax()
+void FirstLevel::BackgroundParallax()
 {
     _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
         if (ent->has<BackgroundTag>()) {
@@ -300,11 +311,11 @@ void DevLevel::BackgroundParallax()
     }
 }
 
-void FirstLevel::ScrollWalls(const float dt)
+/*void FirstLevel::ScrollWalls(const float dt)
 {
     _world->each<TransformComponent>([&](ECS::Entity* ent, TransformComponent* transform) {
         if (ent->has<DrawableComponent>()) {
             transform->position.x -= 10.0f * dt;
         }
     });
-}
+}*/
