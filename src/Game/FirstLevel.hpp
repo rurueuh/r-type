@@ -10,6 +10,12 @@ typedef struct infoBackground {
 	float speed;
 } infoBackground;
 
+typedef struct infoEnemies {
+	std::string path;
+	sf::IntRect area;
+	std::string pattern;
+} infoEnemies;
+
 class FirstLevel : public Level {
 	public:
 		FirstLevel();
@@ -39,5 +45,11 @@ class FirstLevel : public Level {
 			sf::IntRect(1, 37, 32, 14),
 			sf::IntRect(1, 54, 32, 14),
 			sf::IntRect(1, 71, 32, 14),
+		};
+
+		std::vector<infoEnemies> _infoEnemies = {
+			{"./assets/enemies/schwarzi.png", sf::IntRect(52, 3, 56, 53), "lllaallliirrr"},
+			{"./assets/enemies/flies.png", sf::IntRect(5, 6, 20, 23), "aaaaiiii"},
+			{"./assets/enemies/boss.png", sf::IntRect(27, 3, 155, 203), "o"},
 		};
 };

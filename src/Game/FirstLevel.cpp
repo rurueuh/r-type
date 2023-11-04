@@ -223,54 +223,32 @@ void FirstLevel::update(const float dt)
         //ScrollWalls(dt);
 		clock.restart();
 	}
-    if (!schwarziSpawned && clock.getElapsedTime().asSeconds() > 5.0f) {
-        CreateEnemies(1);
+    if (!schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 5.0f) {
         schwarziSpawned = true;
+        CreateEnemies(0, 800, 100);
+        CreateEnemies(0, 800, 300);
+        CreateEnemies(0, 800, 500);
+        CreateEnemies(0, 800, 700);
     }
-    if (!fliesSpawned && clock.getElapsedTime().asSeconds() > 10.0f) {
-        CreateEnemies(2);
+    /*if (!fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 20.0f) {
         fliesSpawned = true;
+        CreateEnemies(1);
     }
-    if (!bossSpawned && clock.getElapsedTime().asSeconds() > 15.0f) {
-        CreateEnemies(3);
+    if (!bossSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 65.0f) {
         bossSpawned = true;
-    }
+        CreateEnemies(2);
+    }*/
 }
 
-void FirstLevel::CreateEnemies(size_t id)
+void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
 {
     auto enemy = _world->CreateEntity();
-
-    switch (id) {
-        case 1:
-            enemy->assign<DrawableComponent>("./assets/enemies/schwarzi.png", sf::IntRect(0, 0, 32, 32));
-            enemy->assign<TransformComponent>(sf::Vector2f(800, 100), sf::Vector2f(1.f, 1.f), 0.f);
-            enemy->assign<EnemyTag>();
-            enemy->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::ENEMY);
-            enemy->assign<PvComponent>(1.f, 1.f);
-            enemy->assign<PatternComponent>("lllaallliirrr", 0);
-            break;
-        case 2:
-            enemy->assign<DrawableComponent>("./assets/enemies/flies.png", sf::IntRect(0, 0, 32, 32));
-            enemy->assign<TransformComponent>(sf::Vector2f(800, 100), sf::Vector2f(1.f, 1.f), 0.f);
-            enemy->assign<EnemyTag>();
-            enemy->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::ENEMY);
-            enemy->assign<PvComponent>(1.f, 1.f);
-            enemy->assign<PatternComponent>("aaaaiiii", 0);
-            break;
-        case 3:
-            enemy->assign<DrawableComponent>("./assets/enemies/boss.png", sf::IntRect(0, 0, 32, 32));
-            enemy->assign<TransformComponent>(sf::Vector2f(800, 100), sf::Vector2f(1.f, 1.f), 0.f);
-            enemy->assign<EnemyTag>();
-            enemy->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::ENEMY);
-            enemy->assign<PvComponent>(3.f, 3.f);
-            enemy->assign<PatternComponent>("o", 0);
-            break;
-        
-        default:
-            break;
-    }
-    enemy->assign<CollisionComponent>(sf::FloatRect(800, 100, 32, 32), ECS::Collision::ENEMY);
+        enemy->assign<EnemyTag>();
+        enemy->assign<DrawableComponent>(_infoEnemies[id].path, _infoEnemies[id].area);
+        enemy->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(3.f, 3.f), 0.f);
+        enemy->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::ENEMY);
+        enemy->assign<PvComponent>(1.f, 1.f);
+        enemy->assign<PatternComponent>(_infoEnemies[id].pattern, 0);
 }
 
 void FirstLevel::BackgroundParallax()
