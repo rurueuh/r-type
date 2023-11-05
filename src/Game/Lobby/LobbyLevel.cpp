@@ -99,19 +99,27 @@ LobbyLevel::LobbyLevel()
         { Input::Key::backward, backward},
         { Input::Key::jump, use},
     };
+    const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> nullInput = {};
+
     auto actualLevel = _world->CreateEntity();
     actualLevel->assign<PlayerComponent>();
     actualLevel->assign<InputComponent>(input);
     #ifndef SERVER
         actualLevel->get<PlayerComponent>()->hash = "me";
     #endif // SERVER
+    const short maxPlayer = 4 - 1;
+    for (short i = 0; i < maxPlayer; i++) {
+        auto player = _world->CreateEntity();
+        player->assign<PlayerComponent>();
+        player->assign<InputComponent>(nullInput);
+    }
 
 	auto player = _world->CreateEntity();
     player->assign<DrawableComponent>("../assets/player.png");
     player->assign<TransformComponent>(sf::Vector2f(200, 200), sf::Vector2f(1, 1), 0);
 
     auto text = _world->CreateEntity();
-    text->assign<TextComponent>("You died");
+    text->assign<TextComponent>("Welcome to the lobby");
     text->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/4), sf::Vector2f(1, 1), 0);
 
     auto restart = _world->CreateEntity();
@@ -121,6 +129,11 @@ LobbyLevel::LobbyLevel()
     auto quit = _world->CreateEntity();
     quit->assign<TextComponent>("Quit");
     quit->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/2 + 100), sf::Vector2f(1, 1), 0);
+
+    auto nbPlayer = _world->CreateEntity();
+    nbPlayer->assign<TextComponent>("0");
+    nbPlayer->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/2 + 200), sf::Vector2f(1, 1), 0);
+    nbPlayer->assign<DataComponent>();
 
     try {
         _world->registerSystem<ECS::System::TextSystem>(0);
@@ -139,4 +152,13 @@ LobbyLevel::~LobbyLevel()
 
 void LobbyLevel::update(const float dt)
 {
+    auto world = _world;
+    auto nbPlayerText = world->GetEntitiesByTag<DataComponent>();
+    auto players = world->GetEntitiesByTag<PlayerComponent>();
+    int nb = 0;
+    for (auto &player : players) {
+        if (player->get<PlayerComponent>()->hash != "")
+            nb++; // DEBUG : hash != "" -> player
+    }
+    nbPlayerText[0]->get<TextComponent>()->_text = std::to_string(nb) + " player(s) active";
 }
