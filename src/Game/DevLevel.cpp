@@ -115,6 +115,8 @@ std::vector<ECS::Entity*> players = {};
 
 static void shootEnemy(ECS::World *world, const float &dt, ECS::Entity *ent)
 {
+    if (!ent->has<DataComponent>())
+        return;
 	auto cooldown = ent->get<DataComponent>()->get<float>("timeShoot");
     if (cooldown < 3.5)
         return;
@@ -198,15 +200,21 @@ void DevLevel::CreatePlayers()
         ship->assign<PvComponent>(100.f, 100.f);
         ship->assign<DrawableComponent>("../assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
         ship->assign<VelocityComponent>(0.1f, 0.1f);
-        const float x = 400;
-        const float y = 400;
+        const float x = -0;
+        const float y = -0;
         ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
-        ship->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::PLAYER);
+        ship->assign<CollisionComponent>(sf::FloatRect(x, y, 32 * 4,14 * 4), ECS::Collision::PLAYER);
         ship->assign<OnDie>(checkPlayerEnd);
+        auto d = ship->assign<DataComponent>();
+        d->set("spawn", 0.f);
         i++;
     }
 #ifndef SERVER
     starship[0]->get<PlayerComponent>()->hash = "me";
+    starship[0]->get<TransformComponent>()->position = sf::Vector2f(200, 200);
+    starship[0]->get<CollisionComponent>()->_rect = sf::FloatRect(200, 200, 32 * 4, 14 * 4);
+    starship[0]->get<DataComponent>()->set("spawn", 1.f);
+
 #endif // SERVER
 }
 
@@ -273,6 +281,7 @@ void DevLevel::update(const float dt)
         auto info = _infoEnemy[i];
         if (info.time <= time) {
             auto enemy = _world->CreateEntity();
+            enemy->assign<DataComponent>();
             enemy->assign<DrawableComponent>("../assets/enemy.png", sf::IntRect(5, 6, 21, 24));
             enemy->assign<TransformComponent>(info.position, sf::Vector2f(2.f, 2.f), 0.f);
             enemy->assign<CollisionComponent>(sf::FloatRect(800, 400, 21 * 2, 24 * 2), ECS::Collision::ENEMY);
@@ -280,7 +289,6 @@ void DevLevel::update(const float dt)
             enemy->assign<PvComponent>(info.hp, info.hp);
             enemy->assign<EnemyTag>();
             enemy->assign<EnemyPath>(FOLLOW_PLAYER);
-            enemy->assign<DataComponent>();
             std::erase(_infoEnemy, info);
             break;
         }
@@ -297,6 +305,26 @@ void DevLevel::update(const float dt)
             levelManager.removeLevel<DevLevel>();
             levelManager.setCurrentLevel<DeadLevel>();
         }
+    }
+
+    // spawn player
+    std::vector<ECS::Entity*> players = {};
+    _world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
+        players.push_back(ent);
+        });
+    for (auto player : players) {
+        if (player->get<PlayerComponent>()->hash == "")
+            continue;
+        auto dataComponentPlayer = player->get<DataComponent>();
+        if (!dataComponentPlayer)
+            continue;
+        if (dataComponentPlayer->get<float>("spawn") == 1.0f)
+            continue;
+        auto transform = player->get<TransformComponent>();
+        auto velocity = player->get<VelocityComponent>();
+        transform->position = sf::Vector2f(200, 200);
+        velocity->velocity = sf::Vector2f(0.f, 0.f);
+        dataComponentPlayer->set("spawn", 1.0f);
     }
 
 }
@@ -323,7 +351,7 @@ void DevLevel::BackgroundParallax()
         if (ent->has<BackgroundTag>()) {
             backgrounds.push_back(ent);
         }
-        });
+    });
     _backgrounds = backgrounds;
     if (_backgrounds.size() == 0)
         return;
