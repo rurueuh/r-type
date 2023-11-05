@@ -204,12 +204,33 @@ void FirstLevel::update(const float dt)
         CreateEnemies(0, 800, 600);
         enemySpawnClock.restart();
     }
-    if (!fliesSpawned && schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 15.0f) {
+    if (!fliesSpawned && schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 12.0f) {
         fliesSpawned = true;
-        CreateEnemies(1, 850, 350);
+        CreateEnemies(1, 850, 100);
+        CreateEnemies(1, 850, 300);
+        CreateEnemies(1, 850, 500);
+        CreateEnemies(1, 850, 700);
+        CreateEnemies(1, 1050, 100);
+        CreateEnemies(1, 1050, 300);
+        CreateEnemies(1, 1050, 500);
+        CreateEnemies(1, 1050, 700);
+        CreateEnemies(1, 950, 10);
+        CreateEnemies(1, 950, 200);
+        CreateEnemies(1, 950, 400);
+        CreateEnemies(1, 950, 800);
+        CreateEnemies(1, 950, 600);
+        CreateEnemies(1, 1250, 100);
+        CreateEnemies(1, 1250, 300);
+        CreateEnemies(1, 1250, 500);
+        CreateEnemies(1, 1250, 700);
+        CreateEnemies(1, 1150, 10);
+        CreateEnemies(1, 1150, 200);
+        CreateEnemies(1, 1150, 400);
+        CreateEnemies(1, 1150, 800);
+        CreateEnemies(1, 1150, 600);
         enemySpawnClock.restart();
     }
-    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 8.0f) {
+    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 22.0f) {
         CreateEnemies(2, 900, 200);
     }
 }
@@ -229,8 +250,12 @@ void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
 
 /*void FirstLevel::EnemyPatterns(const float dt)
 {
+    std::vector<ECS::Entity*> enemies = {};
     _world->each<EnemyTag>([&](ECS::Entity* ent, EnemyTag* enemy) {
-        auto pat = ent->get<PatternComponent>();
+        enemies.push_back(ent);
+    });
+    for (auto enemy : enemies) {
+        auto pat = enemy->get<PatternComponent>();
         if (pat->pattern[pat->currentIndex] == 'N')
             pat->currentIndex = 0;
         switch (pat->pattern[pat->currentIndex]) {
@@ -238,28 +263,28 @@ void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
             pat->currentIndex++;
             break;
         case 'l':
-            left(ent, dt);
+            left(enemy, dt);
             pat->currentIndex++;
             break;
         case 'a':
-            left(ent, dt);
-            forward(ent, dt);
+            left(enemy, dt);
+            forward(enemy, dt);
             pat->currentIndex++;
             break;
         case 'i':
-            left(ent, dt);
-            backward(ent, dt);
+            left(enemy, dt);
+            backward(enemy, dt);
             pat->currentIndex++;
             break;
         case 'r':
-            right(ent, dt);
+            right(enemy, dt);
             pat->currentIndex++;
             break;
         
         default:
             break;
         }
-    });
+    };
 }*/
 
 void FirstLevel::BackgroundParallax()
