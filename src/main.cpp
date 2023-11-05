@@ -5,6 +5,7 @@
 #include "LevelManager.hpp"
 #include "FirstLevel.hpp"
 #include "DeadLevel.hpp"
+#include "WinLevel.hpp"
 #include "GameEngine.hpp"
 #include "Utils/Utils.hpp"
 #include <snappy.h>
@@ -19,6 +20,11 @@ void setLevel(const std::string &str)
     else if (str == "DeadLevel") {
         LevelManager::getInstance().addLevel<DeadLevel>();
 		LevelManager::getInstance().setCurrentLevel<DeadLevel>();
+    }
+
+    else if (str == "WinLevel") {
+        LevelManager::getInstance().addLevel<WinLevel>();
+		LevelManager::getInstance().setCurrentLevel<WinLevel>();
     }
     else
         std::cerr << "Unknown level: " << str << std::endl;
@@ -42,6 +48,7 @@ int main(void)
 
     Utils::registerLevel<FirstLevel>("FirstLevel");
     Utils::registerLevel<DeadLevel>("DeadLevel");
+    Utils::registerLevel<WinLevel>("WinLevel");
 
     try {
         auto &engine = GameEngine::GetInstance();
