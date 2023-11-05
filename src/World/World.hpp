@@ -101,7 +101,11 @@ namespace ECS {
 			}
 		private:
 			World() {};
-			~World() {};
+			~World() {
+				for (auto& sys : m_system) {
+					delete sys.second;
+				}
+			};
 
 			void updateWorld(void);
 

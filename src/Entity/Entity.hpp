@@ -95,6 +95,7 @@ namespace ECS {
 
 		void die(bool force = false) { // TODO: add force dead to remove in m_world
 			this->m_WaitingForDestroy = true;
+			this->m_forceDestroy = force;
 		}
 
 		bool isDead() { return m_WaitingForDestroy; };
@@ -106,5 +107,6 @@ namespace ECS {
 			World *m_world = nullptr;
 			size_t m_id = -1;
 			bool m_WaitingForDestroy = false;
+			bool m_forceDestroy = false;
 	};
 }
