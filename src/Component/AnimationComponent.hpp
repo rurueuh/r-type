@@ -27,6 +27,7 @@ struct AnimationComponent : public Component {
         std::stringstream ss = std::stringstream(str);
         int size = 0;
         ss >> size;
+        animFrame.reserve(size);
         for (int i = 0; i < size; i++) {
             sf::IntRect rect;
             ss >> rect.left >> rect.top >> rect.width >> rect.height;
