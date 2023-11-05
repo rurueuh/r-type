@@ -200,8 +200,8 @@ void DevLevel::CreatePlayers()
         ship->assign<PvComponent>(100.f, 100.f);
         ship->assign<DrawableComponent>("../assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
         ship->assign<VelocityComponent>(0.1f, 0.1f);
-        const float x = -0;
-        const float y = -0;
+        const float x = -800;
+        const float y = -800;
         ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
         ship->assign<CollisionComponent>(sf::FloatRect(x, y, 32 * 4,14 * 4), ECS::Collision::PLAYER);
         ship->assign<OnDie>(checkPlayerEnd);
