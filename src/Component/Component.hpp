@@ -27,6 +27,7 @@
 #include "OnDie.hpp"
 #include "TextComponent.hpp"
 #include "PatternComponent.hpp"
+#include "DamageComponent.hpp"
 
 
 #include "Utils.hpp"

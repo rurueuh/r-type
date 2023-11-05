@@ -23,6 +23,7 @@ void ECS::Component::FactoryAssignComponent(Entity* ent, std::string type, std::
 		FactoryAssignCreateComponent<CollisionComponent>,
 		FactoryAssignCreateComponent<TextComponent>,
 		FactoryAssignCreateComponent<PatternComponent>,
+		FactoryAssignCreateComponent<DamageComponent>
 	};
 	std::vector<std::string> id = {
 		Utils::getRegisteredComponent(Utils::getTypeId<PvComponent>()),
@@ -41,6 +42,7 @@ void ECS::Component::FactoryAssignComponent(Entity* ent, std::string type, std::
 		Utils::getRegisteredComponent(Utils::getTypeId<CollisionComponent>()),
 		Utils::getRegisteredComponent(Utils::getTypeId<TextComponent>()),
 		Utils::getRegisteredComponent(Utils::getTypeId<PatternComponent>()),
+		Utils::getRegisteredComponent(Utils::getTypeId<DamageComponent>()),
 	};
 	// pour une raison inconnue (probablement le combo unordered_map + std::function) je ne peux pas cree de map
 	for (size_t i = 0; i < id.size(); i++) {
