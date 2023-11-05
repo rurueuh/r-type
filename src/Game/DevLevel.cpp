@@ -177,6 +177,7 @@ DevLevel::DevLevel() : Level()
         _world->registerSystem<ECS::System::LifeSpanSystem>(5);
         _world->registerSystem<ECS::System::HpSystem>(6);
         _world->registerSystem<ECS::System::PathSystem>(7, typeOfShoot);
+        _world->registerSystem<ECS::System::AnimationSystem>(8);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }
@@ -192,10 +193,17 @@ void DevLevel::CreatePlayers()
         { Input::Key::jump, shoot }
     };
     shoot(nullptr, 0.f); // for start cooldown shoot
-    std::vector<ECS::Entity*> starship = _world->CreateEntity(6);
+    std::vector<ECS::Entity*> starship = _world->CreateEntity(4);
     size_t i = 0;
     for (auto ship : starship) {
         ship->assign<PlayerComponent>();
+        std::vector<sf::IntRect> frame = {
+            sf::IntRect(1, 3, 32, 14),
+            sf::IntRect(1, 20, 32, 14),
+            sf::IntRect(1, 37, 32, 14),
+            sf::IntRect(1, 54, 32, 14),
+        };
+        ship->assign<AnimationComponent>(frame, 0.1f);
         ship->assign<InputComponent>(input);
         ship->assign<PvComponent>(100.f, 100.f);
         ship->assign<DrawableComponent>("../assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
@@ -322,6 +330,8 @@ void DevLevel::update(const float dt)
             continue;
         auto transform = player->get<TransformComponent>();
         auto velocity = player->get<VelocityComponent>();
+        if (!transform || !velocity)
+            continue;
         transform->position = sf::Vector2f(200, 200);
         velocity->velocity = sf::Vector2f(0.f, 0.f);
         dataComponentPlayer->set("spawn", 1.0f);

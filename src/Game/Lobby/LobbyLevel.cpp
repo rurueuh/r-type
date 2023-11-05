@@ -158,7 +158,8 @@ void LobbyLevel::update(const float dt)
     int nb = 0;
     for (auto &player : players) {
         if (player->get<PlayerComponent>()->hash != "")
-            nb++; // DEBUG : hash != "" -> player
+            nb++;
     }
-    nbPlayerText[0]->get<TextComponent>()->_text = std::to_string(nb) + " player(s) active";
+    if (nbPlayerText.size() > 0 && nbPlayerText[0]->has<TextComponent>())
+        nbPlayerText[0]->get<TextComponent>()->_text = std::to_string(nb) + " player(s) active";
 }

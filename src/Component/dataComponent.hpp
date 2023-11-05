@@ -6,7 +6,7 @@
 #include <any>
 
 namespace ECS::Component {
-    typedef std::unordered_map<std::string, std::any> ComponentDataMap;
+    typedef std::unordered_map<std::string, float> ComponentDataMap;
 };
 
 /**
@@ -20,7 +20,7 @@ struct DataComponent : public Component {
     inline virtual std::string toString() const override {
         std::string str = "";
         for (auto& [key, value] : _data) {
-            str += key + ":" + std::to_string(std::any_cast<float>(value)) + ";";
+            str += key + "|" + std::to_string(static_cast<float>(value));
         }
         return str;
     }
@@ -29,12 +29,14 @@ struct DataComponent : public Component {
         std::stringstream ss = std::stringstream(str);
         std::string key;
         std::string value;
-        while (std::getline(ss, key, ':') && std::getline(ss, value, ';')) {
+        while (std::getline(ss, key, '|') && std::getline(ss, value, '|')) {
+            // remove space from key
+            key.erase(std::remove_if(key.begin(), key.end(), isspace), key.end());
             _data[key] = std::stof(value);
         }
     }
 
-    inline void set(std::string key, std::any value) {
+    inline void set(std::string key, float value) {
         _data[key] = value;
     }
 
@@ -42,7 +44,7 @@ struct DataComponent : public Component {
     inline T get(std::string key) {
         if (!has<T>(key))
             return static_cast<float>(0.f);
-        return std::any_cast<T>(_data[key]);
+        return static_cast<T>(_data[key]);
     }
 
     template <typename T>
@@ -54,3 +56,4 @@ struct DataComponent : public Component {
 
     ECS::Component::ComponentDataMap _data = {};
 };
+

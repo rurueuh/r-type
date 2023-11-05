@@ -45,6 +45,8 @@ int main(void)
     Utils::registerComponent<TextComponent>("TextComponent");
     Utils::registerComponent<EnemyPath>("EnemyPath");
     Utils::registerComponent<DataComponent>("DataComponent");
+    Utils::registerComponent<LevelTag>("LevelTag");
+    Utils::registerComponent<AnimationComponent>("AnimationComponent");
 
     Utils::registerLevel<DevLevel>("DevLevel");
     Utils::registerLevel<LobbyLevel>("LobbyLevel");

@@ -24,6 +24,7 @@ void ECS::Component::FactoryAssignComponent(Entity* ent, std::string type, std::
 		{Utils::getRegisteredComponent(Utils::getTypeId<EnemyPath>()), FactoryAssignCreateComponent<EnemyPath>},
 		{Utils::getRegisteredComponent(Utils::getTypeId<DataComponent>()), FactoryAssignCreateComponent<DataComponent>},
 		{Utils::getRegisteredComponent(Utils::getTypeId<LevelTag>()), FactoryAssignCreateComponent<LevelTag>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<AnimationComponent>()), FactoryAssignCreateComponent<AnimationComponent>},
 	};
 
 	if (list.find(type) != list.end()) {

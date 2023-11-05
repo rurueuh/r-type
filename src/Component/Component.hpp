@@ -29,7 +29,7 @@
 #include "EnemyPath.hpp"
 #include "dataComponent.hpp"
 #include "LevelTag.hpp"
-
+#include "AnimationComponent.hpp"
 
 #include "Utils.hpp"
 #include "Entity.hpp"
