@@ -92,6 +92,14 @@ static void collisionBulletEnemyToPlayer(ECS::World* world, ECS::Entity* e1, ECS
 
 static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
 {
+    #ifndef SERVER
+        if (GameEngine::GetInstance().getClient().getClientHash() == "me") {
+            auto &levelManager = LevelManager::getInstance();
+            levelManager.addLevel<DeadLevel>();
+            levelManager.removeLevel<DevLevel>();
+            levelManager.setCurrentLevel<DeadLevel>();
+        }
+    #endif
     // get all player
 std::vector<ECS::Entity*> players = {};
     world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
@@ -197,12 +205,31 @@ void DevLevel::CreatePlayers()
     size_t i = 0;
     for (auto ship : starship) {
         ship->assign<PlayerComponent>();
+        
+        int yy = 3;
+        yy += i * 17;
         std::vector<sf::IntRect> frame = {
-            sf::IntRect(1, 3, 32, 14),
-            sf::IntRect(1, 20, 32, 14),
-            sf::IntRect(1, 37, 32, 14),
-            sf::IntRect(1, 54, 32, 14),
+            sf::IntRect(1, yy, 32, 14),
+            sf::IntRect(34, yy, 32, 14),
+            sf::IntRect(67, yy, 32, 14),
+            sf::IntRect(100, yy, 32, 14),
+            sf::IntRect(133, yy, 32, 14),
+            sf::IntRect(100, yy, 32, 14),
+            sf::IntRect(67, yy, 32, 14),
+            sf::IntRect(34, yy, 32, 14),
         };
+        #ifndef SERVER
+            if (GameEngine::GetInstance().getClient().getClientHash() == "me") {
+                frame = {
+                    sf::IntRect(1, 3, 32, 14),
+                    sf::IntRect(1, 20, 32, 14),
+                    sf::IntRect(1, 37, 32, 14),
+                    sf::IntRect(1, 54, 32, 14),
+                };
+            }
+        #else
+        #endif
+        
         ship->assign<AnimationComponent>(frame, 0.1f);
         ship->assign<InputComponent>(input);
         ship->assign<PvComponent>(100.f, 100.f);
@@ -297,6 +324,17 @@ void DevLevel::update(const float dt)
             enemy->assign<PvComponent>(info.hp, info.hp);
             enemy->assign<EnemyTag>();
             enemy->assign<EnemyPath>(FOLLOW_PLAYER);
+            std::vector<sf::IntRect> anims = {
+                sf::IntRect(5, 6, 21, 24),
+                sf::IntRect(38, 6, 21, 24),
+                sf::IntRect(71, 6, 21, 24),
+                sf::IntRect(104, 6, 21, 24),
+                sf::IntRect(137, 6, 21, 24),
+                sf::IntRect(170, 6, 21, 24),
+                sf::IntRect(203, 6, 21, 24),
+                sf::IntRect(236, 6, 21, 24),
+            };
+            enemy->assign<AnimationComponent>(anims, 0.2f);
             std::erase(_infoEnemy, info);
             break;
         }
