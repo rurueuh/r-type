@@ -22,13 +22,13 @@ class FirstLevel : public Level {
 		FirstLevel();
 		void CreatePlayers();
 		void CreateBackground(sf::RenderWindow* window, sf::Vector2u& size);
-		void CreateWall(sf::RenderWindow* window, sf::Vector2u& size);
 		void CreateEnemies(size_t id, size_t x, size_t y);
 		~FirstLevel();
 
 		virtual void update(const float dt) override;
 		void BackgroundParallax();
-		void ScrollWalls(const float dt);
+		void EnemyPatterns(const float dt);
+
 	private:
 		std::vector<ECS::Entity*> _backgrounds = _world->CreateEntity(10);
 		
@@ -49,8 +49,8 @@ class FirstLevel : public Level {
 		};
 
 		std::vector<infoEnemies> _infoEnemies = {
-			{"./assets/enemies/schwarzi.png", sf::IntRect(52, 3, 56, 53), "lllaallliirrr", 2.f},
-			{"./assets/enemies/flies.png", sf::IntRect(5, 6, 20, 23), "aaaaiiii", 1.f},
-			{"./assets/enemies/boss.png", sf::IntRect(27, 3, 155, 203), "o", 5.f},
+			{"./assets/enemies/schwarzi.png", sf::IntRect(52, 3, 56, 53), "lllaallliirrrN", 2.f},
+			{"./assets/enemies/flies.png", sf::IntRect(5, 6, 20, 23), "aaaaiiiiN", 1.f},
+			{"./assets/enemies/xeno.png", sf::IntRect(27, 3, 155, 203), "oN", 5.f},
 		};
 };

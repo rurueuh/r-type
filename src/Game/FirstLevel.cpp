@@ -6,6 +6,8 @@
 #include "DeadLevel.hpp"
 #include "WinLevel.hpp"
 
+bool isBossAlive = true;
+
 static void forward(ECS::Entity *ent, const float &dt)
 {
 	ent->get<VelocityComponent>()->velocity.y -= 1 * dt * 142;
@@ -67,8 +69,20 @@ static void collisionBulletEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity
     e1->die();
 }
 
+static void victory(ECS::World* world, ECS::Entity* ent)
+{
+    isBossAlive = false;
+	std::cout << "Victory ours!" << std::endl;
+    auto &levelManager = LevelManager::getInstance();
+    levelManager.addLevel<WinLevel>();
+    levelManager.removeLevel<FirstLevel>();
+    levelManager.setCurrentLevel<WinLevel>();
+}
+
 static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
 {
+    if (isBossAlive == false)
+        victory(world, ent);
     // get all player
     std::vector<ECS::Entity*> players = {};
     world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
@@ -88,15 +102,6 @@ static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
         levelManager.setCurrentLevel<DeadLevel>();
 
 	}
-}
-
-static void victory(ECS::World* world, ECS::Entity* ent)
-{
-	std::cout << "Victory ours!" << std::endl;
-    auto &levelManager = LevelManager::getInstance();
-    levelManager.addLevel<WinLevel>();
-    levelManager.removeLevel<FirstLevel>();
-    levelManager.setCurrentLevel<WinLevel>();
 }
 
 FirstLevel::FirstLevel() : Level()
@@ -189,6 +194,7 @@ void FirstLevel::update(const float dt)
 
     if (clock.getElapsedTime().asSeconds() > 0.1) {
         BackgroundParallax();
+        //EnemyPatterns(dt);
 		clock.restart();
 	}
     if (!schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 8.0f) {
@@ -198,14 +204,14 @@ void FirstLevel::update(const float dt)
         CreateEnemies(0, 800, 600);
         enemySpawnClock.restart();
     }
-    /*if (!fliesSpawned && schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 15.0f) {
+    if (!fliesSpawned && schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 15.0f) {
         fliesSpawned = true;
-        CreateEnemies(1);
+        CreateEnemies(1, 850, 350);
         enemySpawnClock.restart();
     }
-    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 25.0f) {
-        CreateEnemies(2);
-    }*/
+    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 8.0f) {
+        CreateEnemies(2, 900, 200);
+    }
 }
 
 void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
@@ -214,12 +220,47 @@ void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
         enemy->assign<EnemyTag>();
         enemy->assign<DrawableComponent>(_infoEnemies[id].path, _infoEnemies[id].area);
         enemy->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(3.f, 3.f), 0.f);
-        enemy->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::ENEMY);
+        enemy->assign<CollisionComponent>(sf::FloatRect(x, y, _infoEnemies[id].area.width * 3, _infoEnemies[id].area.height * 3), ECS::Collision::ENEMY);
         enemy->assign<PvComponent>(_infoEnemies[id].health, _infoEnemies[id].health);
         enemy->assign<PatternComponent>(_infoEnemies[id].pattern, 0);
         if (id == 2)
             enemy->assign<OnDie>(victory);
 }
+
+/*void FirstLevel::EnemyPatterns(const float dt)
+{
+    _world->each<EnemyTag>([&](ECS::Entity* ent, EnemyTag* enemy) {
+        auto pat = ent->get<PatternComponent>();
+        if (pat->pattern[pat->currentIndex] == 'N')
+            pat->currentIndex = 0;
+        switch (pat->pattern[pat->currentIndex]) {
+        case 'o':
+            pat->currentIndex++;
+            break;
+        case 'l':
+            left(ent, dt);
+            pat->currentIndex++;
+            break;
+        case 'a':
+            left(ent, dt);
+            forward(ent, dt);
+            pat->currentIndex++;
+            break;
+        case 'i':
+            left(ent, dt);
+            backward(ent, dt);
+            pat->currentIndex++;
+            break;
+        case 'r':
+            right(ent, dt);
+            pat->currentIndex++;
+            break;
+        
+        default:
+            break;
+        }
+    });
+}*/
 
 void FirstLevel::BackgroundParallax()
 {
