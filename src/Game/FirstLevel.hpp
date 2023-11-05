@@ -14,6 +14,7 @@ typedef struct infoEnemies {
 	std::string path;
 	sf::IntRect area;
 	std::string pattern;
+	float health;
 } infoEnemies;
 
 class FirstLevel : public Level {
@@ -22,7 +23,7 @@ class FirstLevel : public Level {
 		void CreatePlayers();
 		void CreateBackground(sf::RenderWindow* window, sf::Vector2u& size);
 		void CreateWall(sf::RenderWindow* window, sf::Vector2u& size);
-		void CreateEnemies(size_t id);
+		void CreateEnemies(size_t id, size_t x, size_t y);
 		~FirstLevel();
 
 		virtual void update(const float dt) override;
@@ -48,8 +49,8 @@ class FirstLevel : public Level {
 		};
 
 		std::vector<infoEnemies> _infoEnemies = {
-			{"./assets/enemies/schwarzi.png", sf::IntRect(52, 3, 56, 53), "lllaallliirrr"},
-			{"./assets/enemies/flies.png", sf::IntRect(5, 6, 20, 23), "aaaaiiii"},
-			{"./assets/enemies/boss.png", sf::IntRect(27, 3, 155, 203), "o"},
+			{"./assets/enemies/schwarzi.png", sf::IntRect(52, 3, 56, 53), "lllaallliirrr", 2.f},
+			{"./assets/enemies/flies.png", sf::IntRect(5, 6, 20, 23), "aaaaiiii", 1.f},
+			{"./assets/enemies/boss.png", sf::IntRect(27, 3, 155, 203), "o", 5.f},
 		};
 };

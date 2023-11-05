@@ -51,7 +51,7 @@ static void shoot(ECS::Entity *ent, const float &dt)
         bullet->assign<VelocityComponent>(620.f + (velocity->velocity.x), 0.f + (velocity->velocity.y));
 }
 
-static void collisionPlayerWall(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
+/*static void collisionPlayerWall(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
 {
 	auto transform = e1->get<TransformComponent>();
 	auto velocity = e1->get<VelocityComponent>();
@@ -65,18 +65,21 @@ static void collisionPlayerWall(ECS::World *world, ECS::Entity *e1, ECS::Entity 
 static void collisionBulletWall(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
 {
     e2->die();
-}
+}*/
 
 static void collisionPlayerEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
 {
     auto pv = e1->get<PvComponent>();
-    pv -= 1;
+    auto ppv = e2->get<PvComponent>();
+    pv->_health -= 70;
+    ppv->_health -= 1;
 }
 
 static void collisionBulletEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
 {
     auto pv = e2->get<PvComponent>();
-    pv -= 1;
+    pv->_health -= 1;
+    e1->die();
 }
 
 static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
@@ -112,13 +115,13 @@ FirstLevel::FirstLevel() : Level()
     CreateBackground(window, size);
     //CreateWall(window, size);
     CreatePlayers();
-    auto wall = _world->CreateEntity();
+    /*auto wall = _world->CreateEntity();
     wall->assign<DrawableComponent>("./assets/player.png", sf::IntRect(1, 3, 32, 14));
     wall->assign<TransformComponent>(sf::Vector2f(600, 600), sf::Vector2f(3.f, 3.f), 0.f);
-    wall->assign<CollisionComponent>(sf::FloatRect(600, 600, 32 * 3, 14 * 3), ECS::Collision::WALL);
+    wall->assign<CollisionComponent>(sf::FloatRect(600, 600, 32 * 3, 14 * 3), ECS::Collision::WALL);*/
     CollisionActionList collisionAction = {
-        { {ECS::Collision::PLAYER, ECS::Collision::WALL}, collisionPlayerWall},
-		{ {ECS::Collision::BULLET_PLAYER, ECS::Collision::WALL}, collisionBulletWall},
+        /*{ {ECS::Collision::PLAYER, ECS::Collision::WALL}, collisionPlayerWall},
+		{ {ECS::Collision::BULLET_PLAYER, ECS::Collision::WALL}, collisionBulletWall},*/
         { {ECS::Collision::PLAYER, ECS::Collision::ENEMY}, collisionPlayerEnemy},
         { {ECS::Collision::BULLET_PLAYER, ECS::Collision::ENEMY}, collisionBulletEnemy},
 	};
@@ -247,7 +250,7 @@ void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
         enemy->assign<DrawableComponent>(_infoEnemies[id].path, _infoEnemies[id].area);
         enemy->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(3.f, 3.f), 0.f);
         enemy->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::ENEMY);
-        enemy->assign<PvComponent>(1.f, 1.f);
+        enemy->assign<PvComponent>(_infoEnemies[id].health, _infoEnemies[id].health);
         enemy->assign<PatternComponent>(_infoEnemies[id].pattern, 0);
 }
 
