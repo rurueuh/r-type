@@ -245,6 +245,13 @@ FirstLevel::FirstLevel() : Level()
     }
 }
 
+static void cheatCode(ECS::Entity *ent, const float &dt)
+{
+    auto mob = ent->getWorld()->GetEntitiesByTag<EnemyTag>();
+    if (mob.size() > 0)
+        mob[0]->die();
+}
+
 void FirstLevel::CreatePlayers()
 {
     const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> input = {
@@ -252,7 +259,8 @@ void FirstLevel::CreatePlayers()
         { Input::Key::backward, backward },
         { Input::Key::left, left },
         { Input::Key::right, right },
-        { Input::Key::jump, shoot }
+        { Input::Key::jump, shoot },
+        { Input::Key::secret, cheatCode}
     };
     shoot(nullptr, 0.f); // for start cooldown shoot
     std::vector<ECS::Entity*> starship = _world->CreateEntity(6);
