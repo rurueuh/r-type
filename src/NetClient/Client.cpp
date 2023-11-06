@@ -212,6 +212,7 @@
 
     void Client::onInput(ECS::World *world) {
         #ifndef SERVER // CLIENT ONLY
+            sf::Music test;
             auto &gameEngine = GameEngine::GetInstance();
             auto window = gameEngine.getWindow();
             if (window->hasFocus() == false) {

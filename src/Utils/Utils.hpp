@@ -15,6 +15,7 @@ namespace Utils
 			{sf::Keyboard::Key::S, "s"},
 			{sf::Keyboard::Key::D, "d"},
 			{sf::Keyboard::Key::Space, " "},
+			{sf::Keyboard::Key::M, "m"},
 	};
 
 	template <typename T>
