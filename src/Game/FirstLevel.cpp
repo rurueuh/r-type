@@ -138,7 +138,7 @@ static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
 
 FirstLevel::FirstLevel() : Level()
 {
-    isBossAlive = false;
+    isBossAlive = true;
     auto window = GameEngine::GetInstance().getWindow();
     sf::Vector2u size = { 1600, 900 };
     #ifndef SERVER
@@ -213,11 +213,13 @@ void FirstLevel::CreatePlayers()
         ship->assign<PvComponent>(100.f, 100.f);
         ship->assign<DrawableComponent>("./assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
         ship->assign<VelocityComponent>(0.1f, 0.1f);
-        const float x = 400;
-        const float y = 400;
+        const float x = -400;
+        const float y = -400;
         ship->assign<TransformComponent>(sf::Vector2f(x, y), sf::Vector2f(4.f, 4.f), 0.f);
         ship->assign<CollisionComponent>(sf::FloatRect(400, 400, 32 * 4,14 * 4), ECS::Collision::PLAYER);
         ship->assign<OnDie>(checkPlayerEnd);
+        auto data = ship->assign<DataComponent>();
+        data->set("spawn", 0.f);
         i++;
     }
 #ifndef SERVER
@@ -308,6 +310,28 @@ void FirstLevel::update(const float dt)
         auto timeShoot = dataComponentEnemy->get<float>("timeShoot");
         timeShoot += dt;
         dataComponentEnemy->set("timeShoot", timeShoot);
+    }
+
+    // spawn player
+    std::vector<ECS::Entity*> players = {};
+    _world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
+        players.push_back(ent);
+    });
+    for (auto player : players) {
+        if (player->get<PlayerComponent>()->hash == "")
+            continue;
+        auto dataComponentPlayer = player->get<DataComponent>();
+        if (!dataComponentPlayer)
+            continue;
+        if (dataComponentPlayer->get<float>("spawn") == 1.0f)
+            continue;
+        auto transform = player->get<TransformComponent>();
+        auto velocity = player->get<VelocityComponent>();
+        if (!transform || !velocity)
+            continue;
+        transform->position = sf::Vector2f(200, 200);
+        velocity->velocity = sf::Vector2f(0.f, 0.f);
+        dataComponentPlayer->set("spawn", 1.0f);
     }
 }
 
