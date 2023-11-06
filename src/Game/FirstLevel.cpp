@@ -115,6 +115,14 @@ static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
 {
     if (isBossAlive == false)
         victory(world, ent);
+    #ifndef SERVER
+        if (GameEngine::GetInstance().getClient().getClientHash() == "me") {
+            auto &levelManager = LevelManager::getInstance();
+            levelManager.addLevel<DeadLevel>();
+            levelManager.removeLevel<FirstLevel>();
+            levelManager.setCurrentLevel<DeadLevel>();
+        }
+    #endif
     // get all player
     std::vector<ECS::Entity*> players = {};
     world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
