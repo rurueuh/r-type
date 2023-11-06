@@ -139,6 +139,15 @@ static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
 FirstLevel::FirstLevel() : Level()
 {
     isBossAlive = true;
+
+    auto levelEntity = _world->CreateEntity();
+    auto data = levelEntity->assign<DataComponent>();
+    levelEntity->assign<LevelTag>();
+
+    data->set("schwarziSpawned", 0.f);
+    data->set("fliesSpawned", 0.f);
+    data->set("bossSpawned", 0.f);
+
     auto window = GameEngine::GetInstance().getWindow();
     sf::Vector2u size = { 1600, 900 };
     #ifndef SERVER
@@ -256,23 +265,26 @@ void FirstLevel::update(const float dt)
 {
     static sf::Clock clock;
     static sf::Clock enemySpawnClock;
-    static bool schwarziSpawned = false;
-    static bool fliesSpawned = false;
-    static bool bossSpawned = false;
+
+    auto level = _world->GetEntitiesByTag<LevelTag>()[0];
+    auto data = level->get<DataComponent>();
+    bool schwarziSpawned = data->get<float>("schwarziSpawned");
+    bool fliesSpawned = data->get<float>("fliesSpawned");
+    bool bossSpawned = data->get<float>("bossSpawned");
 
     if (clock.getElapsedTime().asSeconds() > 0.1) {
         BackgroundParallax();
 		clock.restart();
 	}
     if (!schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 8.0f) {
-        schwarziSpawned = true;
+        data->set("schwarziSpawned", 1.f);
         CreateEnemies(0, 800, 100);
         CreateEnemies(0, 800, 350);
         CreateEnemies(0, 800, 600);
         enemySpawnClock.restart();
     }
     if (!fliesSpawned && schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 12.0f) {
-        fliesSpawned = true;
+        data->set("fliesSpawned", 1.f);
         CreateEnemies(1, 850, 100);
         CreateEnemies(1, 850, 300);
         CreateEnemies(1, 850, 500);
@@ -299,7 +311,7 @@ void FirstLevel::update(const float dt)
     }
     if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 22.0f && bossSpawned == false) {
         CreateEnemies(2, 900, 200);
-        bossSpawned = true;
+        data->set("bossSpawned", 1.f);
     }
 
     std::vector<ECS::Entity*> Enemy = _world->GetEntitiesByTag<EnemyTag>();

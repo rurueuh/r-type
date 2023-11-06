@@ -357,7 +357,7 @@ void DevLevel::update(const float dt)
     std::vector<ECS::Entity*> players = {};
     _world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
         players.push_back(ent);
-        });
+    });
     for (auto player : players) {
         if (player->get<PlayerComponent>()->hash == "")
             continue;
