@@ -6,7 +6,8 @@
 /**
  * @brief Component for animation
  */
-struct AnimationComponent : public Component {
+class AnimationComponent : public Component {
+public:
     /**
      * @brief Construct a new Animation Component object
      * @param anims The vector of animation

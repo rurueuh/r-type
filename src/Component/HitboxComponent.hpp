@@ -15,7 +15,8 @@
  * @brief Component for hitbox
  * @deprecated Not used anymore (use Collider instead)
  */
-struct Hitbox : public Component {
+class Hitbox : public Component {
+public:
     /**
      * @brief Constructor
      * @param rect The hitbox

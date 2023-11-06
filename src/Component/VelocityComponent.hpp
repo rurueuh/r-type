@@ -14,7 +14,8 @@
  * @brief Component for velocity
  * @brief velocity: velocity
  */
-struct VelocityComponent : public Component {
+class VelocityComponent : public Component {
+public:
     public:
         /**
          * @brief Construct a new Velocity Component object

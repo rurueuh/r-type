@@ -12,7 +12,8 @@
 /**
  * @brief Tag for level
  */
-struct LevelTag : public Component {
+class LevelTag : public Component {
+public:
     LevelTag() {};
 
     inline virtual std::string toString() const override {

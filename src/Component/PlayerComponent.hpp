@@ -8,7 +8,8 @@
  * @brief Component for player
  * @details The player is a string hash
 */
-struct PlayerComponent : public Component {
+class PlayerComponent : public Component {
+public:
 	/**
 	 * @brief Construct a new Player Component object
 	 * @param hash The hash of the player

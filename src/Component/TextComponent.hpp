@@ -9,7 +9,8 @@
  * @details The text is a string
  * @todo Add font
 */
-struct TextComponent : public Component {
+class TextComponent : public Component {
+public:
     /**
      * @brief Construct a new Text Component object
      * @param text The text

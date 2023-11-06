@@ -17,7 +17,8 @@ namespace ECS::Component {
  * @brief DataComponent is a component that can store any data please stock data where can be convert to float
  * @details DataComponent is a component that can store any data please stock data where can be convert to float
 */
-struct DataComponent : public Component {
+class DataComponent : public Component {
+public:
     /**
      * @brief Construct a new Data Component object
      * @param data The data to store

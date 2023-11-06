@@ -12,7 +12,8 @@
 /**
  * @brief Tag for background
 */
-struct BackgroundTag : public Component {
+class BackgroundTag : public Component {
+public:
     BackgroundTag() {};
 
     inline virtual std::string toString() const override {

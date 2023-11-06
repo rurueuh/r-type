@@ -6,7 +6,8 @@
  * @brief Component for pattern
  * @deprecated Not used anymore
 */
-struct PatternComponent : public Component {
+class PatternComponent : public Component {
+public:
     /**
      * @brief Construct a new Pattern Component object
      * @param pattern The pattern

@@ -7,7 +7,8 @@
  * @brief Component for life span
  * @details The life span is the time before the entity is destroyed
 */
-struct LifeSpan : public Component {
+class LifeSpan : public Component {
+public:
     /**
      * @brief Construct a new Life Span object
      * @param time The time before the entity is destroyed

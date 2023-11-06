@@ -17,7 +17,8 @@
  * @brief type: type of the shoot
  * @deprecated not used
  */
-struct ShootComponent : public Component {
+class ShootComponent : public Component {
+public:
     ShootComponent(int damage, ShootType type) : damage(damage), type(type) {};
     ShootComponent() : damage(0), type(ShootType::MISSILE) {};
 

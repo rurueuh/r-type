@@ -13,7 +13,8 @@ namespace ECS {
  * @brief Component for on die
  * @details Used to know what to do when an entity die
 */
-struct OnDie : public Component {
+class OnDie : public Component {
+public:
     /**
      * @brief Construct a new On Die Component object
      * @param action The action to do when the entity die

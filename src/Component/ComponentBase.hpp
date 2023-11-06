@@ -7,9 +7,10 @@
 /**
  * @brief Base class for all components
 */
-struct Component {
+class Component {
+public:
 	Component() {};
-	~Component() {};
+	virtual ~Component() {};
 
 	/**
 	 * @brief Convert the component to a string

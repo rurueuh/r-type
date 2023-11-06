@@ -17,7 +17,8 @@
  * @brief scale: scale
  * @brief rotation: rotation
  */
-struct TransformComponent : public Component {
+class TransformComponent : public Component {
+public:
     /**
      * @brief Construct a new Transform Component object
      * @param position position

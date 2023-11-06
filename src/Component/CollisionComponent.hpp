@@ -23,7 +23,8 @@ namespace ECS::Collision {
  * @brief Component for collision
  * @details Used to know if an entity is colliding with another
 */
-struct CollisionComponent : public Component {
+class CollisionComponent : public Component {
+public:
     /**
      * @brief Construct a new Collision Component object
      * @param rect The rect of the collision

@@ -7,7 +7,8 @@
 /**
  * @brief Component for Pv
 */
-struct PvComponent : public Component {
+class PvComponent : public Component {
+public:
     /**
      * @brief Construct a new Pv Component object
      * @param health

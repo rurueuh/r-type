@@ -13,7 +13,8 @@ enum EnemyPathType {
 /**
  * @brief Component for enemy path
 */
-struct EnemyPath : public Component {
+class EnemyPath : public Component {
+public:
     /**
      * @brief Construct a new Enemy Path object
      * @param type The type of the path

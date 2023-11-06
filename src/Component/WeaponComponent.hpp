@@ -18,7 +18,8 @@
  * @brief type: type of the weapon
  * @deprecated not used
  */
-struct WeaponComponent : public Component {
+class WeaponComponent : public Component {
+public:
     WeaponComponent(int damage, float fireRate, ShootType type) : damage(damage), fireRate(fireRate), type(type) {};
     WeaponComponent() : damage(0), fireRate(0), type(ShootType::MISSILE) {};
 

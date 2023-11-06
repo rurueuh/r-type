@@ -14,7 +14,8 @@
 /**
  * @brief Component for drawable entity
 */
-struct DrawableComponent : public Component {
+class DrawableComponent : public Component {
+public:
 
     DrawableComponent() = default;
     /**

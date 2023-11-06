@@ -7,7 +7,8 @@
 /**
  * @brief Component for damage
 */
-struct DamageComponent : public Component {
+class DamageComponent : public Component {
+public:
     /**
      * @brief Construct a new Damage Component object
      * @param damage

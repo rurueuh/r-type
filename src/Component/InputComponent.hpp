@@ -41,7 +41,8 @@ namespace Input {
 /**
  * @brief Component for input
 */
-struct InputComponent : public Component {
+class InputComponent : public Component {
+public:
 	/**
 	 * @brief Construct a new Input Component object
 	 * @param input The input

@@ -12,7 +12,7 @@
  * @brief x: x position
  * @deprecated not used
  */
-struct PositionComponent {
+class PositionComponent {
     PositionComponent(float x, float y) : x(x), y(y) {};
     PositionComponent() : x(0), y(0) {};
     float x, y;

@@ -12,7 +12,8 @@
 /**
  * @brief Tag for enemy
 */
-struct EnemyTag : public Component {
+class EnemyTag : public Component {
+public:
     EnemyTag() {};
 
     inline virtual std::string toString() const override {
