@@ -13,7 +13,7 @@ typedef struct {
 typedef struct infoEnemySpawn_s{
 	float time = 0.f;
 	sf::Vector2f position = sf::Vector2f(0.f, 0.f);
-	u_short hp = 1;
+	short hp = 1;
 	bool operator== (const infoEnemySpawn_s& other) {
 		return (time == other.time && position == other.position && hp == other.hp);
 	}

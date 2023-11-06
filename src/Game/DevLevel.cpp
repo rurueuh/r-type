@@ -4,6 +4,11 @@
 #include "World.hpp"
 #include "Entity.hpp"
 #include "DeadLevel.hpp"
+#include <algorithm>
+#include <vector>
+#include <numeric>
+#include <string_view>
+#include <iostream>
 
 static void forward(ECS::Entity *ent, const float &dt)
 {
@@ -335,7 +340,7 @@ void DevLevel::update(const float dt)
                 sf::IntRect(236, 6, 21, 24),
             };
             enemy->assign<AnimationComponent>(anims, 0.2f);
-            std::erase(_infoEnemy, info);
+            std::remove(_infoEnemy.begin(), _infoEnemy.end(), info);
             break;
         }
     }
