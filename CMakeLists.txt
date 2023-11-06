@@ -35,40 +35,37 @@ foreach(file ${SOURCES})
     endif()
 endforeach()
 
-# Votre code source pour rtype-client
-add_executable(rtype-client ${SOURCES})
-set(CMAKE_EXE_LINKER_FLAGS "-static")
+# Votre code source pour rtype_client
+add_executable(rtype_client ${SOURCES})
 
 # Lier votre exécutable avec les bibliothèques SFML
-target_link_libraries(rtype-client sfml-graphics sfml-window sfml-system sfml-network)
-target_link_libraries(rtype-client ${Boost_LIBRARIES})
-target_link_libraries(rtype-client snappy)
+target_link_libraries(rtype_client sfml-graphics sfml-window sfml-system sfml-network sfml-audio)
+target_link_libraries(rtype_client snappy)
 
 # Link thread on Linux
-# target_link_libraries(rtype-client pthread)
+# target_link_libraries(rtype_client pthread)
 
 # if debug
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message(STATUS "Debug mode for rtype-client")
-    target_compile_definitions(rtype-client PUBLIC DEBUG)
+    message(STATUS "Debug mode for rtype_client")
+    target_compile_definitions(rtype_client PUBLIC DEBUG)
 endif()
 
-# Votre code source pour rtype-server
-add_executable(rtype-server ${SOURCES})
+# Votre code source pour rtype_server
+add_executable(rtype_server ${SOURCES})
 
-# Définir la macro SERVER pour rtype-server
-target_compile_definitions(rtype-server PUBLIC SERVER=1)
+# Définir la macro SERVER pour rtype_server
+target_compile_definitions(rtype_server PUBLIC SERVER=1)
 
 # Lier votre exécutable avec les bibliothèques SFML
-target_link_libraries(rtype-server sfml-network)
-target_link_libraries(rtype-server ${Boost_LIBRARIES})
-target_link_libraries(rtype-server snappy)
+target_link_libraries(rtype_server sfml-network)
+target_link_libraries(rtype_server snappy)
 
 # Link thread on Linux
-# target_link_libraries(rtype-server pthread)
+# target_link_libraries(rtype_server pthread)
 
 # if debug
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message(STATUS "Debug mode for rtype-server")
-    target_compile_definitions(rtype-server PUBLIC DEBUG)
+    message(STATUS "Debug mode for rtype_server")
+    target_compile_definitions(rtype_server PUBLIC DEBUG)
 endif()
