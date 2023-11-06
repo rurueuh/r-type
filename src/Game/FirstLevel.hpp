@@ -49,8 +49,8 @@ class FirstLevel : public Level {
 		};
 
 		std::vector<infoEnemies> _infoEnemies = {
-			{"./assets/enemies/schwarzi.png", sf::IntRect(52, 3, 56, 53), "lllaallliirrrN", 2.f},
-			{"./assets/enemies/flies.png", sf::IntRect(5, 6, 20, 23), "aaaaiiiiN", 1.f},
-			{"./assets/enemies/xeno.png", sf::IntRect(27, 3, 155, 203), "oN", 5.f},
+			{"./assets/enemies/schwarzi.png", sf::IntRect(52, 3, 56, 53), "lllaallliirrrN", 40.f},
+			{"./assets/enemies/flies.png", sf::IntRect(5, 6, 20, 23), "aaaaiiiiN", 20.f},
+			{"./assets/enemies/xeno.png", sf::IntRect(27, 3, 155, 203), "oN", 500.f},
 		};
 };

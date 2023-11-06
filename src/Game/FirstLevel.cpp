@@ -58,14 +58,14 @@ static void collisionPlayerEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity
 {
     auto pv = e1->get<PvComponent>();
     auto ppv = e2->get<PvComponent>();
-    pv->_health -= 70;
+    pv->_health -= 10;
     ppv->_health -= 1;
 }
 
 static void collisionBulletEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
 {
     auto pv = e2->get<PvComponent>();
-    pv->_health -= 1;
+    pv->_health -= 20;
     e1->die();
 }
 
@@ -86,7 +86,7 @@ static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
     // get all player
     std::vector<ECS::Entity*> players = {};
     world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
-	players.push_back(ent);
+	    players.push_back(ent);
 	});
 	// check if all player are dead
 	bool allDead = true;
@@ -106,6 +106,7 @@ static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
 
 FirstLevel::FirstLevel() : Level()
 {
+    isBossAlive = false;
     auto window = GameEngine::GetInstance().getWindow();
     sf::Vector2u size = { 1600, 900 };
     #ifndef SERVER
@@ -191,6 +192,7 @@ void FirstLevel::update(const float dt)
     static sf::Clock enemySpawnClock;
     static bool schwarziSpawned = false;
     static bool fliesSpawned = false;
+    static bool bossSpawned = false;
 
     if (clock.getElapsedTime().asSeconds() > 0.1) {
         BackgroundParallax();
@@ -230,8 +232,9 @@ void FirstLevel::update(const float dt)
         CreateEnemies(1, 1150, 600);
         enemySpawnClock.restart();
     }
-    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 22.0f) {
+    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 22.0f && bossSpawned == false) {
         CreateEnemies(2, 900, 200);
+        bossSpawned = true;
     }
 }
 

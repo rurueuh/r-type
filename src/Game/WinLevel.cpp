@@ -110,7 +110,7 @@ WinLevel::WinLevel() : Level()
     t->setFullScreen(window, d->area);
 
     auto text = _world->CreateEntity();
-    text->assign<TextComponent>("You won, congratulations!");
+    text->assign<TextComponent>("You won congratulations!");
     text->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/4), sf::Vector2f(1, 1), 0);
 
     auto restart = _world->CreateEntity();
