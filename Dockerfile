@@ -31,10 +31,10 @@ WORKDIR /app/build
 RUN cmake ..
 
 # Compile le projet
-RUN make rtype-server
+RUN make rtype_server
 
 # Expose le port si nécessaire
 EXPOSE 4242
 
 # Commande de démarrage
-CMD ["./rtype-server"]
+CMD ["./rtype_server"]
