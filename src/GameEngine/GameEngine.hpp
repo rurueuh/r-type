@@ -51,7 +51,7 @@ public:
 	#ifdef SERVER // SERVER ONLY
 		Server &getServer(void) { return _server; }
 	#else // CLIENT ONLY
-		Client &getClient(void) { return _client; }
+		Client &getClient(void) { return *_client; }
 		sf::Font &getFont(void) { return _font; }
 	#endif
 		
@@ -66,7 +66,7 @@ private:
 	#ifdef SERVER // SERVER ONLY
 		Server _server;
 	#else // CLIENT ONLY
-		Client _client;
+		std::shared_ptr<Client> _client = std::make_shared<Client>();
 		sf::Font _font;
 	#endif
 
