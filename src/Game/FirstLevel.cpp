@@ -6,6 +6,11 @@
 #include "DeadLevel.hpp"
 #include "WinLevel.hpp"
 
+#ifndef SERVER
+    static sf::Sound _sound;
+    static sf::SoundBuffer _buffer;
+    static sf::Music _music;
+#endif
 bool isBossAlive = true;
 
 static void forward(ECS::Entity *ent, const float &dt)
@@ -36,6 +41,9 @@ static void shoot(ECS::Entity *ent, const float &dt)
     cooldown.restart();
     if (!ent) // for start cooldown shoot
         return;
+    #ifndef SERVER
+        _sound.play();
+    #endif
     auto transform = ent->get<TransformComponent>();
     auto velocity = ent->get<VelocityComponent>();
     auto world = ent->getWorld();
@@ -61,6 +69,9 @@ static void shootEnemy(ECS::World *world, const float &dt, ECS::Entity *ent)
 	auto cooldown = ent->get<DataComponent>()->get<float>("timeShoot");
     if (cooldown < 3.5)
         return;
+    #ifndef SERVER
+        _sound.play();
+    #endif
     ent->get<DataComponent>()->set("timeShoot", 0.f);
 	auto transform = ent->get<TransformComponent>();
 	auto velocity = ent->get<VelocityComponent>();
@@ -147,6 +158,14 @@ static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
 FirstLevel::FirstLevel() : Level()
 {
     isBossAlive = true;
+    #ifndef SERVER
+        _music.openFromFile("./assets/sound/music.ogg");
+        _music.setLoop(true);
+        _music.play();
+
+        _buffer.loadFromFile("./assets/sound/shoot.ogg");
+        _sound.setBuffer(_buffer);
+    #endif
 
     auto levelEntity = _world->CreateEntity();
     auto data = levelEntity->assign<DataComponent>();
