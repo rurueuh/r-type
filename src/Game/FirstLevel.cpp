@@ -154,6 +154,7 @@ static void victory(ECS::World* world, ECS::Entity* ent)
     levelManager.addLevel<WinLevel>();
     levelManager.removeLevel<FirstLevel>();
     levelManager.setCurrentLevel<WinLevel>();
+    sf::sleep(sf::milliseconds(1000));
 }
 
 static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
@@ -247,6 +248,10 @@ FirstLevel::FirstLevel() : Level()
 
 static void cheatCode(ECS::Entity *ent, const float &dt)
 {
+    static sf::Clock clock;
+    if (clock.getElapsedTime().asSeconds() < 0.5)
+        return;
+    clock.restart();
     auto mob = ent->getWorld()->GetEntitiesByTag<EnemyTag>();
     if (mob.size() > 0)
         mob[0]->die();
