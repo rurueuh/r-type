@@ -38,7 +38,9 @@
 namespace ECS {
 	class Entity;
 	namespace Component {
-
+		/**
+		 * @brief Factory for component
+		*/
 		template <typename T>
 		void FactoryAssignCreateComponent(Entity* ent, std::string type, std::string str) {
 			auto id = Utils::getRegisteredComponent(Utils::getTypeId<T>());
@@ -48,7 +50,9 @@ namespace ECS {
 			}
 		}
 
-		// template Args...
+		/**
+		 * @brief Factory for component
+		*/
 		void FactoryAssignComponent(Entity* ent, std::string type, std::string str = "");
 		
 	};

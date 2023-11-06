@@ -8,12 +8,19 @@
 #pragma once
 #include <iostream>
 
+
+/**
+ * @brief Enum for the type of shoot
+*/
 enum ShootType {
     LASER = 0,
     MISSILE,
     NONE
 };
 
+/**
+ * @brief Overload of the << operator for ShootType
+*/
 inline std::ostream &operator<<(std::ostream &os, const ShootType &type)
 {
     switch (type) {
@@ -30,6 +37,9 @@ inline std::ostream &operator<<(std::ostream &os, const ShootType &type)
     return os;
 }
 
+/**
+ * @brief Overload of the >> operator for ShootType
+*/
 inline std::istream &operator>>(std::istream &is, ShootType &type)
 {
     std::string tmp;

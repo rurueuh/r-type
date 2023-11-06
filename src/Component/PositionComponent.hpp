@@ -7,6 +7,11 @@
 
 #pragma once
 
+/**
+ * @brief Component for position
+ * @brief x: x position
+ * @deprecated not used
+ */
 struct PositionComponent {
     PositionComponent(float x, float y) : x(x), y(y) {};
     PositionComponent() : x(0), y(0) {};

@@ -11,6 +11,12 @@
 #include "ShootType.hpp"
 #include <sstream>
 
+/**
+ * @brief Component for shoot
+ * @brief damage: damage of the shoot
+ * @brief type: type of the shoot
+ * @deprecated not used
+ */
 struct ShootComponent : public Component {
     ShootComponent(int damage, ShootType type) : damage(damage), type(type) {};
     ShootComponent() : damage(0), type(ShootType::MISSILE) {};

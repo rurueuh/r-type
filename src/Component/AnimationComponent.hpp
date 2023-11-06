@@ -3,10 +3,22 @@
 #include "SFML.hpp"
 #include "ComponentBase.hpp"
 
+/**
+ * @brief Component for animation
+ */
 struct AnimationComponent : public Component {
+    /**
+     * @brief Construct a new Animation Component object
+     * @param anims The vector of animation
+     * @param time The time between each animation
+    */
     AnimationComponent(std::vector<sf::IntRect> anims, float time) : animFrame(anims), timeSwitch(time) {};
     AnimationComponent() = default;
 
+    /**
+     * @brief Put the animation on string
+     * @return The string of the animation
+    */
     inline virtual std::string toString() const override {
         std::string str = "";
         int size = animFrame.size();
@@ -23,6 +35,8 @@ struct AnimationComponent : public Component {
         return str;
     }
 
+    /// @brief Construct the animation from string
+    /// @param str The string of the animation
     virtual void fromString(std::string str) override {
         std::stringstream ss = std::stringstream(str);
         int size = 0;

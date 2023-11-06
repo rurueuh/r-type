@@ -11,10 +11,16 @@
 #include "ComponentBase.hpp"
 #include <sstream>
 
+/**
+ * @brief Component for drawable entity
+*/
 struct DrawableComponent : public Component {
 
     DrawableComponent() = default;
-
+    /**
+     * @brief Construct a new Drawable Component object
+     * @param path Path to the texture
+    */
     DrawableComponent(std::string path) : path(path) {
         #ifndef SERVER
             texture = TextureManager::getTexture(path);
@@ -22,6 +28,11 @@ struct DrawableComponent : public Component {
         #endif
     };
 
+    /**
+     * @brief Construct a new Drawable Component object
+     * @param path Path to the texture
+     * @param area Area of the texture
+    */
     DrawableComponent(std::string path, sf::IntRect area) : path(path), area(area) {
         #ifndef SERVER
             texture = TextureManager::getTexture(path);
@@ -31,6 +42,12 @@ struct DrawableComponent : public Component {
         #endif
     };
 
+    /**
+     * @brief Construct a new Drawable Component object
+     * @param path Path to the texture
+     * @param area Area of the texture
+     * @param origin Origin of the texture
+    */
     inline virtual std::string toString() const override {
         std::string str = "";
         str += path + " ";
@@ -41,6 +58,8 @@ struct DrawableComponent : public Component {
         return str;
     }
 
+    /// @brief Construct the drawable from string
+    /// @param str The string of the drawable
     virtual void fromString( std::string str) override {
         std::stringstream ss = std::stringstream(str);
         ss >> path >> area.left >> area.top >> area.width >> area.height;

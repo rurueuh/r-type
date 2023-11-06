@@ -9,6 +9,9 @@
 
 #include "ComponentBase.hpp"
 
+/**
+ * @brief Tag for background
+*/
 struct BackgroundTag : public Component {
     BackgroundTag() {};
 

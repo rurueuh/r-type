@@ -5,6 +5,10 @@
 
 
 namespace ECS::Collision {
+    /**
+     * @brief Enum for collision type
+     * @details Used to know what type of collision we have
+    */
     enum CollisionType {
 	    PLAYER,
 	    ENEMY,
@@ -15,10 +19,26 @@ namespace ECS::Collision {
     };
 }
 
+/**
+ * @brief Component for collision
+ * @details Used to know if an entity is colliding with another
+*/
 struct CollisionComponent : public Component {
+    /**
+     * @brief Construct a new Collision Component object
+     * @param rect The rect of the collision
+     * @param type The type of the collision
+     * @details The rect is the rect of the entity
+     * The type is the type of the entity
+    */
     CollisionComponent(sf::FloatRect rect, ECS::Collision::CollisionType type) : _rect(rect), _type(type) {};
     CollisionComponent() : _rect(0.f, 0.f, 0.f, 0.f), _type(ECS::Collision::NONE) {};
 
+
+    /**
+     * @brief Put the collision on string
+     * @return The string of the collision
+    */
     inline virtual std::string toString() const override {
         std::string str = "";
         str += std::to_string(_rect.left) + " ";
@@ -29,6 +49,8 @@ struct CollisionComponent : public Component {
         return str;
     }
 
+    /// @brief Construct the collision from string
+    /// @param str The string of the collision
     virtual void fromString(std::string str) override {
         std::stringstream ss = std::stringstream(str);
         ss >> _rect.left;
@@ -41,6 +63,12 @@ struct CollisionComponent : public Component {
 
     }
 
+    /**
+     * @brief Get the rect of the collision
+    */
     sf::FloatRect _rect = sf::FloatRect(0.f, 0.f, 0.f, 0.f);
+    /**
+     * @brief Get the type of the collision
+    */
     ECS::Collision::CollisionType _type = ECS::Collision::NONE;
 };

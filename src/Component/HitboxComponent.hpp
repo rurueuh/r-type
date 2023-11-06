@@ -11,10 +11,22 @@
 #include "ComponentBase.hpp"
 #include <sstream>
 
+/**
+ * @brief Component for hitbox
+ * @deprecated Not used anymore (use Collider instead)
+ */
 struct Hitbox : public Component {
+    /**
+     * @brief Constructor
+     * @param rect The hitbox
+    */
     Hitbox(sf::IntRect rect) : rect(rect) {};
     Hitbox() : rect({}) {};
 
+    /**
+     * @brief Convert the hitbox to a string
+     * @return The hitbox as a string
+    */
     inline virtual std::string toString() const override {
         std::string str = "";
         str += std::to_string(rect.left) + " ";
@@ -24,6 +36,10 @@ struct Hitbox : public Component {
         return str;
     }
 
+    /**
+     * @brief Convert a string to a hitbox
+     * @param str The string to convert
+    */
     virtual void fromString(std::string str) override {
         std::stringstream ss = std::stringstream(str);
         ss >> rect.left >> rect.top >> rect.width >> rect.height;

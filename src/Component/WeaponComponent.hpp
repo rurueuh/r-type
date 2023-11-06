@@ -11,6 +11,13 @@
 #include "ShootType.hpp"
 
 
+/**
+ * @brief Component for weapon
+ * @brief damage: damage of the weapon
+ * @brief fireRate: fire rate of the weapon
+ * @brief type: type of the weapon
+ * @deprecated not used
+ */
 struct WeaponComponent : public Component {
     WeaponComponent(int damage, float fireRate, ShootType type) : damage(damage), fireRate(fireRate), type(type) {};
     WeaponComponent() : damage(0), fireRate(0), type(ShootType::MISSILE) {};

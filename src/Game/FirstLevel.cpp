@@ -7,9 +7,9 @@
 #include "WinLevel.hpp"
 
 #ifndef SERVER
-    static sf::Sound _sound;
-    static sf::SoundBuffer _buffer;
-    static sf::Music _music;
+    static sf::SoundBuffer *_buffer = nullptr;
+    static sf::Sound *_sound = nullptr;
+    static sf::Music *_music = nullptr;
 #endif
 bool isBossAlive = true;
 
@@ -42,7 +42,7 @@ static void shoot(ECS::Entity *ent, const float &dt)
     if (!ent) // for start cooldown shoot
         return;
     #ifndef SERVER
-        _sound.play();
+        _sound->play();
     #endif
     auto transform = ent->get<TransformComponent>();
     auto velocity = ent->get<VelocityComponent>();
@@ -70,7 +70,7 @@ static void shootEnemy(ECS::World *world, const float &dt, ECS::Entity *ent)
     if (cooldown < 3.5)
         return;
     #ifndef SERVER
-        _sound.play();
+        _sound->play();
     #endif
     ent->get<DataComponent>()->set("timeShoot", 0.f);
 	auto transform = ent->get<TransformComponent>();
@@ -159,12 +159,15 @@ FirstLevel::FirstLevel() : Level()
 {
     isBossAlive = true;
     #ifndef SERVER
-        _music.openFromFile("./assets/sound/music.ogg");
-        _music.setLoop(true);
-        _music.play();
+        _music = new sf::Music();
+        _music->openFromFile("./assets/sound/music.ogg");
+        _music->setLoop(true);
+        _music->play();
 
-        _buffer.loadFromFile("./assets/sound/shoot.ogg");
-        _sound.setBuffer(_buffer);
+        _buffer = new sf::SoundBuffer();
+        _buffer->loadFromFile("./assets/sound/shoot.ogg");
+        _sound = new sf::Sound();
+        _sound->setBuffer(*_buffer);
     #endif
 
     auto levelEntity = _world->CreateEntity();
@@ -282,10 +285,16 @@ void FirstLevel::CreateBackground(sf::RenderWindow* window, sf::Vector2u& size)
         t2->setFullScreen(window, d2->area);
         t2->scale += sf::Vector2f(0.1f, 0.1f);
     }
+
 }
 
 FirstLevel::~FirstLevel()
 {
+    #ifndef SERVER
+        delete _buffer;
+        delete _sound;
+        delete _music;
+    #endif
 }
 
 void FirstLevel::update(const float dt)

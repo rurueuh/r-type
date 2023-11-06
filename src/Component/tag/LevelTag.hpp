@@ -9,6 +9,9 @@
 
 #include "ComponentBase.hpp"
 
+/**
+ * @brief Tag for level
+ */
 struct LevelTag : public Component {
     LevelTag() {};
 

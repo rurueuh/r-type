@@ -9,6 +9,9 @@
 
 #include "ComponentBase.hpp"
 
+/**
+ * @brief Tag for enemy
+*/
 struct EnemyTag : public Component {
     EnemyTag() {};
 

@@ -3,15 +3,28 @@
 #include "SFML.hpp"
 #include "ComponentBase.hpp"
 
+/**
+ * @brief enum for enemy path type
+*/
 enum EnemyPathType {
     FOLLOW_PLAYER,
-
 };
 
+/**
+ * @brief Component for enemy path
+*/
 struct EnemyPath : public Component {
+    /**
+     * @brief Construct a new Enemy Path object
+     * @param type The type of the path
+    */
     EnemyPath(EnemyPathType type) : pathType(type) {};
     EnemyPath() : pathType(FOLLOW_PLAYER) {};
 
+    /**
+     * @brief Put the enemy path on string
+     * @return The string of the enemy path
+    */
     inline virtual std::string toString() const override {
         std::string str = "";
         str += std::to_string(pathType) + " ";
@@ -19,6 +32,8 @@ struct EnemyPath : public Component {
         return str;
     }
 
+    /// @brief Construct the enemy path from string
+    /// @param str The string of the enemy path
     virtual void fromString(std::string str) override {
         std::stringstream ss = std::stringstream(str);
         int type;

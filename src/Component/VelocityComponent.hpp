@@ -10,8 +10,18 @@
 #include "SFML.hpp"
 #include "ComponentBase.hpp"
 
+/**
+ * @brief Component for velocity
+ * @brief velocity: velocity
+ */
 struct VelocityComponent : public Component {
     public:
+        /**
+         * @brief Construct a new Velocity Component object
+         *
+         * @param x
+         * @param y
+         */
         VelocityComponent(float x, float y) : velocity(sf::Vector2f(x, y)) {};
         VelocityComponent(sf::Vector2f velocity) : velocity(velocity) {};
         VelocityComponent() = default;
@@ -19,6 +29,11 @@ struct VelocityComponent : public Component {
 
         sf::Vector2f velocity = sf::Vector2f(0, 0);
 
+        /**
+         * @brief Get the Velocity object
+         *
+         * @return std::string
+         */
         inline virtual std::string toString(void) const {
             std::string str = "";
             str += std::to_string(velocity.x) + " ";
@@ -26,6 +41,11 @@ struct VelocityComponent : public Component {
             return str;
         }
 
+        /**
+         * @brief Set the Velocity object
+         *
+         * @param str
+         */
         virtual void fromString(std::string str) override {
             std::stringstream ss = std::stringstream(str);
             ss >> velocity.x >> velocity.y;
