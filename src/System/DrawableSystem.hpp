@@ -29,9 +29,9 @@ namespace ECS::System {
                         return;
                     drawHPBar(entity, transform, drawable, window);
 
-                    drawDebugRect(drawable, transform, window);
+                    // drawDebugRect(drawable, transform, window);
                     drawSprite(drawable, transform, window);
-                    });
+                });
     #endif
             }
 #ifndef SERVER
