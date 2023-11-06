@@ -10,5 +10,7 @@
 #define PRINT_ERROR(x) std::cerr << "ERROR : " << x << std::endl;
 #include <iostream>
 
-#define DEBUG_CLOCK_CREATE sf::Clock debugClock; debugClock.restart();
-#define DEBUG_CLOCK_PRINT std::cout << std::fixed << "DEBUG : " << debugClock.getElapsedTime().asSeconds() << "s" << std::endl;
+#define DCC sf::Clock debugClock; debugClock.restart();
+#define DCP std::cout << std::fixed << "DEBUG : " << debugClock.getElapsedTime().asSeconds() << "s" << std::endl;
+
+#define DEBUG_CLOCK static sf::Clock debugClock; if (debugClock.getElapsedTime().asSeconds() > 0.1) { std::cout << std::fixed << "DEBUG : " << debugClock.getElapsedTime().asSeconds() << "s" << std::endl; debugClock.restart(); }

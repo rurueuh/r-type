@@ -62,7 +62,7 @@ namespace ECS {
 						return;
 					}
 				#endif // SERVER
-				if (m_entities[i]->has<OnDie>()) {
+				if (m_entities[i]->has<OnDie>() && m_entities[i]->m_forceDestroy == false) {
 					m_entities[i]->get<OnDie>()->_onDie(this, m_entities[i]);
 				}
 				delete m_entities[i];

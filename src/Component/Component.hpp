@@ -26,10 +26,10 @@
 #include "LifeSpan.hpp"
 #include "OnDie.hpp"
 #include "TextComponent.hpp"
-#include "PatternComponent.hpp"
-#include "DamageComponent.hpp"
-
-
+#include "EnemyPath.hpp"
+#include "dataComponent.hpp"
+#include "LevelTag.hpp"
+#include "AnimationComponent.hpp"
 #include "Utils.hpp"
 #include "Entity.hpp"
 

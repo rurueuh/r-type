@@ -15,3 +15,5 @@
 #include "LifeSpan.hpp"
 #include "CollisionSystem.hpp"
 #include "TextSystem.hpp"
+#include "PathSystem.hpp"
+#include "AnimationSystem.hpp"

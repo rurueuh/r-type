@@ -62,7 +62,6 @@
                 break;
             }
         }
-        threadConnect->terminate();
 		std::cout << "client hash: " << _clientHash << std::endl;
 	    return true;
     }

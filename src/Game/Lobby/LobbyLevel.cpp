@@ -1,10 +1,9 @@
-#include "DeadLevel.hpp"
+#include "LobbyLevel.hpp"
 #include "Component.hpp"
 #include "GameEngine.hpp"
 #include "World.hpp"
 #include "Entity.hpp"
 #include "DevLevel.hpp"
-#include "LobbyLevel.hpp"
 
 static sf::Clock cooldownInput;
 static constexpr float cooldown = 0.25;
@@ -26,9 +25,9 @@ static void forward(ECS::Entity *ent, const float &dt)
     world->each<TextComponent>([&](ECS::Entity* ent, TextComponent* text) {
         if (x == 1) {
             if (selector == 0) {
-                text->_text = "Restart <";
+                text->_text = "Start <";
             } else {
-                text->_text = "Restart";
+                text->_text = "Start";
             }
         } else if (x == 2) {
             if (selector == 0) {
@@ -57,9 +56,9 @@ static void backward(ECS::Entity *ent, const float &dt)
     world->each<TextComponent>([&](ECS::Entity* ent, TextComponent* text) {
         if (x == 1) {
             if (selector == 0) {
-                text->_text = "Restart <";
+                text->_text = "Start <";
             } else {
-                text->_text = "Restart";
+                text->_text = "Start";
             }
         } else if (x == 2) {
             if (selector == 0) {
@@ -74,10 +73,11 @@ static void backward(ECS::Entity *ent, const float &dt)
 
 static void use(ECS::Entity *ent, const float &dt)
 {
-    LevelManager::getInstance().removeLevel<DeadLevel>();
+    LevelManager::getInstance().removeLevel<LobbyLevel>();
     if (selector == 0) {
-        LevelManager::getInstance().addLevel<FirstLevel>();
-        LevelManager::getInstance().setCurrentLevel<FirstLevel>();
+        LevelManager::getInstance().addLevel<DevLevel>();
+        LevelManager::getInstance().setCurrentLevel<DevLevel>();
+        sf::sleep(sf::seconds(1));
     } else {
         #ifndef SERVER
         auto &gameEngine = GameEngine::GetInstance();
@@ -92,35 +92,48 @@ static void use(ECS::Entity *ent, const float &dt)
     }
 }
 
-DeadLevel::DeadLevel()
+LobbyLevel::LobbyLevel()
 {
     const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> input = {
         { Input::Key::forward, forward},
         { Input::Key::backward, backward},
         { Input::Key::jump, use},
     };
+    const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> nullInput = {};
+
     auto actualLevel = _world->CreateEntity();
     actualLevel->assign<PlayerComponent>();
     actualLevel->assign<InputComponent>(input);
     #ifndef SERVER
         actualLevel->get<PlayerComponent>()->hash = "me";
     #endif // SERVER
+    const short maxPlayer = 4 - 1;
+    for (short i = 0; i < maxPlayer; i++) {
+        auto player = _world->CreateEntity();
+        player->assign<PlayerComponent>();
+        player->assign<InputComponent>(nullInput);
+    }
 
 	auto player = _world->CreateEntity();
     player->assign<DrawableComponent>("../assets/player.png");
-    player->assign<TransformComponent>(sf::Vector2f(200.f, 200.f), sf::Vector2f(1.f, 1.f), 0.f);
+    player->assign<TransformComponent>(sf::Vector2f(200, 200), sf::Vector2f(1, 1), 0);
 
     auto text = _world->CreateEntity();
-    text->assign<TextComponent>("You died");
+    text->assign<TextComponent>("Welcome to the lobby");
     text->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/4), sf::Vector2f(1, 1), 0);
 
     auto restart = _world->CreateEntity();
-    restart->assign<TextComponent>("Restart <");
+    restart->assign<TextComponent>("Start <");
     restart->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/2), sf::Vector2f(1, 1), 0);
 
     auto quit = _world->CreateEntity();
     quit->assign<TextComponent>("Quit");
     quit->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/2 + 100), sf::Vector2f(1, 1), 0);
+
+    auto nbPlayer = _world->CreateEntity();
+    nbPlayer->assign<TextComponent>("0");
+    nbPlayer->assign<TransformComponent>(sf::Vector2f(1600/2 - 40, 800/2 + 200), sf::Vector2f(1, 1), 0);
+    nbPlayer->assign<DataComponent>();
 
     try {
         _world->registerSystem<ECS::System::TextSystem>(0);
@@ -133,10 +146,20 @@ DeadLevel::DeadLevel()
 	}
 }
 
-DeadLevel::~DeadLevel()
+LobbyLevel::~LobbyLevel()
 {
 }
 
-void DeadLevel::update(const float dt)
+void LobbyLevel::update(const float dt)
 {
+    auto world = _world;
+    auto nbPlayerText = world->GetEntitiesByTag<DataComponent>();
+    auto players = world->GetEntitiesByTag<PlayerComponent>();
+    int nb = 0;
+    for (auto &player : players) {
+        if (player->get<PlayerComponent>()->hash != "")
+            nb++;
+    }
+    if (nbPlayerText.size() > 0 && nbPlayerText[0]->has<TextComponent>())
+        nbPlayerText[0]->get<TextComponent>()->_text = std::to_string(nb) + " player(s) active";
 }

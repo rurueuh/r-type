@@ -4,54 +4,33 @@
 #include <functional>
 
 void ECS::Component::FactoryAssignComponent(Entity* ent, std::string type, std::string str) {
-	// remove useless space in type
 	type.erase(std::remove_if(type.begin(), type.end(), isspace), type.end());
-	std::vector<std::function<void(Entity*, std::string, std::string)>> funcs = {
-		FactoryAssignCreateComponent<PvComponent>,
-		FactoryAssignCreateComponent<InputComponent>,
-		FactoryAssignCreateComponent<DrawableComponent>,
-		FactoryAssignCreateComponent<TransformComponent>,
-		FactoryAssignCreateComponent<Hitbox>,
-		FactoryAssignCreateComponent<PlayerComponent>,
-		FactoryAssignCreateComponent<WeaponComponent>,
-		FactoryAssignCreateComponent<ShootComponent>,
-		FactoryAssignCreateComponent<EnemyTag>,
-		FactoryAssignCreateComponent<BackgroundTag>,
-		FactoryAssignCreateComponent<VelocityComponent>,
-		FactoryAssignCreateComponent<LifeSpan>,
-		FactoryAssignCreateComponent<OnDie>,
-		FactoryAssignCreateComponent<CollisionComponent>,
-		FactoryAssignCreateComponent<TextComponent>,
-		FactoryAssignCreateComponent<PatternComponent>,
-		FactoryAssignCreateComponent<DamageComponent>
+	std::map<std::string, std::function<void(Entity*, std::string, std::string)>> list = {
+		{Utils::getRegisteredComponent(Utils::getTypeId<PvComponent>()), FactoryAssignCreateComponent<PvComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<InputComponent>()), FactoryAssignCreateComponent<InputComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<DrawableComponent>()), FactoryAssignCreateComponent<DrawableComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<TransformComponent>()), FactoryAssignCreateComponent<TransformComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<Hitbox>()), FactoryAssignCreateComponent<Hitbox>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<PlayerComponent>()), FactoryAssignCreateComponent<PlayerComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<WeaponComponent>()), FactoryAssignCreateComponent<WeaponComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<ShootComponent>()), FactoryAssignCreateComponent<ShootComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<EnemyTag>()), FactoryAssignCreateComponent<EnemyTag>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<BackgroundTag>()), FactoryAssignCreateComponent<BackgroundTag>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<VelocityComponent>()), FactoryAssignCreateComponent<VelocityComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<LifeSpan>()), FactoryAssignCreateComponent<LifeSpan>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<OnDie>()), FactoryAssignCreateComponent<OnDie>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<CollisionComponent>()), FactoryAssignCreateComponent<CollisionComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<TextComponent>()), FactoryAssignCreateComponent<TextComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<EnemyPath>()), FactoryAssignCreateComponent<EnemyPath>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<DataComponent>()), FactoryAssignCreateComponent<DataComponent>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<LevelTag>()), FactoryAssignCreateComponent<LevelTag>},
+		{Utils::getRegisteredComponent(Utils::getTypeId<AnimationComponent>()), FactoryAssignCreateComponent<AnimationComponent>},
 	};
-	std::vector<std::string> id = {
-		Utils::getRegisteredComponent(Utils::getTypeId<PvComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<InputComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<DrawableComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<TransformComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<Hitbox>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<PlayerComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<WeaponComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<ShootComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<EnemyTag>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<BackgroundTag>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<VelocityComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<LifeSpan>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<OnDie>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<CollisionComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<TextComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<PatternComponent>()),
-		Utils::getRegisteredComponent(Utils::getTypeId<DamageComponent>()),
-	};
-	// pour une raison inconnue (probablement le combo unordered_map + std::function) je ne peux pas cree de map
-	for (size_t i = 0; i < id.size(); i++) {
-		if (type == id[i]) {
-			funcs[i](ent, type, str);
-			return;
-		}
-		if (i == id.size() - 1) {
-			std::cerr << "ERROR : Component " << type << " not found" << std::endl;
-		}
-	}
+
+	if (list.find(type) != list.end()) {
+		list[type](ent, type, str);
+	} else {
+		std::cerr << "Component " << type << " not found" << std::endl;
+	}	
+
 }
