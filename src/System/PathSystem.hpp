@@ -20,6 +20,9 @@ namespace ECS {
                 world->each<EnemyPath>([&](ECS::Entity* ent, EnemyPath* path) {
                     std::map<EnemyPathType, void(*)(ECS::World*, const float&, ECS::Entity *)> pathMap = {
 						{ FOLLOW_PLAYER, PathSystem::PathFollowPlayer },
+                        { FOLLOW_PATH, PathSystem::PathFollowPath },
+                        { FOLLOW_PLAYER_BOSS, PathSystem::PathFollowPlayer },
+                        { FOLLOW_PATH_BOSS, PathSystem::PathFollowPath },
 					};
                     
                     pathMap[path->pathType](world, dt, ent);
@@ -79,6 +82,32 @@ namespace ECS {
                     else if (transform->position.y > playerTransform->position.y) {
                         velocity->velocity.y += -1.f * distanceBetween * dt;
                     }
+                }
+            }
+
+            static void PathFollowPath(ECS::World* world, const float& dt, ECS::Entity* ent) {
+                auto transform = ent->get<TransformComponent>();
+                auto velocity = ent->get<VelocityComponent>();
+                auto path = ent->get<EnemyPath>();
+
+                if (transform->position.y < 0) {
+                    velocity->velocity.y = -velocity->velocity.y / 2;
+                    transform->position.y = 0;
+                    path->_isDownMove = true;
+                    return;
+                }
+                else if (transform->position.y > 900) {
+                    velocity->velocity.y = -velocity->velocity.y / 2;
+                    transform->position.y = 900;
+                    path->_isDownMove = false;
+                    return;
+                }
+
+                if (path->_isDownMove) {
+                    velocity->velocity.y += 1.f * 64.f * dt;
+                }
+                else {
+                    velocity->velocity.y += -1.f * 64.f * dt;
                 }
             }
         private:

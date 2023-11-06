@@ -90,6 +90,40 @@ static void shootEnemy(ECS::World *world, const float &dt, ECS::Entity *ent)
 		bullet->assign<VelocityComponent>(-620.f + (velocity->velocity.x), 0.f + (velocity->velocity.y));
 }
 
+static void shootEnemyBoss(ECS::World *world, const float &dt, ECS::Entity *ent)
+{
+    if (!ent->has<DataComponent>())
+        return;
+	auto cooldown = ent->get<DataComponent>()->get<float>("timeShoot");
+    if (cooldown < 3.5)
+        return;
+    #ifndef SERVER
+        _sound->play();
+    #endif
+    ent->get<DataComponent>()->set("timeShoot", 0.f);
+	auto transform = ent->get<TransformComponent>();
+	auto velocity = ent->get<VelocityComponent>();
+    for (int i = 0; i < 12; i++) {
+        auto bullet = world->CreateEntity();
+        auto x = rand() % 100;
+        auto y = rand() % 100;
+        bullet->assign<DrawableComponent>("../assets/sheet1.png", sf::IntRect(337, 255, 12, 4));
+        bullet->assign<TransformComponent>(sf::Vector2f(transform->position.x + x, transform->position.y + y), sf::Vector2f(-4.f, 4.f), 0.f);
+        bullet->assign<LifeSpan>(2.f);
+        bullet->assign<CollisionComponent>(sf::FloatRect(transform->position.x, transform->position.y, 32, 14),
+            ECS::Collision::BULLET_ENEMY);
+        if (!velocity)
+            bullet->assign<VelocityComponent>(-620.f, 0.f);
+        else
+            bullet->assign<VelocityComponent>(-620.f + (velocity->velocity.x + x), 0.f + (velocity->velocity.y + y));
+        bullet->assign<EnemyPath>(EnemyPathType::FOLLOW_PATH_BOSS);
+        bullet->assign<OnDie>([](ECS::World* world, ECS::Entity* ent) {
+            std::cout << "Bullet die" << std::endl;
+        });
+    }
+    
+}
+
 static void collisionPlayerEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
 {
     auto pv = e1->get<PvComponent>();
@@ -191,7 +225,10 @@ FirstLevel::FirstLevel() : Level()
         { {ECS::Collision::BULLET_ENEMY, ECS::Collision::PLAYER}, collisionBulletPlayer}
 	};
     ECS::System::Path::ShootPathType typeOfShoot = {
-        { FOLLOW_PLAYER, shootEnemy }
+        { FOLLOW_PLAYER, shootEnemy },
+        { FOLLOW_PATH, shootEnemy },
+        { FOLLOW_PLAYER_BOSS, shootEnemyBoss },
+        { FOLLOW_PATH_BOSS, shootEnemyBoss },
     };
     try {
         _world->registerSystem<ECS::System::TransformSystem>(0);
@@ -312,40 +349,40 @@ void FirstLevel::update(const float dt)
         BackgroundParallax();
 		clock.restart();
 	}
-    if (!schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 8.0f) {
+    if (!schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 0.0f) {
         data->set("schwarziSpawned", 1.f);
-        CreateEnemies(0, 800, 100);
-        CreateEnemies(0, 800, 350);
-        CreateEnemies(0, 800, 600);
+        // CreateEnemies(0, 800, 100);
+        // CreateEnemies(0, 800, 350);
+        // CreateEnemies(0, 800, 600);
         enemySpawnClock.restart();
     }
-    if (!fliesSpawned && schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 12.0f) {
+    if (!fliesSpawned && schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 1.0f) {
         data->set("fliesSpawned", 1.f);
-        CreateEnemies(1, 850, 100);
-        CreateEnemies(1, 850, 300);
-        CreateEnemies(1, 850, 500);
-        CreateEnemies(1, 850, 700);
-        CreateEnemies(1, 1050, 100);
-        CreateEnemies(1, 1050, 300);
-        CreateEnemies(1, 1050, 500);
-        CreateEnemies(1, 1050, 700);
-        CreateEnemies(1, 950, 10);
-        CreateEnemies(1, 950, 200);
-        CreateEnemies(1, 950, 400);
-        CreateEnemies(1, 950, 800);
-        CreateEnemies(1, 950, 600);
-        CreateEnemies(1, 1250, 100);
-        CreateEnemies(1, 1250, 300);
-        CreateEnemies(1, 1250, 500);
-        CreateEnemies(1, 1250, 700);
-        CreateEnemies(1, 1150, 10);
-        CreateEnemies(1, 1150, 200);
-        CreateEnemies(1, 1150, 400);
-        CreateEnemies(1, 1150, 800);
-        CreateEnemies(1, 1150, 600);
+        // CreateEnemies(1, 850, 100);
+        // CreateEnemies(1, 850, 300);
+        // CreateEnemies(1, 850, 500);
+        // CreateEnemies(1, 850, 700);
+        // CreateEnemies(1, 1050, 100);
+        // CreateEnemies(1, 1050, 300);
+        // CreateEnemies(1, 1050, 500);
+        // CreateEnemies(1, 1050, 700);
+        // CreateEnemies(1, 950, 10);
+        // CreateEnemies(1, 950, 200);
+        // CreateEnemies(1, 950, 400);
+        // CreateEnemies(1, 950, 800);
+        // CreateEnemies(1, 950, 600);
+        // CreateEnemies(1, 1250, 100);
+        // CreateEnemies(1, 1250, 300);
+        // CreateEnemies(1, 1250, 500);
+        // CreateEnemies(1, 1250, 700);
+        // CreateEnemies(1, 1150, 10);
+        // CreateEnemies(1, 1150, 200);
+        // CreateEnemies(1, 1150, 400);
+        // CreateEnemies(1, 1150, 800);
+        // CreateEnemies(1, 1150, 600);
         enemySpawnClock.restart();
     }
-    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 22.0f && bossSpawned == false) {
+    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 2.0f && bossSpawned == false) {
         CreateEnemies(2, 900, 200);
         data->set("bossSpawned", 1.f);
     }
@@ -392,7 +429,6 @@ void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
         enemy->assign<CollisionComponent>(sf::FloatRect(x, y, _infoEnemies[id].area.width * 3, _infoEnemies[id].area.height * 3), ECS::Collision::ENEMY);
         enemy->assign<PvComponent>(_infoEnemies[id].health, _infoEnemies[id].health);
         enemy->assign<PatternComponent>(_infoEnemies[id].pattern, 0);
-        enemy->assign<EnemyPath>(EnemyPathType::FOLLOW_PLAYER);
         enemy->assign<DataComponent>();
         enemy->assign<VelocityComponent>(0.f, 0.f);
         
@@ -410,6 +446,11 @@ void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
                 sf::IntRect(236, 6, 21, 24),
             };
             enemy->assign<AnimationComponent>(anims, 0.2f);
+            enemy->assign<EnemyPath>(EnemyPathType::FOLLOW_PATH);
+        } else if (id == 0) {
+            enemy->assign<EnemyPath>(EnemyPathType::FOLLOW_PLAYER);
+        } else if (id == 2) {
+            enemy->assign<EnemyPath>(EnemyPathType::FOLLOW_PLAYER_BOSS);
         }
 }
 

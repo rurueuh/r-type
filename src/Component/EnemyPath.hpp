@@ -8,6 +8,9 @@
 */
 enum EnemyPathType {
     FOLLOW_PLAYER,
+    FOLLOW_PLAYER_BOSS,
+    FOLLOW_PATH,
+    FOLLOW_PATH_BOSS,
 };
 
 /**
@@ -19,7 +22,9 @@ public:
      * @brief Construct a new Enemy Path object
      * @param type The type of the path
     */
-    EnemyPath(EnemyPathType type) : pathType(type) {};
+    EnemyPath(EnemyPathType type) : pathType(type) {
+        _isDownMove = (rand() % 2) == 0;
+    };
     EnemyPath() : pathType(FOLLOW_PLAYER) {};
 
     /**
