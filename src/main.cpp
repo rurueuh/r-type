@@ -23,6 +23,10 @@ void setLevel(const std::string &str)
         LevelManager::getInstance().addLevel<DeadLevel>();
 		LevelManager::getInstance().setCurrentLevel<DeadLevel>();
     }
+    else if (str == "DevLevel") {
+        LevelManager::getInstance().addLevel<DevLevel>();
+		LevelManager::getInstance().setCurrentLevel<DevLevel>();
+    }
     else if (str == "WinLevel") {
         LevelManager::getInstance().addLevel<WinLevel>();
 		LevelManager::getInstance().setCurrentLevel<WinLevel>();
@@ -48,7 +52,6 @@ int main(void)
     Utils::registerComponent<BackgroundTag>("BTag");
     Utils::registerComponent<CollisionComponent>("CollisionComponent");
     Utils::registerComponent<TextComponent>("TextComponent");
-    Utils::registerLevel<FirstLevel>("FirstLevel");
     Utils::registerComponent<EnemyPath>("EnemyPath");
     Utils::registerComponent<DataComponent>("DataComponent");
     Utils::registerComponent<LevelTag>("LevelTag");
@@ -58,10 +61,12 @@ int main(void)
     Utils::registerLevel<LobbyLevel>("LobbyLevel");
     Utils::registerLevel<DeadLevel>("DeadLevel");
     Utils::registerLevel<WinLevel>("WinLevel");
+    Utils::registerLevel<FirstLevel>("FirstLevel");
+
 
     try {
         auto &engine = GameEngine::GetInstance();
-        engine.Init<FirstLevel>();
+        engine.Init<LobbyLevel>();
         engine.Run();
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;

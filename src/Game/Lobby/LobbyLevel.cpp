@@ -4,6 +4,7 @@
 #include "World.hpp"
 #include "Entity.hpp"
 #include "DevLevel.hpp"
+#include "FirstLevel.hpp"
 
 static sf::Clock cooldownInput;
 static constexpr float cooldown = 0.25;
@@ -17,7 +18,7 @@ static void forward(ECS::Entity *ent, const float &dt)
     cooldownInput.restart();
     if (selector == 0) {
         selector = 1;
-    } else {
+    } else if (selector == 1) {
         selector = 0;
     }
 
@@ -26,13 +27,13 @@ static void forward(ECS::Entity *ent, const float &dt)
         if (x == 1) {
             if (selector == 0) {
                 text->_text = "Start <";
-            } else {
+            } else if (selector == 1) {
                 text->_text = "Start";
             }
         } else if (x == 2) {
             if (selector == 0) {
                 text->_text = "Quit";
-            } else {
+            } else if (selector == 1) {
                 text->_text = "Quit <";
             }
         }
@@ -57,13 +58,13 @@ static void backward(ECS::Entity *ent, const float &dt)
         if (x == 1) {
             if (selector == 0) {
                 text->_text = "Start <";
-            } else {
+            } else if (selector == 1) {
                 text->_text = "Start";
             }
         } else if (x == 2) {
             if (selector == 0) {
                 text->_text = "Quit";
-            } else {
+            } else if (selector == 1) {
                 text->_text = "Quit <";
             }
         }
@@ -75,13 +76,13 @@ static void use(ECS::Entity *ent, const float &dt)
 {
     LevelManager::getInstance().removeLevel<LobbyLevel>();
     if (selector == 0) {
-        LevelManager::getInstance().addLevel<DevLevel>();
-        LevelManager::getInstance().setCurrentLevel<DevLevel>();
+        LevelManager::getInstance().addLevel<FirstLevel>();
+        LevelManager::getInstance().setCurrentLevel<FirstLevel>();
         sf::sleep(sf::seconds(1));
-    } else {
+    } else if (selector == 1) {
         #ifndef SERVER
-        auto &gameEngine = GameEngine::GetInstance();
-        gameEngine.Shutdown();
+            auto &gameEngine = GameEngine::GetInstance();
+            gameEngine.Shutdown();
         #else
             auto &gameEngine = GameEngine::GetInstance();
             gameEngine.getServer().disconnectClient();
@@ -92,12 +93,23 @@ static void use(ECS::Entity *ent, const float &dt)
     }
 }
 
+static void secretLevel(ECS::Entity *ent, const float &dt)
+{
+    (void) ent;
+    (void) dt;
+    LevelManager::getInstance().removeLevel<LobbyLevel>();
+    LevelManager::getInstance().addLevel<DevLevel>();
+    LevelManager::getInstance().setCurrentLevel<DevLevel>();
+    sf::sleep(sf::seconds(1));
+}
+
 LobbyLevel::LobbyLevel()
 {
     const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> input = {
         { Input::Key::forward, forward},
         { Input::Key::backward, backward},
         { Input::Key::jump, use},
+        { Input::Key::secret, secretLevel},
     };
     const std::unordered_map<Input::Key, std::function<void(ECS::Entity*, const float&)>> nullInput = {};
 

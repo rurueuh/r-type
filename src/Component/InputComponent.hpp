@@ -20,6 +20,7 @@ namespace Input {
 		left,
 		right,
 		jump,
+		secret,
 	};
 	const std::vector<std::pair<Key, std::string>> keyConfig = {
 		{Key::forward, "z"},
@@ -27,6 +28,7 @@ namespace Input {
 		{Key::left, "q"},
 		{Key::right, "d"},
 		{Key::jump, " "},
+		{Key::secret, "m"},
 	};
 };
 
