@@ -163,6 +163,7 @@ FirstLevel::FirstLevel() : Level()
         _world->registerSystem<ECS::System::LifeSpanSystem>(5);
         _world->registerSystem<ECS::System::HpSystem>(6);
         _world->registerSystem<ECS::System::PathSystem>(7, typeOfShoot);
+        _world->registerSystem<ECS::System::AnimationSystem>(8);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }
@@ -182,6 +183,32 @@ void FirstLevel::CreatePlayers()
     size_t i = 0;
     for (auto ship : starship) {
         ship->assign<PlayerComponent>();
+
+        int yy = 3;
+        yy += i * 17;
+        std::vector<sf::IntRect> frame = {
+            sf::IntRect(1, yy, 32, 14),
+            sf::IntRect(34, yy, 32, 14),
+            sf::IntRect(67, yy, 32, 14),
+            sf::IntRect(100, yy, 32, 14),
+            sf::IntRect(133, yy, 32, 14),
+            sf::IntRect(100, yy, 32, 14),
+            sf::IntRect(67, yy, 32, 14),
+            sf::IntRect(34, yy, 32, 14),
+        };
+        #ifndef SERVER
+            if (GameEngine::GetInstance().getClient().getClientHash() == "me") {
+                frame = {
+                    sf::IntRect(1, 3, 32, 14),
+                    sf::IntRect(1, 20, 32, 14),
+                    sf::IntRect(1, 37, 32, 14),
+                    sf::IntRect(1, 54, 32, 14),
+                };
+            }
+        #else
+        #endif
+        
+        ship->assign<AnimationComponent>(frame, 0.1f);
         ship->assign<InputComponent>(input);
         ship->assign<PvComponent>(100.f, 100.f);
         ship->assign<DrawableComponent>("./assets/player.png", _infoPlayers[i % _infoPlayers.size()]);
@@ -233,7 +260,6 @@ void FirstLevel::update(const float dt)
 
     if (clock.getElapsedTime().asSeconds() > 0.1) {
         BackgroundParallax();
-        //EnemyPatterns(dt);
 		clock.restart();
 	}
     if (!schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 8.0f) {
@@ -300,46 +326,20 @@ void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
         
         if (id == 2)
             enemy->assign<OnDie>(victory);
-}
-
-/*void FirstLevel::EnemyPatterns(const float dt)
-{
-    std::vector<ECS::Entity*> enemies = {};
-    _world->each<EnemyTag>([&](ECS::Entity* ent, EnemyTag* enemy) {
-        enemies.push_back(ent);
-    });
-    for (auto enemy : enemies) {
-        auto pat = enemy->get<PatternComponent>();
-        if (pat->pattern[pat->currentIndex] == 'N')
-            pat->currentIndex = 0;
-        switch (pat->pattern[pat->currentIndex]) {
-        case 'o':
-            pat->currentIndex++;
-            break;
-        case 'l':
-            left(enemy, dt);
-            pat->currentIndex++;
-            break;
-        case 'a':
-            left(enemy, dt);
-            forward(enemy, dt);
-            pat->currentIndex++;
-            break;
-        case 'i':
-            left(enemy, dt);
-            backward(enemy, dt);
-            pat->currentIndex++;
-            break;
-        case 'r':
-            right(enemy, dt);
-            pat->currentIndex++;
-            break;
-        
-        default:
-            break;
+        if (id == 1) {
+            std::vector<sf::IntRect> anims = {
+                sf::IntRect(5, 6, 21, 24),
+                sf::IntRect(38, 6, 21, 24),
+                sf::IntRect(71, 6, 21, 24),
+                sf::IntRect(104, 6, 21, 24),
+                sf::IntRect(137, 6, 21, 24),
+                sf::IntRect(170, 6, 21, 24),
+                sf::IntRect(203, 6, 21, 24),
+                sf::IntRect(236, 6, 21, 24),
+            };
+            enemy->assign<AnimationComponent>(anims, 0.2f);
         }
-    };
-}*/
+}
 
 void FirstLevel::BackgroundParallax()
 {
