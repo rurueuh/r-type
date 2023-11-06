@@ -357,40 +357,40 @@ void FirstLevel::update(const float dt)
         BackgroundParallax();
 		clock.restart();
 	}
-    if (!schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 0.0f) {
+    if (!schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 3.0f) {
         data->set("schwarziSpawned", 1.f);
-        // CreateEnemies(0, 800, 100);
-        // CreateEnemies(0, 800, 350);
-        // CreateEnemies(0, 800, 600);
+        CreateEnemies(0, 800, 100);
+        CreateEnemies(0, 800, 350);
+        CreateEnemies(0, 800, 600);
         enemySpawnClock.restart();
     }
-    if (!fliesSpawned && schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 1.0f) {
+    if (!fliesSpawned && schwarziSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 13.0f) {
         data->set("fliesSpawned", 1.f);
-        // CreateEnemies(1, 850, 100);
-        // CreateEnemies(1, 850, 300);
-        // CreateEnemies(1, 850, 500);
-        // CreateEnemies(1, 850, 700);
-        // CreateEnemies(1, 1050, 100);
-        // CreateEnemies(1, 1050, 300);
-        // CreateEnemies(1, 1050, 500);
-        // CreateEnemies(1, 1050, 700);
-        // CreateEnemies(1, 950, 10);
-        // CreateEnemies(1, 950, 200);
-        // CreateEnemies(1, 950, 400);
-        // CreateEnemies(1, 950, 800);
-        // CreateEnemies(1, 950, 600);
-        // CreateEnemies(1, 1250, 100);
-        // CreateEnemies(1, 1250, 300);
-        // CreateEnemies(1, 1250, 500);
-        // CreateEnemies(1, 1250, 700);
-        // CreateEnemies(1, 1150, 10);
-        // CreateEnemies(1, 1150, 200);
-        // CreateEnemies(1, 1150, 400);
-        // CreateEnemies(1, 1150, 800);
-        // CreateEnemies(1, 1150, 600);
+        CreateEnemies(1, 850, 100);
+        CreateEnemies(1, 850, 300);
+        CreateEnemies(1, 850, 500);
+        CreateEnemies(1, 850, 700);
+        CreateEnemies(1, 1050, 100);
+        CreateEnemies(1, 1050, 300);
+        CreateEnemies(1, 1050, 500);
+        CreateEnemies(1, 1050, 700);
+        CreateEnemies(1, 950, 10);
+        CreateEnemies(1, 950, 200);
+        CreateEnemies(1, 950, 400);
+        CreateEnemies(1, 950, 800);
+        CreateEnemies(1, 950, 600);
+        CreateEnemies(1, 1250, 100);
+        CreateEnemies(1, 1250, 300);
+        CreateEnemies(1, 1250, 500);
+        CreateEnemies(1, 1250, 700);
+        CreateEnemies(1, 1150, 10);
+        CreateEnemies(1, 1150, 200);
+        CreateEnemies(1, 1150, 400);
+        CreateEnemies(1, 1150, 800);
+        CreateEnemies(1, 1150, 600);
         enemySpawnClock.restart();
     }
-    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 2.0f && bossSpawned == false) {
+    if (fliesSpawned && enemySpawnClock.getElapsedTime().asSeconds() > 30.0f && bossSpawned == false) {
         CreateEnemies(2, 900, 200);
         data->set("bossSpawned", 1.f);
     }
