@@ -54,6 +54,31 @@ static void shoot(ECS::Entity *ent, const float &dt)
         bullet->assign<VelocityComponent>(620.f + (velocity->velocity.x), 0.f + (velocity->velocity.y));
 }
 
+static void shootEnemy(ECS::World *world, const float &dt, ECS::Entity *ent)
+{
+    if (!ent->has<DataComponent>())
+        return;
+	auto cooldown = ent->get<DataComponent>()->get<float>("timeShoot");
+    if (cooldown < 3.5)
+        return;
+    ent->get<DataComponent>()->set("timeShoot", 0.f);
+	auto transform = ent->get<TransformComponent>();
+	auto velocity = ent->get<VelocityComponent>();
+	auto bullet = world->CreateEntity();
+	bullet->assign<DrawableComponent>("../assets/sheet1.png", sf::IntRect(337, 255, 12, 4));
+	bullet->assign<TransformComponent>(transform->position, sf::Vector2f(-2.f, 2.f), 0.f);
+	bullet->assign<LifeSpan>(2.f);
+    bullet->assign<OnDie>([](ECS::World* world, ECS::Entity* ent) {
+		std::cout << "Bullet die" << std::endl;
+	});
+	bullet->assign<CollisionComponent>(sf::FloatRect(transform->position.x, transform->position.y, 32, 14),
+        ECS::Collision::BULLET_ENEMY);
+	if (!velocity)
+		bullet->assign<VelocityComponent>(-620.f, 0.f);
+	else
+		bullet->assign<VelocityComponent>(-620.f + (velocity->velocity.x), 0.f + (velocity->velocity.y));
+}
+
 static void collisionPlayerEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
 {
     auto pv = e1->get<PvComponent>();
@@ -66,6 +91,13 @@ static void collisionBulletEnemy(ECS::World *world, ECS::Entity *e1, ECS::Entity
 {
     auto pv = e2->get<PvComponent>();
     pv->_health -= 20;
+    e1->die();
+}
+
+static void collisionBulletPlayer(ECS::World *world, ECS::Entity *e1, ECS::Entity *e2)
+{
+    auto pv = e2->get<PvComponent>();
+    pv->_health -= 10;
     e1->die();
 }
 
@@ -117,7 +149,11 @@ FirstLevel::FirstLevel() : Level()
     CollisionActionList collisionAction = {
         { {ECS::Collision::PLAYER, ECS::Collision::ENEMY}, collisionPlayerEnemy},
         { {ECS::Collision::BULLET_PLAYER, ECS::Collision::ENEMY}, collisionBulletEnemy},
+        { {ECS::Collision::BULLET_ENEMY, ECS::Collision::PLAYER}, collisionBulletPlayer}
 	};
+    ECS::System::Path::ShootPathType typeOfShoot = {
+        { FOLLOW_PLAYER, shootEnemy }
+    };
     try {
         _world->registerSystem<ECS::System::TransformSystem>(0);
         _world->registerSystem<ECS::System::DrawableSystem>(1);
@@ -126,6 +162,7 @@ FirstLevel::FirstLevel() : Level()
         _world->registerSystem<ECS::System::VelocitySystem>(4);
         _world->registerSystem<ECS::System::LifeSpanSystem>(5);
         _world->registerSystem<ECS::System::HpSystem>(6);
+        _world->registerSystem<ECS::System::PathSystem>(7, typeOfShoot);
     } catch (const std::exception &e) {
         std::cout << "ERROR : " << e.what() << std::endl;
     }
@@ -236,6 +273,16 @@ void FirstLevel::update(const float dt)
         CreateEnemies(2, 900, 200);
         bossSpawned = true;
     }
+
+    std::vector<ECS::Entity*> Enemy = _world->GetEntitiesByTag<EnemyTag>();
+    for (auto enemy : Enemy) {
+        auto dataComponentEnemy = enemy->get<DataComponent>();
+        if (!dataComponentEnemy)
+            continue;
+        auto timeShoot = dataComponentEnemy->get<float>("timeShoot");
+        timeShoot += dt;
+        dataComponentEnemy->set("timeShoot", timeShoot);
+    }
 }
 
 void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
@@ -247,6 +294,10 @@ void FirstLevel::CreateEnemies(size_t id, size_t x, size_t y)
         enemy->assign<CollisionComponent>(sf::FloatRect(x, y, _infoEnemies[id].area.width * 3, _infoEnemies[id].area.height * 3), ECS::Collision::ENEMY);
         enemy->assign<PvComponent>(_infoEnemies[id].health, _infoEnemies[id].health);
         enemy->assign<PatternComponent>(_infoEnemies[id].pattern, 0);
+        enemy->assign<EnemyPath>(EnemyPathType::FOLLOW_PLAYER);
+        enemy->assign<DataComponent>();
+        enemy->assign<VelocityComponent>(0.f, 0.f);
+        
         if (id == 2)
             enemy->assign<OnDie>(victory);
 }
