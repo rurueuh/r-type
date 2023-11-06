@@ -10,6 +10,7 @@
 #include "GameEngine.hpp"
 #include "Utils/Utils.hpp"
 #include <snappy.h>
+#include "DevLevel.hpp"
 
 void setLevel(const std::string &str)
 {

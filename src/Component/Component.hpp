@@ -30,6 +30,8 @@
 #include "dataComponent.hpp"
 #include "LevelTag.hpp"
 #include "AnimationComponent.hpp"
+#include "PatternComponent.hpp"
+
 #include "Utils.hpp"
 #include "Entity.hpp"
 

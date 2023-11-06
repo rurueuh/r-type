@@ -5,6 +5,7 @@
 #include "Entity.hpp"
 #include "DevLevel.hpp"
 #include "LobbyLevel.hpp"
+#include "FirstLevel.hpp"
 
 static sf::Clock cooldownInput;
 static constexpr float cooldown = 0.25;
