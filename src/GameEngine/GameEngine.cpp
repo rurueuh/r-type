@@ -4,7 +4,7 @@
 GameEngine::GameEngine()
 {
     #ifndef SERVER
-        _font.loadFromFile("../assets/font.ttf");
+        _font.loadFromFile("./assets/font.ttf");
     #endif
     srand(time(NULL));
 }
@@ -43,7 +43,7 @@ void GameEngine::replicateEntities(void)
     _server.sendToAll(packet);
 
 #else // CLIENT ONLY
-    _client.networkSync(world);
+    _client->networkSync(world);
     // TODO: send to server (client)
 #endif
 }
@@ -64,7 +64,7 @@ void GameEngine::Run(void)
             if (event.type == sf::Event::KeyPressed) {
             }
         }
-        _client.onInput(world);
+        _client->onInput(world);
         _window->clear();
 #endif
         static sf::Clock clock;

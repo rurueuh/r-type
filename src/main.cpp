@@ -3,25 +3,30 @@
 #include "Entity.hpp"
 #include "Component.hpp"
 #include "LevelManager.hpp"
-#include "DevLevel.hpp"
+#include "FirstLevel.hpp"
 #include "DeadLevel.hpp"
+#include "WinLevel.hpp"
 #include "LobbyLevel.hpp"
 #include "GameEngine.hpp"
 #include "Utils/Utils.hpp"
 #include <snappy.h>
+#include "DevLevel.hpp"
 
 void setLevel(const std::string &str)
 {
-    if (str == "DevLevel") {
-		LevelManager::getInstance().addLevel<DevLevel>();
-        LevelManager::getInstance().setCurrentLevel<DevLevel>();
+    if (str == "FirstLevel") {
+		LevelManager::getInstance().addLevel<FirstLevel>();
+        LevelManager::getInstance().setCurrentLevel<FirstLevel>();
     }
 
     else if (str == "DeadLevel") {
         LevelManager::getInstance().addLevel<DeadLevel>();
 		LevelManager::getInstance().setCurrentLevel<DeadLevel>();
     }
-    else if (str == "LobbyLevel") {
+    else if (str == "WinLevel") {
+        LevelManager::getInstance().addLevel<WinLevel>();
+		LevelManager::getInstance().setCurrentLevel<WinLevel>();
+    } else if (str == "LobbyLevel") {
         LevelManager::getInstance().addLevel<LobbyLevel>();
         LevelManager::getInstance().setCurrentLevel<LobbyLevel>();
     }
@@ -43,6 +48,7 @@ int main(void)
     Utils::registerComponent<BackgroundTag>("BTag");
     Utils::registerComponent<CollisionComponent>("CollisionComponent");
     Utils::registerComponent<TextComponent>("TextComponent");
+    Utils::registerLevel<FirstLevel>("FirstLevel");
     Utils::registerComponent<EnemyPath>("EnemyPath");
     Utils::registerComponent<DataComponent>("DataComponent");
     Utils::registerComponent<LevelTag>("LevelTag");
@@ -51,10 +57,11 @@ int main(void)
     Utils::registerLevel<DevLevel>("DevLevel");
     Utils::registerLevel<LobbyLevel>("LobbyLevel");
     Utils::registerLevel<DeadLevel>("DeadLevel");
+    Utils::registerLevel<WinLevel>("WinLevel");
 
     try {
         auto &engine = GameEngine::GetInstance();
-        engine.Init<LobbyLevel>();
+        engine.Init<FirstLevel>();
         engine.Run();
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;

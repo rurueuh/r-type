@@ -101,9 +101,9 @@ static void checkPlayerEnd(ECS::World* world, ECS::Entity* ent)
         }
     #endif
     // get all player
-std::vector<ECS::Entity*> players = {};
+    std::vector<ECS::Entity*> players = {};
     world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
-	players.push_back(ent);
+	    players.push_back(ent);
 	});
 	// check if all player are dead
 	bool allDead = true;
@@ -357,7 +357,7 @@ void DevLevel::update(const float dt)
     std::vector<ECS::Entity*> players = {};
     _world->each<PlayerComponent>([&](ECS::Entity* ent, PlayerComponent* player) {
         players.push_back(ent);
-        });
+    });
     for (auto player : players) {
         if (player->get<PlayerComponent>()->hash == "")
             continue;

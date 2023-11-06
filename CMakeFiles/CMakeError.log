@@ -1,0 +1,228 @@
+Determining if the include file windows.h exists failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_56094/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_56094.dir/build.make CMakeFiles/cmTC_56094.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_56094.dir/CheckIncludeFile.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_56094.dir/CheckIncludeFile.c.o -c /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: windows.h: No such file or directory
+    1 | #include <windows.h>
+      |          ^~~~~~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_56094.dir/build.make:78: CMakeFiles/cmTC_56094.dir/CheckIncludeFile.c.o] Error 1
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_56094/fast] Error 2
+
+
+
+Determining if the function lzo1x_1_15_compress exists in the lzo2 failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_87e1b/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_87e1b.dir/build.make CMakeFiles/cmTC_87e1b.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_87e1b.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=lzo1x_1_15_compress -o CMakeFiles/cmTC_87e1b.dir/CheckFunctionExists.c.o -c /home/odyce/Downloads/clion-2021.3.4/bin/cmake/linux/share/cmake-3.22/Modules/CheckFunctionExists.c
+Linking C executable cmTC_87e1b
+/home/odyce/Downloads/clion-2021.3.4/bin/cmake/linux/bin/cmake -E cmake_link_script CMakeFiles/cmTC_87e1b.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=lzo1x_1_15_compress CMakeFiles/cmTC_87e1b.dir/CheckFunctionExists.c.o -o cmTC_87e1b  -llzo2 
+/usr/bin/ld: cannot find -llzo2: No such file or directory
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_87e1b.dir/build.make:99: cmTC_87e1b] Error 1
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_87e1b/fast] Error 2
+
+
+
+Determining if the function LZ4_compress_default exists in the lz4 failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_a5cf5/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a5cf5.dir/build.make CMakeFiles/cmTC_a5cf5.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a5cf5.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=LZ4_compress_default -o CMakeFiles/cmTC_a5cf5.dir/CheckFunctionExists.c.o -c /home/odyce/Downloads/clion-2021.3.4/bin/cmake/linux/share/cmake-3.22/Modules/CheckFunctionExists.c
+Linking C executable cmTC_a5cf5
+/home/odyce/Downloads/clion-2021.3.4/bin/cmake/linux/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a5cf5.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=LZ4_compress_default CMakeFiles/cmTC_a5cf5.dir/CheckFunctionExists.c.o -o cmTC_a5cf5  -llz4 
+/usr/bin/ld: cannot find -llz4: No such file or directory
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_a5cf5.dir/build.make:99: cmTC_a5cf5] Error 1
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_a5cf5/fast] Error 2
+
+
+
+Performing C++ SOURCE FILE Test HAVE_VISUAL_STUDIO_ARCH_AVX failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_aa181/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_aa181.dir/build.make CMakeFiles/cmTC_aa181.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_aa181.dir/src.cxx.o
+/usr/bin/c++ -DHAVE_VISUAL_STUDIO_ARCH_AVX  -Wall -Wextra -Wno-sign-compare -fno-exceptions -fno-rtti    /arch:AVX -o CMakeFiles/cmTC_aa181.dir/src.cxx.o -c /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx
+c++: warning: /arch:AVX: linker input file unused because linking not done
+c++: error: /arch:AVX: linker input file not found: No such file or directory
+gmake[1]: *** [CMakeFiles/cmTC_aa181.dir/build.make:78: CMakeFiles/cmTC_aa181.dir/src.cxx.o] Error 1
+gmake[1]: *** Deleting file 'CMakeFiles/cmTC_aa181.dir/src.cxx.o'
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_aa181/fast] Error 2
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_VISUAL_STUDIO_ARCH_AVX2 failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_5fca2/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_5fca2.dir/build.make CMakeFiles/cmTC_5fca2.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_5fca2.dir/src.cxx.o
+/usr/bin/c++ -DHAVE_VISUAL_STUDIO_ARCH_AVX2  -Wall -Wextra -Wno-sign-compare -fno-exceptions -fno-rtti    /arch:AVX2 -o CMakeFiles/cmTC_5fca2.dir/src.cxx.o -c /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx
+c++: warning: /arch:AVX2: linker input file unused because linking not done
+c++: error: /arch:AVX2: linker input file not found: No such file or directory
+gmake[1]: *** [CMakeFiles/cmTC_5fca2.dir/build.make:78: CMakeFiles/cmTC_5fca2.dir/src.cxx.o] Error 1
+gmake[1]: *** Deleting file 'CMakeFiles/cmTC_5fca2.dir/src.cxx.o'
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_5fca2/fast] Error 2
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test SNAPPY_HAVE_SSSE3 failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_4c12d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_4c12d.dir/build.make CMakeFiles/cmTC_4c12d.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_4c12d.dir/src.cxx.o
+/usr/bin/c++ -DSNAPPY_HAVE_SSSE3  -Wall -Wextra -Wno-sign-compare -fno-exceptions -fno-rtti  -o CMakeFiles/cmTC_4c12d.dir/src.cxx.o -c /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx
+In file included from /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx:2:
+/usr/lib/gcc/x86_64-redhat-linux/13/include/tmmintrin.h: In function ‘int main()’:
+/usr/lib/gcc/x86_64-redhat-linux/13/include/tmmintrin.h:136:1: error: inlining failed in call to ‘always_inline’ ‘__m128i _mm_shuffle_epi8(__m128i, __m128i)’: target specific option mismatch
+  136 | _mm_shuffle_epi8 (__m128i __X, __m128i __Y)
+      | ^~~~~~~~~~~~~~~~
+/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx:8:43: note: called from here
+    8 |   const __m128i pattern = _mm_shuffle_epi8(_mm_loadl_epi64(src), shuffle_mask);
+      |                           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/gcc/x86_64-redhat-linux/13/include/tmmintrin.h:136:1: error: inlining failed in call to ‘always_inline’ ‘__m128i _mm_shuffle_epi8(__m128i, __m128i)’: target specific option mismatch
+  136 | _mm_shuffle_epi8 (__m128i __X, __m128i __Y)
+      | ^~~~~~~~~~~~~~~~
+/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx:8:43: note: called from here
+    8 |   const __m128i pattern = _mm_shuffle_epi8(_mm_loadl_epi64(src), shuffle_mask);
+      |                           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gmake[1]: *** [CMakeFiles/cmTC_4c12d.dir/build.make:78: CMakeFiles/cmTC_4c12d.dir/src.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_4c12d/fast] Error 2
+
+
+Source file was:
+
+#include <tmmintrin.h>
+
+int main() {
+  const __m128i *src = 0;
+  __m128i dest;
+  const __m128i shuffle_mask = _mm_load_si128(src);
+  const __m128i pattern = _mm_shuffle_epi8(_mm_loadl_epi64(src), shuffle_mask);
+  _mm_storeu_si128(&dest, pattern);
+  return 0;
+}
+Performing C++ SOURCE FILE Test SNAPPY_HAVE_X86_CRC32 failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_390fd/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_390fd.dir/build.make CMakeFiles/cmTC_390fd.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_390fd.dir/src.cxx.o
+/usr/bin/c++ -DSNAPPY_HAVE_X86_CRC32  -Wall -Wextra -Wno-sign-compare -fno-exceptions -fno-rtti  -o CMakeFiles/cmTC_390fd.dir/src.cxx.o -c /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx
+In file included from /usr/lib/gcc/x86_64-redhat-linux/13/include/immintrin.h:39,
+                 from /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx:2:
+/usr/lib/gcc/x86_64-redhat-linux/13/include/smmintrin.h: In function ‘int main()’:
+/usr/lib/gcc/x86_64-redhat-linux/13/include/smmintrin.h:834:1: error: inlining failed in call to ‘always_inline’ ‘unsigned int _mm_crc32_u32(unsigned int, unsigned int)’: target specific option mismatch
+  834 | _mm_crc32_u32 (unsigned int __C, unsigned int __V)
+      | ^~~~~~~~~~~~~
+/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx:4:23: note: called from here
+    4 |   return _mm_crc32_u32(0, 1);
+      |          ~~~~~~~~~~~~~^~~~~~
+gmake[1]: *** [CMakeFiles/cmTC_390fd.dir/build.make:78: CMakeFiles/cmTC_390fd.dir/src.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_390fd/fast] Error 2
+
+
+Source file was:
+
+#include <immintrin.h>
+int main() {
+  return _mm_crc32_u32(0, 1);
+}
+Performing C++ SOURCE FILE Test SNAPPY_HAVE_NEON_CRC32 failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_0f558/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_0f558.dir/build.make CMakeFiles/cmTC_0f558.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_0f558.dir/src.cxx.o
+/usr/bin/c++ -DSNAPPY_HAVE_NEON_CRC32  -Wall -Wextra -Wno-sign-compare -fno-exceptions -fno-rtti  -o CMakeFiles/cmTC_0f558.dir/src.cxx.o -c /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx
+/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx:2:10: fatal error: arm_neon.h: No such file or directory
+    2 | #include <arm_neon.h>
+      |          ^~~~~~~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_0f558.dir/build.make:78: CMakeFiles/cmTC_0f558.dir/src.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_0f558/fast] Error 2
+
+
+Source file was:
+
+#include <arm_neon.h>
+#include <arm_acle.h>
+int main() {
+  return __crc32cw(0, 1);
+}
+Performing C++ SOURCE FILE Test SNAPPY_HAVE_BMI2 failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_73ec2/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_73ec2.dir/build.make CMakeFiles/cmTC_73ec2.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_73ec2.dir/src.cxx.o
+/usr/bin/c++ -DSNAPPY_HAVE_BMI2  -Wall -Wextra -Wno-sign-compare -fno-exceptions -fno-rtti  -o CMakeFiles/cmTC_73ec2.dir/src.cxx.o -c /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx
+In file included from /usr/lib/gcc/x86_64-redhat-linux/13/include/x86gprintrin.h:43,
+                 from /usr/lib/gcc/x86_64-redhat-linux/13/include/immintrin.h:27,
+                 from /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx:2:
+/usr/lib/gcc/x86_64-redhat-linux/13/include/bmi2intrin.h: In function ‘int main()’:
+/usr/lib/gcc/x86_64-redhat-linux/13/include/bmi2intrin.h:39:1: error: inlining failed in call to ‘always_inline’ ‘unsigned int _bzhi_u32(unsigned int, unsigned int)’: target specific option mismatch
+   39 | _bzhi_u32 (unsigned int __X, unsigned int __Y)
+      | ^~~~~~~~~
+/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx:4:19: note: called from here
+    4 |   return _bzhi_u32(0, 1);
+      |          ~~~~~~~~~^~~~~~
+gmake[1]: *** [CMakeFiles/cmTC_73ec2.dir/build.make:78: CMakeFiles/cmTC_73ec2.dir/src.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_73ec2/fast] Error 2
+
+
+Source file was:
+
+#include <immintrin.h>
+int main() {
+  return _bzhi_u32(0, 1);
+}
+Performing C++ SOURCE FILE Test SNAPPY_HAVE_NEON failed with the following output:
+Change Dir: /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_a5afd/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a5afd.dir/build.make CMakeFiles/cmTC_a5afd.dir/build
+gmake[1]: Entering directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_a5afd.dir/src.cxx.o
+/usr/bin/c++ -DSNAPPY_HAVE_NEON  -Wall -Wextra -Wno-sign-compare -fno-exceptions -fno-rtti  -o CMakeFiles/cmTC_a5afd.dir/src.cxx.o -c /home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx
+/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp/src.cxx:2:10: fatal error: arm_neon.h: No such file or directory
+    2 | #include <arm_neon.h>
+      |          ^~~~~~~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_a5afd.dir/build.make:78: CMakeFiles/cmTC_a5afd.dir/src.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/odyce/Epitech_Projects/R-Type/B-CPP-500-LIL-5-1-rtype-maximilien.vanstaevel/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_a5afd/fast] Error 2
+
+
+Source file was:
+
+#include <arm_neon.h>
+int main() {
+  uint8_t val = 3, dup[8];
+  uint8x16_t v = vld1q_dup_u8(&val);
+  vst1q_u8(dup, v);
+  return 0;
+}

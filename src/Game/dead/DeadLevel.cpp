@@ -5,6 +5,7 @@
 #include "Entity.hpp"
 #include "DevLevel.hpp"
 #include "LobbyLevel.hpp"
+#include "FirstLevel.hpp"
 
 static sf::Clock cooldownInput;
 static constexpr float cooldown = 0.25;
@@ -76,9 +77,8 @@ static void use(ECS::Entity *ent, const float &dt)
 {
     LevelManager::getInstance().removeLevel<DeadLevel>();
     if (selector == 0) {
-        LevelManager::getInstance().addLevel<LobbyLevel>();
-        LevelManager::getInstance().setCurrentLevel<LobbyLevel>();
-        sf::sleep(sf::seconds(1));
+        LevelManager::getInstance().addLevel<FirstLevel>();
+        LevelManager::getInstance().setCurrentLevel<FirstLevel>();
     } else {
         #ifndef SERVER
         auto &gameEngine = GameEngine::GetInstance();
